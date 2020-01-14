@@ -1,5 +1,5 @@
 .vscode/
 example/
 ListTest
-src/main.c
-bin/
+assign/bin/
+assign/src/main.c
