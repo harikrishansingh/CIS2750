@@ -1,5 +1,6 @@
 #include "SVGParser.h"
 
+/*Public API*/
 
 SVGimage* createSVGimage(char* fileName);
 
@@ -30,6 +31,8 @@ int numPathsWithdata(SVGimage* img, char* data);
 
 // Function that returns the number of all groups with the specified length - see A1 Module 2 for details
 int numGroupsWithLen(SVGimage* img, int len);
+
+/*Helper Functions*/
 
 int numAttr(SVGimage* img);
 
