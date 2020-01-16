@@ -17,4 +17,4 @@ svgparser.o: src/SVGParser.c include/SVGParser.h
 	$(CC) $(CFLAGS) -c src/SVGParser.c -fpic -o bin/SVGParser.o
 
 clean:
-	rm bin/*.o bin/*.so
+	rm bin/*.o bin/*.so bin/main
