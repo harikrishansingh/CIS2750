@@ -1,5 +1,7 @@
 .vscode/
+.idea/
 example/
 ListTest
 assign1/bin/
 assign1/src/main.c
+assign1/cmake-build-debug
