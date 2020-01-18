@@ -50,59 +50,122 @@ void deleteSVGimage(SVGimage* img){
 }
 
 // Function that returns a list of all rectangles in the image.  
-List* getRects(SVGimage* img);
+List* getRects(SVGimage* img){
+
+}
 
 // Function that returns a list of all circles in the image.  
-List* getCircles(SVGimage* img);
+List* getCircles(SVGimage* img){
+
+}
 
 // Function that returns a list of all groups in the image.  
-List* getGroups(SVGimage* img);
+List* getGroups(SVGimage* img){
+
+}
 
 // Function that returns a list of all paths in the image.  
-List* getPaths(SVGimage* img);
+List* getPaths(SVGimage* img){
+
+}
 
 // Function that returns the number of all rectangles with the specified area
-int numRectsWithArea(SVGimage* img, float area);
+int numRectsWithArea(SVGimage* img, float area){
+
+    return 0;
+}
 
 // Function that returns the number of all circles with the specified area
-int numCirclesWithArea(SVGimage* img, float area);
+int numCirclesWithArea(SVGimage* img, float area){
+
+    return 0;
+}
 
 // Function that returns the number of all paths with the specified data - i.e. Path.data field
-int numPathsWithdata(SVGimage* img, char* data);
+int numPathsWithdata(SVGimage* img, char* data){
+
+    return 0;
+}
 
 // Function that returns the number of all groups with the specified length - see A1 Module 2 for details
-int numGroupsWithLen(SVGimage* img, int len);
+int numGroupsWithLen(SVGimage* img, int len){
+
+    return 0;
+}
 
 /*Helper Functions*/
 
-int numAttr(SVGimage* img);
+int numAttr(SVGimage* img){
 
-void deleteAttribute( void* data);
+    return 0;
+}
 
-char* attributeToString( void* data);
+void deleteAttribute( void* data){
 
-int compareAttributes(const void *first, const void *second);
+}
 
-void deleteGroup(void* data);
+char* attributeToString( void* data){
 
-char* groupToString( void* data);
+    return (char *)'c';
+}
 
-int compareGroups(const void *first, const void *second);
+int compareAttributes(const void *first, const void *second){
 
-void deleteRectangle(void* data);
+    return 0;
+}
 
-char* rectangleToString(void* data);
+void deleteGroup(void* data){
 
-int compareRectangles(const void *first, const void *second);
+}
 
-void deleteCircle(void* data);
+char* groupToString( void* data){
 
-char* circleToString(void* data);
+    return (char *)'c';
+}
 
-int compareCircles(const void *first, const void *second);
+int compareGroups(const void *first, const void *second){
 
-void deletePath(void* data);
+    return 0;
+}
 
-char* pathToString(void* data);
+void deleteRectangle(void* data){
 
-int comparePaths(const void *first, const void *second);
+}
+
+char* rectangleToString(void* data){
+
+    return (char *)'c';
+}
+
+int compareRectangles(const void *first, const void *second){
+
+    return 0;
+}
+
+void deleteCircle(void* data){
+
+}
+
+char* circleToString(void* data){
+
+    return (char *)'c';
+}
+
+int compareCircles(const void *first, const void *second){
+
+    return 0;
+}
+
+void deletePath(void* data){
+
+}
+
+char* pathToString(void* data){
+
+    return (char *) 'c';
+}
+
+int comparePaths(const void *first, const void *second){
+
+    return 0;
+}
