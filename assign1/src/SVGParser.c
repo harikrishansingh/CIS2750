@@ -10,7 +10,7 @@ SVGimage* createSVGimage(char* fileName){
         -List of rectangles, circles, paths, groups
         -Other attributes
     */
-   
+
     xmlDoc *document = xmlReadFile(fileName, NULL, 0);
     //Return NULL if the parsing failed
     if (document == NULL)
@@ -48,6 +48,7 @@ SVGimage* createSVGimage(char* fileName){
 
 char* SVGimageToString(SVGimage* img){
 
+    return NULL;
 }
 
 void deleteSVGimage(SVGimage* img){
@@ -60,21 +61,25 @@ void deleteSVGimage(SVGimage* img){
 // Function that returns a list of all rectangles in the image.  
 List* getRects(SVGimage* img){
 
+    return NULL;
 }
 
 // Function that returns a list of all circles in the image.  
 List* getCircles(SVGimage* img){
 
+    return NULL;
 }
 
 // Function that returns a list of all groups in the image.  
 List* getGroups(SVGimage* img){
 
+    return NULL;
 }
 
 // Function that returns a list of all paths in the image.  
 List* getPaths(SVGimage* img){
 
+    return NULL;
 }
 
 // Function that returns the number of all rectangles with the specified area
