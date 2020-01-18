@@ -1,12 +1,53 @@
 #include "SVGParser.h"
+#include <malloc.h>
 
 /*Public API*/
 
-SVGimage* createSVGimage(char* fileName);
+SVGimage* createSVGimage(char* fileName){
+    SVGimage *image = calloc(1, sizeof(SVGimage));
+    /*
+    TODO:
+        -List of rectangles, circles, paths, groups
+        -Other attributes
+    */
+   
+    xmlDoc *document = xmlReadFile(fileName, NULL, 0);
+    xmlNode *rootNode = xmlDocGetRootElement(document);
 
-char* SVGimageToString(SVGimage* img);
+    //Get namespace
+    strcpy(image->namespace, (char *)rootNode->nsDef->href);
 
-void deleteSVGimage(SVGimage* img);
+    //Get title, if it exists
+    xmlNode *titleNode = rootNode->children;
+    do {
+        titleNode = titleNode->next;
+    } while (titleNode != NULL && strcmp("title", (char *)titleNode->name) != 0);
+    strcpy(image->title,titleNode == NULL ? "" : (char *)titleNode->children->content);
+
+    //Get description
+    xmlNode *descNode = rootNode->children;
+    do {
+        descNode = descNode->next;
+    } while (descNode != NULL && strcmp("desc", (char *)descNode->name) != 0);
+    strcpy(image->description,descNode == NULL ? "" : (char *)descNode->children->content);
+
+    //TODO: Generalize title and description functions
+
+    image->rectangles = getRects();
+    image->circles = getCircles();
+    image->paths = getPaths();
+    image->groups = getGroups();
+
+    return image;
+}
+
+char* SVGimageToString(SVGimage* img){
+
+}
+
+void deleteSVGimage(SVGimage* img){
+
+}
 
 // Function that returns a list of all rectangles in the image.  
 List* getRects(SVGimage* img);
