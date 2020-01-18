@@ -8,8 +8,7 @@ SVGimage* createSVGimage(char* fileName){
 
     xmlDoc *document = xmlReadFile(fileName, NULL, 0);
     //Return NULL if the parsing failed
-    if (document == NULL)
-        return NULL;
+    if (document == NULL) return NULL;
 
     xmlNode *rootNode = xmlDocGetRootElement(document);
 
@@ -60,15 +59,13 @@ char* SVGimageToString(SVGimage* img){
 }
 
 void deleteSVGimage(SVGimage* img){
-    if (img == NULL)
-        return;
+    if (img == NULL) return;
 
     freeList(img->rectangles);
     freeList(img->circles);
     freeList(img->paths);
     freeList(img->groups);
     freeList(img->otherAttributes);
-
     free(img);
 }
 
