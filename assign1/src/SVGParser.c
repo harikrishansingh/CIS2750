@@ -12,6 +12,10 @@ SVGimage* createSVGimage(char* fileName){
     */
    
     xmlDoc *document = xmlReadFile(fileName, NULL, 0);
+    //Return NULL if the parsing failed
+    if (document == NULL)
+        return NULL;
+
     xmlNode *rootNode = xmlDocGetRootElement(document);
 
     //Get namespace
