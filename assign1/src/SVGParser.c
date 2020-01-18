@@ -108,7 +108,7 @@ int numGroupsWithLen(SVGimage* img, int len){
 //Helper Functions
 
 int numAttr(SVGimage* img){
-    //TODO: Loop through rects, circles, paths, groups, attribute lists for this (INCLUDES SVG NODE ATTRIBUTES)
+    //TODO: Loop through rects, circles, paths, groups, attribute lists for this (INCLUDES SVG NODE ATTRIBUTES (NOT including the description, title, or namespace))
     return 0;
 }
 
