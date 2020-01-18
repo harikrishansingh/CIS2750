@@ -11,8 +11,9 @@ set(CMAKE_BINARY_DIR bin)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${LIBXML2_INCLUDE_DIR})
 
-add_library(svgparse SHARED src/SVGParser.c include/Helper.h)
-target_link_libraries(svgparse PUBLIC ${LIBXML2_LIBRARIES})
+add_library(linkedlistapi SHARED src/LinkedListAPI.c)
+add_library(svgparse SHARED src/SVGParser.c)
+target_link_libraries(svgparse PUBLIC ${LIBXML2_LIBRARIES} linkedlistapi)
 
 add_executable(programTest src/main.c)
 target_link_libraries(programTest svgparse)

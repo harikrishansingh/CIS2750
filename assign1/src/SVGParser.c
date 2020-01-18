@@ -1,16 +1,10 @@
 #include "SVGParser.h"
-#include "Helper.h"
 #include <malloc.h>
 
 /*Public API*/
 
 SVGimage* createSVGimage(char* fileName){
     SVGimage *image = calloc(1, sizeof(SVGimage));
-    /*
-    TODO:
-        -List of rectangles, circles, paths, groups
-        -Other attributes
-    */
 
     xmlDoc *document = xmlReadFile(fileName, NULL, 0);
     //Return NULL if the parsing failed
@@ -35,26 +29,45 @@ SVGimage* createSVGimage(char* fileName){
         descNode = descNode->next;
     } while (descNode != NULL && strcmp("desc", (char *)descNode->name) != 0);
     strcpy(image->description,descNode == NULL ? "" : (char *)descNode->children->content);
-
     //TODO: Generalize title and description functions
 
-    image->rectangles = getRects();
-    image->circles = getCircles();
-    image->paths = getPaths();
-    image->groups = getGroups();
+    image->rectangles = initializeList(rectangleToString, deleteRectangle, compareRectangles);
+    image->circles = initializeList(circleToString, deleteCircle, compareCircles);
+    image->paths = initializeList(pathToString, deletePath, comparePaths);
+    image->groups = initializeList(groupToString, deleteGroup, compareGroups);
+    image->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
 
     xmlFreeDoc(document);
     return image;
 }
 
 char* SVGimageToString(SVGimage* img){
+    char *desc = calloc(1024, sizeof(char));
 
-    return NULL;
+    strcat(desc, "Namespace: ");
+    strcat(desc, img->namespace);
+    strcat(desc, "\n");
+    strcat(desc, "Title: ");
+    strcat(desc, img->title);
+    strcat(desc, "\n");
+    strcat(desc, "Description: ");
+    strcat(desc, img->description);
+    strcat(desc, "\n");
+
+    //TODO: Add descriptions for the lists
+
+    return desc;
 }
 
 void deleteSVGimage(SVGimage* img){
     if (img == NULL)
         return;
+
+    freeList(img->rectangles);
+    freeList(img->circles);
+    freeList(img->paths);
+    freeList(img->groups);
+    freeList(img->otherAttributes);
 
     free(img);
 }
