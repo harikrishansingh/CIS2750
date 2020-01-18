@@ -1,4 +1,5 @@
 #include "SVGParser.h"
+#include "Helper.h"
 #include <malloc.h>
 
 /*Public API*/
