@@ -14,5 +14,5 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${LIBXML2_INCLUDE_DIR})
 add_library(svgparse SHARED src/SVGParser.c)
 target_link_libraries(svgparse PUBLIC ${LIBXML2_LIBRARIES})
 
-add_executable(test src/main.c)
-target_link_libraries(test svgparse)
+add_executable(programTest src/main.c)
+target_link_libraries(programTest svgparse)
