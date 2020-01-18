@@ -42,6 +42,7 @@ SVGimage* createSVGimage(char* fileName){
     image->paths = getPaths();
     image->groups = getGroups();
 
+    xmlFreeDoc(document);
     return image;
 }
 
@@ -50,7 +51,10 @@ char* SVGimageToString(SVGimage* img){
 }
 
 void deleteSVGimage(SVGimage* img){
+    if (img == NULL)
+        return;
 
+    free(img);
 }
 
 // Function that returns a list of all rectangles in the image.  
