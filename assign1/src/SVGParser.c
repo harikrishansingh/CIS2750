@@ -122,8 +122,8 @@ char* attributeToString( void* data){
     return NULL;
 }
 
+//Unused
 int compareAttributes(const void *first, const void *second){
-
     return 0;
 }
 
@@ -136,8 +136,8 @@ char* groupToString( void* data){
     return NULL;
 }
 
+//Unused
 int compareGroups(const void *first, const void *second){
-
     return 0;
 }
 
@@ -150,8 +150,8 @@ char* rectangleToString(void* data){
     return NULL;
 }
 
+//Unused
 int compareRectangles(const void *first, const void *second){
-
     return 0;
 }
 
@@ -164,8 +164,8 @@ char* circleToString(void* data){
     return NULL;
 }
 
+//Unused
 int compareCircles(const void *first, const void *second){
-
     return 0;
 }
 
@@ -178,8 +178,8 @@ char* pathToString(void* data){
     return NULL;
 }
 
+//Unused
 int comparePaths(const void *first, const void *second){
-
     return 0;
 }
 
