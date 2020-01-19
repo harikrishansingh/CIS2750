@@ -38,6 +38,7 @@ SVGimage* createSVGimage(char* fileName){
     image->otherAttributes = populateAttr(rootNode);
 
     xmlFreeDoc(document);
+    xmlCleanupParser();
     return image;
 }
 
