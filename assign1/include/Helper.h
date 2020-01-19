@@ -1,5 +1,6 @@
 #ifndef _HELPER_
 #define _HELPER_
+#define PI 3.1415926535
 
 #include "LinkedListAPI.h"
 

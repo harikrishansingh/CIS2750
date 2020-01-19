@@ -102,23 +102,76 @@ List* getPaths(SVGimage* img){
 }
 
 int numRectsWithArea(SVGimage* img, float area){
+    int count = 0;
 
-    return 0;
+    if (img != NULL && img->rectangles->length > 0) {
+        Node* currentRect = img->rectangles->head;
+        for (int i = img->rectangles->length; i >= 0; i--) {
+            if ((((Rectangle *) currentRect->data)->width * ((Rectangle *) currentRect->data)->height) == area) {
+                count++;
+            }
+            //TODO: Make sure this is next and not previous
+            currentRect = currentRect->next;
+        }
+    }
+
+    return count;
 }
 
 int numCirclesWithArea(SVGimage* img, float area){
+    int count = 0;
 
-    return 0;
+    if (img != NULL && img->circles->length > 0) {
+        Node* currentCircle = img->circles->head;
+        for (int i = img->circles->length; i >= 0; i--) {
+            if ((((Circle *) currentCircle->data)->r * ((Circle *) currentCircle->data)->r * PI) == area) {
+                count++;
+            }
+            //TODO: Make sure this is next and not previous
+            currentCircle = currentCircle->next;
+        }
+    }
+
+    return count;
 }
 
 int numPathsWithdata(SVGimage* img, char* data){
+    int count = 0;
 
-    return 0;
+    if (img != NULL && img->paths->length > 0) {
+        Node* currentPath = img->paths->head;
+        for (int i = img->paths->length; i >= 0; i--) {
+            if (strcmp(((Path *)currentPath)->data, data) == 0) {
+                count++;
+            }
+            //TODO: Make sure this is next and not previous
+            currentPath = currentPath->next;
+        }
+    }
+
+    return count;
 }
 
 int numGroupsWithLen(SVGimage* img, int len){
+    int count = 0;
 
-    return 0;
+    if (img != NULL && img->groups->length > 0){
+        Node* currentGroup = img->groups->head;
+        for (int i = img->paths->length; i >= 0; i--) {
+            int currentGroupLength = ((Group *)currentGroup->data)->rectangles->length +
+                                     ((Group *)currentGroup->data)->circles->length +
+                                     ((Group *)currentGroup->data)->paths->length +
+                                     ((Group *)currentGroup->data)->groups->length;
+
+            if (currentGroupLength == len) {
+                count++;
+            }
+            //TODO: Make sure this is next and not previous
+            currentGroup = currentGroup->next;
+        }
+    }
+
+    return count;
 }
 
 //Helper Functions
