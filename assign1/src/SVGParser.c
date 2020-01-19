@@ -42,19 +42,33 @@ SVGimage* createSVGimage(char* fileName){
 }
 
 char* SVGimageToString(SVGimage* img){
-    char *desc = calloc(1024, sizeof(char));
+    char *desc = calloc(5120, sizeof(char));
+    sprintf(desc, "Namespace: %s\nTitle: %s\nDescription: %s\n", img->namespace, img->title, img->description);
 
-    strcat(desc, "Namespace: ");
-    strcat(desc, img->namespace);
-    strcat(desc, "\n");
-    strcat(desc, "Title: ");
-    strcat(desc, img->title);
-    strcat(desc, "\n");
-    strcat(desc, "Description: ");
-    strcat(desc, img->description);
-    strcat(desc, "\n");
+    char* listDesc;
+    if (img->rectangles->length > 0) {
+        listDesc = toString(img->rectangles);
+        strcat(desc, listDesc);
+        free(listDesc);
+    }
 
-    //TODO: Add descriptions for the lists
+    if (img->circles->length > 0) {
+        listDesc = toString(img->circles);
+        strcat(desc, listDesc);
+        free(listDesc);
+    }
+
+    if (img->paths->length > 0) {
+        listDesc = toString(img->paths);
+        strcat(desc, listDesc);
+        free(listDesc);
+    }
+
+    if (img->groups->length > 0) {
+        listDesc = toString(img->groups);
+        strcat(desc, listDesc);
+        free(listDesc);
+    }
 
     return desc;
 }
