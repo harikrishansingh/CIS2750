@@ -86,19 +86,19 @@ void deleteSVGimage(SVGimage* img){
 }
 
 List* getRects(SVGimage* img){
-    return img->rectangles;
+    return img == NULL ? NULL : img->rectangles;
 }
 
 List* getCircles(SVGimage* img){
-    return img->circles;
+    return img == NULL ? NULL : img->circles;
 }
 
 List* getGroups(SVGimage* img){
-    return img->groups;
+    return img == NULL ? NULL : img->groups;
 }
 
 List* getPaths(SVGimage* img){
-    return img->paths;
+    return img == NULL ? NULL : img->paths;
 }
 
 int numRectsWithArea(SVGimage* img, float area){
