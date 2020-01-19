@@ -1,4 +1,5 @@
 #include "SVGParser.h"
+#include "Helper.h"
 #include <malloc.h>
 
 //Public API
@@ -30,11 +31,11 @@ SVGimage* createSVGimage(char* fileName){
     strcpy(image->description,descNode == NULL ? "" : (char *)descNode->children->content);
     //TODO: Generalize title and description functions
 
-    image->rectangles = initializeList(rectangleToString, deleteRectangle, compareRectangles);
-    image->circles = initializeList(circleToString, deleteCircle, compareCircles);
-    image->paths = initializeList(pathToString, deletePath, comparePaths);
-    image->groups = initializeList(groupToString, deleteGroup, compareGroups);
-    image->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
+    image->rectangles = populateRects(rootNode);
+    image->circles = populateCircles(rootNode);
+    image->paths = populatePaths(rootNode);
+    image->groups = populateGroups(rootNode);
+    image->otherAttributes = populateAttr(rootNode);
 
     xmlFreeDoc(document);
     return image;
@@ -180,4 +181,34 @@ char* pathToString(void* data){
 int comparePaths(const void *first, const void *second){
 
     return 0;
+}
+
+List* populateRects (xmlNode* rootNode){
+    List* listHead = initializeList(rectangleToString, deleteRectangle, compareRectangles);
+
+    return listHead;
+}
+
+List* populateCircles (xmlNode* rootNode){
+    List* listHead = initializeList(circleToString, deleteCircle, compareCircles);
+
+    return listHead;
+}
+
+List* populatePaths (xmlNode* rootNode){
+    List* listHead = initializeList(pathToString, deletePath, comparePaths);
+
+    return listHead;
+}
+
+List* populateGroups (xmlNode* rootNode){
+    List* listHead = initializeList(groupToString, deleteGroup, compareGroups);
+
+    return listHead;
+}
+
+List* populateAttr (xmlNode* rootNode){
+    List* listHead = initializeList(attributeToString, deleteAttribute, compareAttributes);
+
+    return listHead;
 }
