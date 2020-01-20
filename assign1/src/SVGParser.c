@@ -257,11 +257,9 @@ int comparePaths(const void *first, const void *second){
 }
 
 List* populateRects (xmlNode* rootNode, List* list){
-    if (rootNode->children != NULL) populateRects(rootNode->children, list);
-
-    //TODO: Make it look for children of sibling nodes as well
-
     for (xmlNode* node = rootNode; node != NULL; node = node->next) {
+        if (node->children != NULL) populateRects(rootNode->children, list);
+
         if (strcmp((char*)node->name, "rect") != 0) continue;
 
         Rectangle *rectToAdd = calloc(1, sizeof(Rectangle));
