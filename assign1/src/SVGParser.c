@@ -31,11 +31,11 @@ SVGimage* createSVGimage(char* fileName){
     strcpy(image->description,descNode == NULL ? "" : (char *)descNode->children->content);
     //TODO: Generalize title and description functions
 
-    image->rectangles = populateRects(rootNode);
-    image->circles = populateCircles(rootNode);
-    image->paths = populatePaths(rootNode);
-    image->groups = populateGroups(rootNode);
-    image->otherAttributes = populateAttr(rootNode);
+    image->rectangles = populateRects(rootNode, initializeList(rectangleToString, deleteRectangle, compareRectangles));
+    image->circles = populateCircles(rootNode, initializeList(circleToString, deleteCircle, compareCircles));
+    image->paths = populatePaths(rootNode, initializeList(pathToString, deletePath, comparePaths));
+    image->groups = populateGroups(rootNode, initializeList(groupToString, deleteGroup, compareGroups));
+    image->otherAttributes = populateAttr(rootNode, initializeList(attributeToString, deleteAttribute, compareAttributes));
 
     xmlFreeDoc(document);
     xmlCleanupParser();
@@ -44,7 +44,7 @@ SVGimage* createSVGimage(char* fileName){
 
 char* SVGimageToString(SVGimage* img){
     char *desc = calloc(5120, sizeof(char));
-    sprintf(desc, "Namespace: %s\nTitle: %s\nDescription: %s\n", img->namespace, img->title, img->description);
+    sprintf(desc, "Namespace: %s\nTitle: %s\nDescription: %s", img->namespace, img->title, img->description);
 
     char* listDesc;
     if (img->rectangles->length > 0) {
@@ -186,8 +186,9 @@ void deleteAttribute( void* data){
 }
 
 char* attributeToString( void* data){
-
-    return NULL;
+    char* temp = calloc(14, sizeof(char));
+    strcpy(temp, "<PLACEHOLDER>");
+    return temp;
 }
 
 //Unused
@@ -200,8 +201,9 @@ void deleteGroup(void* data){
 }
 
 char* groupToString( void* data){
-
-    return NULL;
+    char* temp = calloc(14, sizeof(char));
+    strcpy(temp, "<PLACEHOLDER>");
+    return temp;
 }
 
 //Unused
@@ -214,8 +216,9 @@ void deleteRectangle(void* data){
 }
 
 char* rectangleToString(void* data){
-
-    return NULL;
+    char* temp = calloc(14, sizeof(char));
+    strcpy(temp, "<PLACEHOLDER>");
+    return temp;
 }
 
 //Unused
@@ -228,8 +231,9 @@ void deleteCircle(void* data){
 }
 
 char* circleToString(void* data){
-
-    return NULL;
+    char* temp = calloc(14, sizeof(char));
+    strcpy(temp, "<PLACEHOLDER>");
+    return temp;
 }
 
 //Unused
@@ -242,8 +246,9 @@ void deletePath(void* data){
 }
 
 char* pathToString(void* data){
-
-    return NULL;
+    char* temp = calloc(14, sizeof(char));
+    strcpy(temp, "<PLACEHOLDER>");
+    return temp;
 }
 
 //Unused
@@ -251,32 +256,59 @@ int comparePaths(const void *first, const void *second){
     return 0;
 }
 
-List* populateRects (xmlNode* rootNode){
-    List* listHead = initializeList(rectangleToString, deleteRectangle, compareRectangles);
+List* populateRects (xmlNode* rootNode, List* list){
+    if (rootNode->children != NULL) populateRects(rootNode->children, list);
 
-    return listHead;
+    //TODO: Make it look for children of sibling nodes as well
+
+    for (xmlNode* node = rootNode; node != NULL; node = node->next) {
+        if (strcmp((char*)node->name, "rect") != 0) continue;
+
+        Rectangle *rectToAdd = calloc(1, sizeof(Rectangle));
+
+        char* value = (char*)xmlGetProp(node, (xmlChar *)"x");
+        rectToAdd->x = value == NULL ? 0 : split(value, NULL);
+
+        value = (char*)xmlGetProp(node, (xmlChar *)"y");
+        rectToAdd->y = value == NULL ? 0 : split(value, NULL);
+
+        value = (char*)xmlGetProp(node, (xmlChar *)"width");
+        rectToAdd->width = value == NULL ? 0 : split(value, NULL);
+
+        value = (char*)xmlGetProp(node, (xmlChar *)"height");
+        rectToAdd->height = value == NULL ? 0 : split(value, NULL);
+
+        value = (char*)xmlGetProp(node, (xmlChar *)"units");
+        if (value != NULL) split(value, rectToAdd->units);
+
+//            rectToAdd->otherAttributes ;
+
+        insertFront(list, rectToAdd);
+    }
+
+    return list;
 }
 
-List* populateCircles (xmlNode* rootNode){
-    List* listHead = initializeList(circleToString, deleteCircle, compareCircles);
+List* populateCircles (xmlNode* rootNode, List* list){
 
-    return listHead;
+    return list;
 }
 
-List* populatePaths (xmlNode* rootNode){
-    List* listHead = initializeList(pathToString, deletePath, comparePaths);
+List* populatePaths (xmlNode* rootNode, List* list){
 
-    return listHead;
+    return list;
 }
 
-List* populateGroups (xmlNode* rootNode){
-    List* listHead = initializeList(groupToString, deleteGroup, compareGroups);
+List* populateGroups (xmlNode* rootNode, List* list){
 
-    return listHead;
+    return list;
 }
 
-List* populateAttr (xmlNode* rootNode){
-    List* listHead = initializeList(attributeToString, deleteAttribute, compareAttributes);
+List* populateAttr (xmlNode* rootNode, List* list){
 
-    return listHead;
+    return list;
+}
+
+float split (char* input, char* units){
+    return (float)strtol(input, &units, 10);
 }
