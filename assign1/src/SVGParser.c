@@ -29,23 +29,23 @@ SVGimage* createSVGimage(char* fileName) {
     strcpy(image->description, descNode == NULL ? "" : (char*)descNode->children->content);
     //TODO: Generalize title and description functions
 
-  image->rectangles = initializeList(rectangleToString, deleteRectangle, compareRectangles);
-  image->circles = initializeList(circleToString, deleteCircle, compareCircles);
-  image->paths = initializeList(pathToString, deletePath, comparePaths);
-  image->groups = initializeList(groupToString, deleteGroup, compareGroups);
-  image->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
+    image->rectangles = initializeList(rectangleToString, deleteRectangle, compareRectangles);
+    image->circles = initializeList(circleToString, deleteCircle, compareCircles);
+    image->paths = initializeList(pathToString, deletePath, comparePaths);
+    image->groups = initializeList(groupToString, deleteGroup, compareGroups);
+    image->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
 
     //TODO: Make sure im not forgetting the other attributes thing
-    for (xmlNode *currNode = rootNode->children; currNode != NULL; currNode = currNode->next) {
-      if (strcmp((char*)currNode->name, "rect") == 0) {
-        populateRects(currNode, image->rectangles);
-      } else if (strcmp((char*)currNode->name, "circle") == 0) {
-        populateCircles(currNode, image->circles);
-      } else if (strcmp((char*)currNode->name, "path") == 0) {
-        populatePaths(currNode, image->paths);
-      } else if (strcmp((char*)currNode->name, "g") == 0) {
-        populateGroups(currNode, image->groups);
-      }
+    for (xmlNode* currNode = rootNode->children; currNode != NULL; currNode = currNode->next) {
+        if (strcmp((char*)currNode->name, "rect") == 0) {
+            populateRects(currNode, image->rectangles);
+        } else if (strcmp((char*)currNode->name, "circle") == 0) {
+            populateCircles(currNode, image->circles);
+        } else if (strcmp((char*)currNode->name, "path") == 0) {
+            populatePaths(currNode, image->paths);
+        } else if (strcmp((char*)currNode->name, "g") == 0) {
+            populateGroups(currNode, image->groups);
+        }
     }
 
     xmlFreeDoc(document);
@@ -360,16 +360,16 @@ List* populatePaths(xmlNode* rootNode, List* list) {
 List* populateGroups(xmlNode* rootNode, List* list) {
     //TODO: Make sure im not forgetting the other attributes thing
     //TODO: Make work
-    for (xmlNode *currNode = rootNode->children; currNode != NULL; currNode = currNode->next) {
-      if (strcmp((char*)currNode->name, "rect") == 0) {
+    for (xmlNode* currNode = rootNode->children; currNode != NULL; currNode = currNode->next) {
+        if (strcmp((char*)currNode->name, "rect") == 0) {
 //        populateRects(currNode, image->rectangles);
-      } else if (strcmp((char*)currNode->name, "circle") == 0) {
+        } else if (strcmp((char*)currNode->name, "circle") == 0) {
 //        populateCircles(currNode, image->circles);
-      } else if (strcmp((char*)currNode->name, "path") == 0) {
+        } else if (strcmp((char*)currNode->name, "path") == 0) {
 //        populatePaths(currNode, image->paths);
-      } else if (strcmp((char*)currNode->name, "g") == 0) {
+        } else if (strcmp((char*)currNode->name, "g") == 0) {
 //        populateGroups(currNode, image->groups);
-      }
+        }
     }
 
     return list;
