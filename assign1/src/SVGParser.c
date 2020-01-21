@@ -212,7 +212,7 @@ int compareGroups(const void *first, const void *second){
 }
 
 void deleteRectangle(void* data){
-
+    free(data);
 }
 
 char* rectangleToString(void* data){
@@ -266,20 +266,26 @@ List* populateRects (xmlNode* rootNode, List* list){
 
         char* value = (char*)xmlGetProp(node, (xmlChar *)"x");
         rectToAdd->x = value == NULL ? 0 : split(value, NULL);
+        xmlFree(value);
 
         value = (char*)xmlGetProp(node, (xmlChar *)"y");
         rectToAdd->y = value == NULL ? 0 : split(value, NULL);
+        xmlFree(value);
 
         value = (char*)xmlGetProp(node, (xmlChar *)"width");
         rectToAdd->width = value == NULL ? 0 : split(value, NULL);
+        xmlFree(value);
 
         value = (char*)xmlGetProp(node, (xmlChar *)"height");
         rectToAdd->height = value == NULL ? 0 : split(value, NULL);
+        xmlFree(value);
 
         value = (char*)xmlGetProp(node, (xmlChar *)"units");
         if (value != NULL) split(value, rectToAdd->units);
+        xmlFree(value);
 
-//            rectToAdd->otherAttributes ;
+        //TODO: Attributes
+//        rectToAdd->otherAttributes ;
 
         insertFront(list, rectToAdd);
     }
