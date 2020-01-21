@@ -197,7 +197,11 @@ int compareAttributes(const void *first, const void *second){
 }
 
 void deleteGroup(void* data){
-
+    if (((Group*)data)->rectangles != NULL) freeList(((Group*)data)->rectangles);
+    if (((Group*)data)->circles != NULL) freeList(((Group*)data)->circles);
+    if (((Group*)data)->paths != NULL) freeList(((Group*)data)->paths);
+    if (((Group*)data)->groups != NULL) freeList(((Group*)data)->groups);
+    free(data);
 }
 
 char* groupToString( void* data){
@@ -227,7 +231,7 @@ int compareRectangles(const void *first, const void *second){
 }
 
 void deleteCircle(void* data){
-
+    free(data);
 }
 
 char* circleToString(void* data){
@@ -242,7 +246,8 @@ int compareCircles(const void *first, const void *second){
 }
 
 void deletePath(void* data){
-
+    freeList(((Path*)data)->otherAttributes);
+    free(data);
 }
 
 char* pathToString(void* data){
