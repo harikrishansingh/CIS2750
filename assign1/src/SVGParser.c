@@ -3,31 +3,16 @@
 #include <malloc.h>
 
 SVGimage* createSVGimage(char* fileName) {
-    SVGimage* image = calloc(1, sizeof(SVGimage));
-
     xmlDoc* document = xmlReadFile(fileName, NULL, 0);
     //Return NULL if the parsing failed
     if (document == NULL) return NULL;
 
     xmlNode* rootNode = xmlDocGetRootElement(document);
 
+    SVGimage* image = calloc(1, sizeof(SVGimage));
+
     //Get namespace
-    strcpy(image->namespace, (char*)rootNode->nsDef->href);
-
-    //Get title, if it exists
-    xmlNode* titleNode = rootNode->children;
-    do {
-        titleNode = titleNode->next;
-    } while (titleNode != NULL && strcmp("title", (char*)titleNode->name) != 0);
-    strcpy(image->title, titleNode == NULL ? "" : (char*)titleNode->children->content);
-
-    //Get description
-    xmlNode* descNode = rootNode->children;
-    do {
-        descNode = descNode->next;
-    } while (descNode != NULL && strcmp("desc", (char*)descNode->name) != 0);
-    strcpy(image->description, descNode == NULL ? "" : (char*)descNode->children->content);
-    //TODO: Generalize title and description functions
+    strcpy(image->namespace, (char*)rootNode->ns->href);
 
     image->rectangles = initializeList(rectangleToString, deleteRectangle, compareRectangles);
     image->circles = initializeList(circleToString, deleteCircle, compareCircles);
@@ -45,6 +30,10 @@ SVGimage* createSVGimage(char* fileName) {
             populatePaths(currNode, image->paths);
         } else if (strcmp((char*)currNode->name, "g") == 0) {
             populateGroups(currNode, image->groups);
+        } else if (strcmp((char*)currNode->name, "title") == 0) {
+            strcpy(image->title, (char*)currNode->children->content);
+        } else if (strcmp((char*)currNode->name, "desc") == 0) {
+            strcpy(image->description, (char*)currNode->children->content);
         }
     }
 
