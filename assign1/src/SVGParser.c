@@ -23,13 +23,13 @@ SVGimage* createSVGimage(char* fileName) {
     //TODO: Make sure im not forgetting the other attributes thing
     for (xmlNode* currNode = rootNode->children; currNode != NULL; currNode = currNode->next) {
         if (strcmp((char*)currNode->name, "rect") == 0) {
-            populateRects(currNode, image->rectangles);
+            addRectangle(currNode, image->rectangles);
         } else if (strcmp((char*)currNode->name, "circle") == 0) {
-            populateCircles(currNode, image->circles);
+            addCircle(currNode, image->circles);
         } else if (strcmp((char*)currNode->name, "path") == 0) {
-            populatePaths(currNode, image->paths);
+            addPath(currNode, image->paths);
         } else if (strcmp((char*)currNode->name, "g") == 0) {
-            populateGroups(currNode, image->groups);
+            addGroup(currNode, image->groups);
         } else if (strcmp((char*)currNode->name, "title") == 0) {
             strcpy(image->title, (char*)currNode->children->content);
         } else if (strcmp((char*)currNode->name, "desc") == 0) {
