@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" createEmptyFolders="true">
+    <serverData>
+      <paths name="School (329cf4cf-95e4-4987-9b47-aa0a68c1b9f2)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/tmp.QcKzs8r8tP" local="$PROJECT_DIR$/assign1" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/assign1/cmake-build-debug" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+      <paths name="School (a0cd383b-072a-4399-9401-6042c8c800f5)">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="WSL (82371ef2-39d8-48d1-890b-ab1ae338c9ab)">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>

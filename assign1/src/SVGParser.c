@@ -31,11 +31,14 @@ SVGimage* createSVGimage(char* fileName) {
     strcpy(image->description, descNode == NULL ? "" : (char*)descNode->children->content);
     //TODO: Generalize title and description functions
 
-    image->rectangles = populateRects(rootNode, initializeList(rectangleToString, deleteRectangle, compareRectangles));
-    image->circles = populateCircles(rootNode, initializeList(circleToString, deleteCircle, compareCircles));
-    image->paths = populatePaths(rootNode, initializeList(pathToString, deletePath, comparePaths));
-    image->groups = populateGroups(rootNode, initializeList(groupToString, deleteGroup, compareGroups));
-    image->otherAttributes = populateAttr(rootNode, initializeList(attributeToString, deleteAttribute, compareAttributes));
+
+
+
+//    image->rectangles = populateRects(rootNode, initializeList(rectangleToString, deleteRectangle, compareRectangles));
+//    image->circles = populateCircles(rootNode, initializeList(circleToString, deleteCircle, compareCircles));
+//    image->paths = populatePaths(rootNode, initializeList(pathToString, deletePath, comparePaths));
+//    image->groups = populateGroups(rootNode, initializeList(groupToString, deleteGroup, compareGroups));
+//    image->otherAttributes = populateAttr(rootNode, initializeList(attributeToString, deleteAttribute, compareAttributes));
 
     xmlFreeDoc(document);
     xmlCleanupParser();
