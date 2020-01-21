@@ -43,30 +43,34 @@ SVGimage* createSVGimage(char* fileName) {
 }
 
 char* SVGimageToString(SVGimage* img) {
-    char* desc = calloc(5120, sizeof(char));
-    sprintf(desc, "Namespace: %s\nTitle: %s\nDescription: %s", img->namespace, img->title, img->description);
+    char* desc = calloc(strlen(img->namespace) + strlen(img->title) + strlen(img->description) + 242, sizeof(char)); //242 extra bytes for \0's and extra words in the next line
+    sprintf(desc, "[Namespace]: %s\n[Title]: %s\n[Description]: %s", img->namespace, img->title, img->description);
 
     char* listDesc;
     if (img->rectangles->length > 0) {
         listDesc = toString(img->rectangles);
+        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 2);
         strcat(desc, listDesc);
         free(listDesc);
     }
 
     if (img->circles->length > 0) {
         listDesc = toString(img->circles);
+        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 2);
         strcat(desc, listDesc);
         free(listDesc);
     }
 
     if (img->paths->length > 0) {
         listDesc = toString(img->paths);
+        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 2);
         strcat(desc, listDesc);
         free(listDesc);
     }
 
     if (img->groups->length > 0) {
         listDesc = toString(img->groups);
+        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 2);
         strcat(desc, listDesc);
         free(listDesc);
     }
@@ -260,115 +264,99 @@ int comparePaths(const void* first, const void* second) {
 }
 
 //Make it just make a new rectangle and insert back
-List* populateRects(xmlNode* rootNode, List* list) {
-    for (xmlNode* node = rootNode; node != NULL; node = node->next) {
-        if (strcmp((char*)node->name, "rect") != 0) continue;
+List* addRectangle(xmlNode* node, List* list) {
+    Rectangle* rectToAdd = calloc(1, sizeof(Rectangle));
 
-        Rectangle* rectToAdd = calloc(1, sizeof(Rectangle));
+    char* value = (char*)xmlGetProp(node, (xmlChar*)"x");
+    rectToAdd->x = value == NULL ? 0 : strtol(value, NULL, 10); //Change endptr to the units field to save lines and not rely on units attribute (doesnt even exist)
+    xmlFree(value);
 
-        char* value = (char*)xmlGetProp(node, (xmlChar*)"x");
-        rectToAdd->x = value == NULL ? 0 : split(value, NULL);
-        xmlFree(value);
+    value = (char*)xmlGetProp(node, (xmlChar*)"y");
+    rectToAdd->y = value == NULL ? 0 : strtol(value, NULL, 10);
+    xmlFree(value);
 
-        value = (char*)xmlGetProp(node, (xmlChar*)"y");
-        rectToAdd->y = value == NULL ? 0 : split(value, NULL);
-        xmlFree(value);
+    value = (char*)xmlGetProp(node, (xmlChar*)"width");
+    rectToAdd->width = value == NULL ? 0 : strtol(value, NULL, 10);
+    xmlFree(value);
 
-        value = (char*)xmlGetProp(node, (xmlChar*)"width");
-        rectToAdd->width = value == NULL ? 0 : split(value, NULL);
-        xmlFree(value);
+    value = (char*)xmlGetProp(node, (xmlChar*)"height");
+    rectToAdd->height = value == NULL ? 0 : strtol(value, NULL, 10);
+    xmlFree(value);
 
-        value = (char*)xmlGetProp(node, (xmlChar*)"height");
-        rectToAdd->height = value == NULL ? 0 : split(value, NULL);
-        xmlFree(value);
+    value = (char*)xmlGetProp(node, (xmlChar*)"units");
+    if (value != NULL) strtol(value, (char**)(rectToAdd->units), 10);
+    xmlFree(value);
 
-        value = (char*)xmlGetProp(node, (xmlChar*)"units");
-        if (value != NULL) split(value, rectToAdd->units);
-        xmlFree(value);
-
-        //TODO: Attributes
+    //TODO: Attributes
 //        rectToAdd->otherAttributes ;
 
-        insertBack(list, rectToAdd);
-    }
+    insertBack(list, rectToAdd);
 
     return list;
 }
 
-List* populateCircles(xmlNode* rootNode, List* list) {
-    for (xmlNode* node = rootNode; node != NULL; node = node->next) {
-        if (strcmp((char*)node->name, "circle") != 0) continue;
+List* addCircle(xmlNode* node, List* list) {
+    Circle* circleToAdd = calloc(1, sizeof(Circle));
 
-        Circle* circleToAdd = calloc(1, sizeof(Circle));
+    char* value = (char*)xmlGetProp(node, (xmlChar*)"cx");
+    circleToAdd->cx = value == NULL ? 0 : strtol(value, NULL, 10);
+    xmlFree(value);
 
-        char* value = (char*)xmlGetProp(node, (xmlChar*)"cx");
-        circleToAdd->cx = value == NULL ? 0 : split(value, NULL);
-        xmlFree(value);
+    value = (char*)xmlGetProp(node, (xmlChar*)"cy");
+    circleToAdd->cy = value == NULL ? 0 : strtol(value, NULL, 10);
+    xmlFree(value);
 
-        value = (char*)xmlGetProp(node, (xmlChar*)"cy");
-        circleToAdd->cy = value == NULL ? 0 : split(value, NULL);
-        xmlFree(value);
+    value = (char*)xmlGetProp(node, (xmlChar*)"r");
+    circleToAdd->r = value == NULL ? 0 : strtol(value, NULL, 10);
+    xmlFree(value);
 
-        value = (char*)xmlGetProp(node, (xmlChar*)"r");
-        circleToAdd->r = value == NULL ? 0 : split(value, NULL);
-        xmlFree(value);
+    value = (char*)xmlGetProp(node, (xmlChar*)"units");
+    if (value != NULL) strtol(value, (char**)circleToAdd->units, 10);
+    xmlFree(value);
 
-        value = (char*)xmlGetProp(node, (xmlChar*)"units");
-        if (value != NULL) split(value, circleToAdd->units);
-        xmlFree(value);
-
-        //TODO: Attributes
+    //TODO: Attributes
 //        circleToAdd->otherAttributes ;
 
-        insertBack(list, circleToAdd);
-    }
+    insertBack(list, circleToAdd);
 
     return list;
 }
 
-List* populatePaths(xmlNode* rootNode, List* list) {
-    for (xmlNode* node = rootNode; node != NULL; node = node->next) {
-        if (strcmp((char*)node->name, "path") != 0) continue;
+List* addPath(xmlNode* node, List* list) {
+    Path* pathToAdd = calloc(1, sizeof(Path));
 
-        Path* pathToAdd = calloc(1, sizeof(Path));
+    char* value = (char*)xmlGetProp(node, (xmlChar*)"d");
+    pathToAdd->data = calloc(strlen(value) + 1, sizeof(char));
+    strcpy(pathToAdd->data, value);
+    xmlFree(value);
 
-        char* value = (char*)xmlGetProp(node, (xmlChar*)"d");
-        pathToAdd->data = calloc(strlen(value) + 1, sizeof(char));
-        strcpy(pathToAdd->data, value);
-        xmlFree(value);
-
-        //TODO: Attributes
+    //TODO: Attributes
 //        pathToAdd->otherAttributes ;
 
-        insertBack(list, pathToAdd);
-    }
+    insertBack(list, pathToAdd);
 
     return list;
 }
 
-List* populateGroups(xmlNode* rootNode, List* list) {
+List* addGroup(xmlNode* node, List* list) {
     //TODO: Make sure im not forgetting the other attributes thing
     //TODO: Make work
-    for (xmlNode* currNode = rootNode->children; currNode != NULL; currNode = currNode->next) {
+    for (xmlNode* currNode = node->children; currNode != NULL; currNode = currNode->next) {
         if (strcmp((char*)currNode->name, "rect") == 0) {
-//        populateRects(currNode, image->rectangles);
+//        addRectangle(currNode, image->rectangles);
         } else if (strcmp((char*)currNode->name, "circle") == 0) {
-//        populateCircles(currNode, image->circles);
+//        addCircle(currNode, image->circles);
         } else if (strcmp((char*)currNode->name, "path") == 0) {
-//        populatePaths(currNode, image->paths);
+//        addPath(currNode, image->paths);
         } else if (strcmp((char*)currNode->name, "g") == 0) {
-//        populateGroups(currNode, image->groups);
+//        addGroup(currNode, image->groups);
         }
     }
 
     return list;
 }
 
-List* populateAttr(xmlNode* rootNode, List* list) {
+List* addAttribute(xmlNode* node, List* list) {
 
     return list;
-}
-
-float split(char* input, char* units) {
-    return (float)strtol(input, &units, 10);
 }
