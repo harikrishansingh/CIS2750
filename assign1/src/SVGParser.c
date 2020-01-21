@@ -287,7 +287,7 @@ List* populateRects (xmlNode* rootNode, List* list){
         //TODO: Attributes
 //        rectToAdd->otherAttributes ;
 
-        insertFront(list, rectToAdd);
+        insertBack(list, rectToAdd);
     }
 
     return list;
@@ -320,7 +320,7 @@ List* populateCircles (xmlNode* rootNode, List* list){
         //TODO: Attributes
 //        circleToAdd->otherAttributes ;
 
-        insertFront(list, circleToAdd);
+        insertBack(list, circleToAdd);
     }
 
     return list;
@@ -342,7 +342,7 @@ List* populatePaths (xmlNode* rootNode, List* list){
         //TODO: Attributes
 //        pathToAdd->otherAttributes ;
 
-        insertFront(list, pathToAdd);
+        insertBack(list, pathToAdd);
     }
 
     return list;
