@@ -2,8 +2,6 @@
 #include "Helper.h"
 #include <malloc.h>
 
-//Public API
-
 SVGimage* createSVGimage(char* fileName) {
     SVGimage* image = calloc(1, sizeof(SVGimage));
 
@@ -31,14 +29,24 @@ SVGimage* createSVGimage(char* fileName) {
     strcpy(image->description, descNode == NULL ? "" : (char*)descNode->children->content);
     //TODO: Generalize title and description functions
 
+  image->rectangles = initializeList(rectangleToString, deleteRectangle, compareRectangles);
+  image->circles = initializeList(circleToString, deleteCircle, compareCircles);
+  image->paths = initializeList(pathToString, deletePath, comparePaths);
+  image->groups = initializeList(groupToString, deleteGroup, compareGroups);
+  image->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
 
-
-
-//    image->rectangles = populateRects(rootNode, initializeList(rectangleToString, deleteRectangle, compareRectangles));
-//    image->circles = populateCircles(rootNode, initializeList(circleToString, deleteCircle, compareCircles));
-//    image->paths = populatePaths(rootNode, initializeList(pathToString, deletePath, comparePaths));
-//    image->groups = populateGroups(rootNode, initializeList(groupToString, deleteGroup, compareGroups));
-//    image->otherAttributes = populateAttr(rootNode, initializeList(attributeToString, deleteAttribute, compareAttributes));
+    //TODO: Make sure im not forgetting the other attributes thing
+    for (xmlNode *currNode = rootNode->children; currNode != NULL; currNode = currNode->next) {
+      if (strcmp((char*)currNode->name, "rect") == 0) {
+        populateRects(currNode, image->rectangles);
+      } else if (strcmp((char*)currNode->name, "circle") == 0) {
+        populateCircles(currNode, image->circles);
+      } else if (strcmp((char*)currNode->name, "path") == 0) {
+        populatePaths(currNode, image->paths);
+      } else if (strcmp((char*)currNode->name, "g") == 0) {
+        populateGroups(currNode, image->groups);
+      }
+    }
 
     xmlFreeDoc(document);
     xmlCleanupParser();
@@ -177,8 +185,6 @@ int numGroupsWithLen(SVGimage* img, int len) {
     return count;
 }
 
-//Helper Functions
-
 int numAttr(SVGimage* img) {
     //TODO: Loop through rects, circles, paths, groups, attribute lists for this (INCLUDES SVG NODE ATTRIBUTES (NOT including the description, title, or namespace))
     return 0;
@@ -264,10 +270,9 @@ int comparePaths(const void* first, const void* second) {
     return 0;
 }
 
+//Make it just make a new rectangle and insert back
 List* populateRects(xmlNode* rootNode, List* list) {
     for (xmlNode* node = rootNode; node != NULL; node = node->next) {
-        if (node->children != NULL) populateRects(rootNode->children, list);
-
         if (strcmp((char*)node->name, "rect") != 0) continue;
 
         Rectangle* rectToAdd = calloc(1, sizeof(Rectangle));
@@ -303,8 +308,6 @@ List* populateRects(xmlNode* rootNode, List* list) {
 
 List* populateCircles(xmlNode* rootNode, List* list) {
     for (xmlNode* node = rootNode; node != NULL; node = node->next) {
-        if (node->children != NULL) populateCircles(rootNode->children, list);
-
         if (strcmp((char*)node->name, "circle") != 0) continue;
 
         Circle* circleToAdd = calloc(1, sizeof(Circle));
@@ -336,8 +339,6 @@ List* populateCircles(xmlNode* rootNode, List* list) {
 
 List* populatePaths(xmlNode* rootNode, List* list) {
     for (xmlNode* node = rootNode; node != NULL; node = node->next) {
-        if (node->children != NULL) populatePaths(rootNode->children, list);
-
         if (strcmp((char*)node->name, "path") != 0) continue;
 
         Path* pathToAdd = calloc(1, sizeof(Path));
@@ -357,6 +358,19 @@ List* populatePaths(xmlNode* rootNode, List* list) {
 }
 
 List* populateGroups(xmlNode* rootNode, List* list) {
+    //TODO: Make sure im not forgetting the other attributes thing
+    //TODO: Make work
+    for (xmlNode *currNode = rootNode->children; currNode != NULL; currNode = currNode->next) {
+      if (strcmp((char*)currNode->name, "rect") == 0) {
+//        populateRects(currNode, image->rectangles);
+      } else if (strcmp((char*)currNode->name, "circle") == 0) {
+//        populateCircles(currNode, image->circles);
+      } else if (strcmp((char*)currNode->name, "path") == 0) {
+//        populatePaths(currNode, image->paths);
+      } else if (strcmp((char*)currNode->name, "g") == 0) {
+//        populateGroups(currNode, image->groups);
+      }
+    }
 
     return list;
 }
