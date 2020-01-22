@@ -5,6 +5,7 @@
 #include "LinkedListAPI.h"
 #include <ctype.h>
 
+//TODO: Condense ALL of the add* functions into one variadic function
 void addRectangle (xmlNode* node, List* list);
 void addCircle (xmlNode* node, List* list);
 void addPath (xmlNode* node, List* list);

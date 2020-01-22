@@ -266,28 +266,21 @@ int comparePaths(const void* first, const void* second) {
 void addRectangle(xmlNode* node, List* list) {
     Rectangle* rectToAdd = calloc(1, sizeof(Rectangle));
 
-    char* value = (char*)xmlGetProp(node, (xmlChar*)"x");
-    rectToAdd->x = value == NULL ? 0 : strtol(value, NULL, 10); //Change endptr to the units field to save lines and not rely on units attribute (doesnt even exist)
-    xmlFree(value);
-
-    value = (char*)xmlGetProp(node, (xmlChar*)"y");
-    rectToAdd->y = value == NULL ? 0 : strtol(value, NULL, 10);
-    xmlFree(value);
-
-    value = (char*)xmlGetProp(node, (xmlChar*)"width");
-    rectToAdd->width = value == NULL ? 0 : strtol(value, NULL, 10);
-    xmlFree(value);
-
-    value = (char*)xmlGetProp(node, (xmlChar*)"height");
-    rectToAdd->height = value == NULL ? 0 : strtol(value, NULL, 10);
-    xmlFree(value);
-
-    value = (char*)xmlGetProp(node, (xmlChar*)"units");
-    if (value != NULL) strtol(value, (char**)(rectToAdd->units), 10);
-    xmlFree(value);
-
-    //TODO: Attributes
-//        rectToAdd->otherAttributes ;
+    for (xmlAttr* attrNode = node->properties; attrNode != NULL; attrNode = attrNode->next) {
+        if (strcmp((char*)attrNode->name, "x") == 0) {
+            /*This first case gives strtof the `units` field because we only care about the first element having units.
+              If the fist has no units, we assume none do. And if the first has units, we assume the same for all elements.*/
+            rectToAdd->x = strtof((char*)attrNode->children->content, (char**)rectToAdd->units);
+        } else if (strcmp((char*)attrNode->name, "y") == 0) {
+            rectToAdd->y = strtof((char*)attrNode->children->content, NULL);
+        } else if (strcmp((char*)attrNode->name, "width") == 0) {
+            rectToAdd->width = strtof((char*)attrNode->children->content, NULL);
+        } else if (strcmp((char*)attrNode->name, "heigh") == 0) {
+            rectToAdd->height = strtof((char*)attrNode->children->content, NULL);
+        } else {
+            insertBack(rectToAdd->otherAttributes, makeAttribute(attrNode));
+        }
+    }
 
     insertBack(list, rectToAdd);
 }
