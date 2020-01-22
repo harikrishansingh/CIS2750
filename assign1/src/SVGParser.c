@@ -206,7 +206,7 @@ void deleteGroup(void* data) {
 }
 
 char* groupToString(void* data) {
-    char* temp = calloc(14, sizeof(char));
+    char* temp = calloc(20, sizeof(char));
     strcpy(temp, "<GROUP PLACEHOLDER>");
     return temp;
 }
@@ -222,7 +222,7 @@ void deleteRectangle(void* data) {
 }
 
 char* rectangleToString(void* data) {
-    char* temp = calloc(14, sizeof(char));
+    char* temp = calloc(24, sizeof(char));
     strcpy(temp, "<RECTANGLE PLACEHOLDER>");
     return temp;
 }
@@ -238,7 +238,7 @@ void deleteCircle(void* data) {
 }
 
 char* circleToString(void* data) {
-    char* temp = calloc(14, sizeof(char));
+    char* temp = calloc(21, sizeof(char));
     strcpy(temp, "<CIRCLE PLACEHOLDER>");
     return temp;
 }
@@ -255,7 +255,7 @@ void deletePath(void* data) {
 }
 
 char* pathToString(void* data) {
-    char* temp = calloc(14, sizeof(char));
+    char* temp = calloc(19, sizeof(char));
     strcpy(temp, "<PATH PLACEHOLDER>");
     return temp;
 }
