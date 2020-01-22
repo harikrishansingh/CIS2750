@@ -7,10 +7,10 @@
 
 //TODO: Make one general function instead of all four
 //Perform depth-first searches through the XML nodes to find each element
-List* addRectangle (xmlNode* node, List* list);
-List* addCircle (xmlNode* node, List* list);
+void addRectangle (xmlNode* node, List* list);
+void addCircle (xmlNode* node, List* list);
 void addPath (xmlNode* node, List* list);
-List* addGroup (xmlNode* node, List* list);
-List* addAttribute (xmlNode* node, List* list);
+void addGroup (xmlNode* node, List* list);
+void addAttribute (xmlNode* node, List* list);
 
 #endif //_HELPER_

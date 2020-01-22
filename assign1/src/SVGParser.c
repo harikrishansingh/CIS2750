@@ -263,8 +263,7 @@ int comparePaths(const void* first, const void* second) {
     return 0;
 }
 
-//Make it just make a new rectangle and insert back
-List* addRectangle(xmlNode* node, List* list) {
+void addRectangle(xmlNode* node, List* list) {
     Rectangle* rectToAdd = calloc(1, sizeof(Rectangle));
 
     char* value = (char*)xmlGetProp(node, (xmlChar*)"x");
@@ -291,11 +290,9 @@ List* addRectangle(xmlNode* node, List* list) {
 //        rectToAdd->otherAttributes ;
 
     insertBack(list, rectToAdd);
-
-    return list;
 }
 
-List* addCircle(xmlNode* node, List* list) {
+void addCircle(xmlNode* node, List* list) {
     Circle* circleToAdd = calloc(1, sizeof(Circle));
 
     char* value = (char*)xmlGetProp(node, (xmlChar*)"cx");
@@ -318,8 +315,6 @@ List* addCircle(xmlNode* node, List* list) {
 //        circleToAdd->otherAttributes ;
 
     insertBack(list, circleToAdd);
-
-    return list;
 }
 
 void addPath(xmlNode* node, List* list) {
@@ -346,7 +341,7 @@ void addPath(xmlNode* node, List* list) {
     insertBack(list, pathToAdd);
 }
 
-List* addGroup(xmlNode* node, List* list) {
+void addGroup(xmlNode* node, List* list) {
     //TODO: Make sure im not forgetting the other attributes thing
     //TODO: Make work
     for (xmlNode* currNode = node->children; currNode != NULL; currNode = currNode->next) {
@@ -360,11 +355,7 @@ List* addGroup(xmlNode* node, List* list) {
 //        addGroup(currNode, image->groups);
         }
     }
-
-    return list;
 }
 
-List* addAttribute(xmlNode* node, List* list) {
-
-    return list;
+void addAttribute(xmlNode* node, List* list) {
 }
