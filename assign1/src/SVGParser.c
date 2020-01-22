@@ -294,25 +294,21 @@ void addRectangle(xmlNode* node, List* list) {
 
 void addCircle(xmlNode* node, List* list) {
     Circle* circleToAdd = calloc(1, sizeof(Circle));
+    circleToAdd->otherAttributes = initializeList(circleToString, deleteCircle, compareCircles);
 
-    char* value = (char*)xmlGetProp(node, (xmlChar*)"cx");
-    circleToAdd->cx = value == NULL ? 0 : strtol(value, NULL, 10);
-    xmlFree(value);
-
-    value = (char*)xmlGetProp(node, (xmlChar*)"cy");
-    circleToAdd->cy = value == NULL ? 0 : strtol(value, NULL, 10);
-    xmlFree(value);
-
-    value = (char*)xmlGetProp(node, (xmlChar*)"r");
-    circleToAdd->r = value == NULL ? 0 : strtol(value, NULL, 10);
-    xmlFree(value);
-
-    value = (char*)xmlGetProp(node, (xmlChar*)"units");
-    if (value != NULL) strtol(value, (char**)circleToAdd->units, 10);
-    xmlFree(value);
-
-    //TODO: Attributes
-//        circleToAdd->otherAttributes ;
+    for (xmlAttr* attrNode = node->properties; attrNode != NULL; attrNode = attrNode->next) {
+        if (strcmp((char*)attrNode->name, "cx") == 0) {
+            /*This first case gives strtof the `units` field because we only care about the first element having units.
+              If the fist has no units, we assume none do. And if the first has units, we assume the same for all elements.*/
+            circleToAdd->cx = strtof((char*)attrNode->children->content, (char**)circleToAdd->units);
+        } else if (strcmp((char*)attrNode->name, "cy") == 0) {
+            circleToAdd->cy = strtof((char*)attrNode->children->content, NULL);
+        } else if (strcmp((char*)attrNode->name, "r") == 0) {
+            circleToAdd->r = strtof((char*)attrNode->children->content, NULL);
+        } else {
+            insertBack(circleToAdd->otherAttributes, makeAttribute(attrNode));
+        }
+    }
 
     insertBack(list, circleToAdd);
 }
