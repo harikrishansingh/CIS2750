@@ -40,6 +40,10 @@ SVGimage* createSVGimage(char* fileName) {
         }
     }
 
+    for (xmlAttr* attrNode = rootNode->properties; attrNode != NULL; attrNode = attrNode->next) {
+        insertBack(image->otherAttributes, makeAttribute(attrNode));
+    }
+
     xmlFreeDoc(document);
     xmlCleanupParser();
     return image;
@@ -50,6 +54,13 @@ char* SVGimageToString(SVGimage* img) {
     sprintf(desc, "[NAMESPACE]\n%s\n[TITLE]\n%s\n[DESCRIPTION]\n%s", img->namespace, img->title, img->description);
 
     char* listDesc;
+    if (img->otherAttributes->length > 0) {
+        listDesc = toString(img->otherAttributes);
+        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 2);
+        strcat(desc, listDesc);
+        free(listDesc);
+    }
+
     if (img->rectangles->length > 0) {
         listDesc = toString(img->rectangles);
         desc = realloc(desc, strlen(desc) + strlen(listDesc) + 2);
@@ -186,9 +197,9 @@ void deleteAttribute(void* data) {
 }
 
 char* attributeToString(void* data) {
-    char* temp = calloc(64, sizeof(char));
-    strcpy(temp, "<ATTRIBUTE PLACEHOLDER>\n");
-    return temp;
+    char* tmpDesc = calloc(strlen(((Attribute*)data)->name) + strlen(((Attribute*)data)->value) + 64, sizeof(char));
+    sprintf(tmpDesc, "[BEGIN ATTRIBUTE]\nname: %s\nvalue: %s\n[END ATTRIBUTE]\n", ((Attribute*)data)->name, ((Attribute*)data)->value);
+    return tmpDesc;
 }
 
 //Unused
@@ -249,7 +260,7 @@ void deleteCircle(void* data) {
 
 char* circleToString(void* data) {
     char* tmpDesc = calloc(128, sizeof(char));
-    sprintf(tmpDesc, "[BEGIN Circle]\ncx: %f\ncy: %f\nr: %f\nunits: %s", ((Circle*)data)->cx, ((Circle*)data)->cy, ((Circle*)data)->r, ((Circle*)data)->units);
+    sprintf(tmpDesc, "[BEGIN CIRCLE]\ncx: %f\ncy: %f\nr: %f\nunits: %s", ((Circle*)data)->cx, ((Circle*)data)->cy, ((Circle*)data)->r, ((Circle*)data)->units);
 
     if (((Circle*)data)->otherAttributes->length > 0) {
         char* listDesc = toString(((Circle*)data)->otherAttributes);
