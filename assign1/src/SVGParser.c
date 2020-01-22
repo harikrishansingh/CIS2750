@@ -5,7 +5,10 @@
 SVGimage* createSVGimage(char* fileName) {
     xmlDoc* document = xmlReadFile(fileName, NULL, 0);
     //Return NULL if the parsing failed
-    if (document == NULL) return NULL;
+    if (document == NULL) {
+        xmlCleanupParser();
+        return NULL;
+    }
 
     xmlNode* rootNode = xmlDocGetRootElement(document);
 
@@ -184,7 +187,9 @@ int numAttr(SVGimage* img) {
 }
 
 void deleteAttribute(void* data) {
-
+    free(((Attribute*)data)->name);
+    free(((Attribute*)data)->value);
+    free(data);
 }
 
 char* attributeToString(void* data) {
@@ -203,6 +208,7 @@ void deleteGroup(void* data) {
     if (((Group*)data)->circles != NULL) freeList(((Group*)data)->circles);
     if (((Group*)data)->paths != NULL) freeList(((Group*)data)->paths);
     if (((Group*)data)->groups != NULL) freeList(((Group*)data)->groups);
+    if (((Group*)data)->otherAttributes != NULL) freeList(((Group*)data)->otherAttributes);
     free(data);
 }
 
@@ -218,6 +224,7 @@ int compareGroups(const void* first, const void* second) {
 }
 
 void deleteRectangle(void* data) {
+    freeList(((Rectangle*)data)->otherAttributes);
     free(data);
 }
 
@@ -233,6 +240,7 @@ int compareRectangles(const void* first, const void* second) {
 }
 
 void deleteCircle(void* data) {
+    freeList(((Circle*)data)->otherAttributes);
     free(data);
 }
 
@@ -248,6 +256,7 @@ int compareCircles(const void* first, const void* second) {
 }
 
 void deletePath(void* data) {
+    free(((Path*)data)->data);
     freeList(((Path*)data)->otherAttributes);
     free(data);
 }
@@ -265,6 +274,7 @@ int comparePaths(const void* first, const void* second) {
 
 void addRectangle(xmlNode* node, List* list) {
     Rectangle* rectToAdd = calloc(1, sizeof(Rectangle));
+    rectToAdd->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
 
     for (xmlAttr* attrNode = node->properties; attrNode != NULL; attrNode = attrNode->next) {
         if (strcmp((char*)attrNode->name, "x") == 0) {
@@ -287,7 +297,7 @@ void addRectangle(xmlNode* node, List* list) {
 
 void addCircle(xmlNode* node, List* list) {
     Circle* circleToAdd = calloc(1, sizeof(Circle));
-    circleToAdd->otherAttributes = initializeList(circleToString, deleteCircle, compareCircles);
+    circleToAdd->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
 
     for (xmlAttr* attrNode = node->properties; attrNode != NULL; attrNode = attrNode->next) {
         if (strcmp((char*)attrNode->name, "cx") == 0) {
@@ -308,11 +318,11 @@ void addCircle(xmlNode* node, List* list) {
 
 void addPath(xmlNode* node, List* list) {
     Path* pathToAdd = calloc(1, sizeof(Path));
-    pathToAdd->otherAttributes = initializeList(pathToString, deletePath, comparePaths);
+    pathToAdd->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
 
     for (xmlAttr* attrNode = node->properties; attrNode != NULL; attrNode = attrNode->next){
         if (strcmp((char*)attrNode->name, "d") == 0) {
-            pathToAdd->data = calloc(strlen((char*)attrNode->children->content), sizeof(char));
+            pathToAdd->data = calloc(strlen((char*)attrNode->children->content) + 1, sizeof(char));
             strcpy(pathToAdd->data, (char*)attrNode->children->content);
         } else {
             insertBack(pathToAdd->otherAttributes, makeAttribute(attrNode));
@@ -340,8 +350,8 @@ void addGroup(xmlNode* node, List* list) {
 
 Attribute* makeAttribute(xmlAttr* attrNode) {
     Attribute* attrToAdd = calloc(1, sizeof(Attribute));
-    attrToAdd->name = calloc(strlen((char*)attrNode->name), sizeof(char));
-    attrToAdd->value = calloc(strlen((char*)attrNode->children->content), sizeof(char));
+    attrToAdd->name = calloc(strlen((char*)attrNode->name) + 1, sizeof(char));
+    attrToAdd->value = calloc(strlen((char*)attrNode->children->content) + 1, sizeof(char));
     strcpy(attrToAdd->name, (char*)attrNode->name);
     strcpy(attrToAdd->value, (char*)attrNode->children->content);
     return attrToAdd;
