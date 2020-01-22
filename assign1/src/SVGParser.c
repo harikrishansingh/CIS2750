@@ -47,7 +47,7 @@ SVGimage* createSVGimage(char* fileName) {
 
 char* SVGimageToString(SVGimage* img) {
     char* desc = calloc(strlen(img->namespace) + strlen(img->title) + strlen(img->description) + 242, sizeof(char)); //242 extra bytes for \0's and extra words in the next line
-    sprintf(desc, "[Namespace]: %s\n[Title]: %s\n[Description]: %s", img->namespace, img->title, img->description);
+    sprintf(desc, "[NAMESPACE]\n%s\n[TITLE]\n%s\n[DESCRIPTION]\n%s", img->namespace, img->title, img->description);
 
     char* listDesc;
     if (img->rectangles->length > 0) {
@@ -186,8 +186,8 @@ void deleteAttribute(void* data) {
 }
 
 char* attributeToString(void* data) {
-    char* temp = calloc(14, sizeof(char));
-    strcpy(temp, "<ATTRIBUTE PLACEHOLDER>");
+    char* temp = calloc(64, sizeof(char));
+    strcpy(temp, "<ATTRIBUTE PLACEHOLDER>\n");
     return temp;
 }
 
@@ -206,8 +206,8 @@ void deleteGroup(void* data) {
 }
 
 char* groupToString(void* data) {
-    char* temp = calloc(20, sizeof(char));
-    strcpy(temp, "<GROUP PLACEHOLDER>");
+    char* temp = calloc(64, sizeof(char));
+    strcpy(temp, "<GROUP PLACEHOLDER>\n");
     return temp;
 }
 
@@ -222,9 +222,19 @@ void deleteRectangle(void* data) {
 }
 
 char* rectangleToString(void* data) {
-    char* temp = calloc(24, sizeof(char));
-    strcpy(temp, "<RECTANGLE PLACEHOLDER>");
-    return temp;
+    char* tmpDesc = calloc(128, sizeof(char));
+    sprintf(tmpDesc, "[BEGIN RECTANGLE]\nx: %f\ny: %f\nwidth: %f\nheight: %f\nunits: %s\n", ((Rectangle*)data)->x, ((Rectangle*)data)->y, ((Rectangle*)data)->width, ((Rectangle*)data)->height, ((Rectangle*)data)->units);
+
+    if (((Rectangle*)data)->otherAttributes->length > 0) {
+        char* listDesc = toString(((Rectangle*)data)->otherAttributes);
+        tmpDesc = realloc(tmpDesc, sizeof(char) * (strlen(tmpDesc) + strlen(listDesc) + 64));
+        strcat(tmpDesc, listDesc);
+        free(listDesc);
+    }
+
+    strcat(tmpDesc, "[END RECTANGLE]\n");
+
+    return tmpDesc;
 }
 
 //Unused
@@ -238,8 +248,8 @@ void deleteCircle(void* data) {
 }
 
 char* circleToString(void* data) {
-    char* temp = calloc(21, sizeof(char));
-    strcpy(temp, "<CIRCLE PLACEHOLDER>");
+    char* temp = calloc(64, sizeof(char));
+    strcpy(temp, "<CIRCLE PLACEHOLDER>\n");
     return temp;
 }
 
@@ -255,8 +265,8 @@ void deletePath(void* data) {
 }
 
 char* pathToString(void* data) {
-    char* temp = calloc(19, sizeof(char));
-    strcpy(temp, "<PATH PLACEHOLDER>");
+    char* temp = calloc(64, sizeof(char));
+    strcpy(temp, "<PATH PLACEHOLDER>\n");
     return temp;
 }
 
@@ -278,7 +288,7 @@ void addRectangle(xmlNode* node, List* list) {
             rectToAdd->y = strtof((char*)attrNode->children->content, NULL);
         } else if (strcmp((char*)attrNode->name, "width") == 0) {
             rectToAdd->width = strtof((char*)attrNode->children->content, NULL);
-        } else if (strcmp((char*)attrNode->name, "heigh") == 0) {
+        } else if (strcmp((char*)attrNode->name, "height") == 0) {
             rectToAdd->height = strtof((char*)attrNode->children->content, NULL);
         } else {
             insertBack(rectToAdd->otherAttributes, makeAttribute(attrNode));
