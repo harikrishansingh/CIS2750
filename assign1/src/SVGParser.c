@@ -357,5 +357,11 @@ void addGroup(xmlNode* node, List* list) {
     }
 }
 
-void addAttribute(xmlNode* node, List* list) {
+Attribute* makeAttribute(xmlAttr* attrNode) {
+    Attribute* attrToAdd = calloc(1, sizeof(Attribute));
+    attrToAdd->name = calloc(strlen((char*)attrNode->name), sizeof(char));
+    attrToAdd->value = calloc(strlen((char*)attrNode->children->content), sizeof(char));
+    strcpy(attrToAdd->name, (char*)attrNode->name);
+    strcpy(attrToAdd->value, (char*)attrNode->children->content);
+    return attrToAdd;
 }
