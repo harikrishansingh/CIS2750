@@ -248,9 +248,19 @@ void deleteCircle(void* data) {
 }
 
 char* circleToString(void* data) {
-    char* temp = calloc(64, sizeof(char));
-    strcpy(temp, "<CIRCLE PLACEHOLDER>\n");
-    return temp;
+    char* tmpDesc = calloc(128, sizeof(char));
+    sprintf(tmpDesc, "[BEGIN Circle]\ncx: %f\ncy: %f\nr: %f\nunits: %s", ((Circle*)data)->cx, ((Circle*)data)->cy, ((Circle*)data)->r, ((Circle*)data)->units);
+
+    if (((Circle*)data)->otherAttributes->length > 0) {
+        char* listDesc = toString(((Circle*)data)->otherAttributes);
+        tmpDesc = realloc(tmpDesc, sizeof(char) * (strlen(tmpDesc) + strlen(listDesc) + 64));
+        strcat(tmpDesc, listDesc);
+        free(listDesc);
+    }
+
+    strcat(tmpDesc, "[END CIRCLE]\n");
+
+    return tmpDesc;
 }
 
 //Unused
@@ -278,12 +288,14 @@ int comparePaths(const void* first, const void* second) {
 void addRectangle(xmlNode* node, List* list) {
     Rectangle* rectToAdd = calloc(1, sizeof(Rectangle));
     rectToAdd->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
+    //Needed for strtof
+    char* units = NULL;
 
     for (xmlAttr* attrNode = node->properties; attrNode != NULL; attrNode = attrNode->next) {
         if (strcmp((char*)attrNode->name, "x") == 0) {
             /*This first case gives strtof the `units` field because we only care about the first element having units.
               If the fist has no units, we assume none do. And if the first has units, we assume the same for all elements.*/
-            rectToAdd->x = strtof((char*)attrNode->children->content, (char**)rectToAdd->units);
+            rectToAdd->x = strtof((char*)attrNode->children->content, &units);
         } else if (strcmp((char*)attrNode->name, "y") == 0) {
             rectToAdd->y = strtof((char*)attrNode->children->content, NULL);
         } else if (strcmp((char*)attrNode->name, "width") == 0) {
@@ -294,6 +306,7 @@ void addRectangle(xmlNode* node, List* list) {
             insertBack(rectToAdd->otherAttributes, makeAttribute(attrNode));
         }
     }
+    if (units != NULL) strcpy(rectToAdd->units, units);
 
     insertBack(list, rectToAdd);
 }
@@ -301,12 +314,14 @@ void addRectangle(xmlNode* node, List* list) {
 void addCircle(xmlNode* node, List* list) {
     Circle* circleToAdd = calloc(1, sizeof(Circle));
     circleToAdd->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
+    //Needed for strtof
+    char* units = NULL;
 
     for (xmlAttr* attrNode = node->properties; attrNode != NULL; attrNode = attrNode->next) {
         if (strcmp((char*)attrNode->name, "cx") == 0) {
             /*This first case gives strtof the `units` field because we only care about the first element having units.
               If the fist has no units, we assume none do. And if the first has units, we assume the same for all elements.*/
-            circleToAdd->cx = strtof((char*)attrNode->children->content, (char**)circleToAdd->units);
+            circleToAdd->cx = strtof((char*)attrNode->children->content, &units);
         } else if (strcmp((char*)attrNode->name, "cy") == 0) {
             circleToAdd->cy = strtof((char*)attrNode->children->content, NULL);
         } else if (strcmp((char*)attrNode->name, "r") == 0) {
@@ -315,6 +330,7 @@ void addCircle(xmlNode* node, List* list) {
             insertBack(circleToAdd->otherAttributes, makeAttribute(attrNode));
         }
     }
+    if (units != NULL) strcpy(circleToAdd->units, units);
 
     insertBack(list, circleToAdd);
 }
