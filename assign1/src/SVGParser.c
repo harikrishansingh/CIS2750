@@ -1,6 +1,7 @@
 #include "SVGParser.h"
 #include "Helper.h"
 #include <math.h>
+#include <strings.h>
 
 SVGimage* createSVGimage(char* fileName) {
     xmlDoc* document = xmlReadFile(fileName, NULL, 0);
@@ -25,17 +26,17 @@ SVGimage* createSVGimage(char* fileName) {
 
     //TODO: Make sure im not forgetting the other attributes thing
     for (xmlNode* currNode = rootNode->children; currNode != NULL; currNode = currNode->next) {
-        if (strcmp((char*)currNode->name, "rect") == 0) {
+        if (strcasecmp((char*)currNode->name, "rect") == 0) {
             addRectangle(currNode, image->rectangles);
-        } else if (strcmp((char*)currNode->name, "circle") == 0) {
+        } else if (strcasecmp((char*)currNode->name, "circle") == 0) {
             addCircle(currNode, image->circles);
-        } else if (strcmp((char*)currNode->name, "path") == 0) {
+        } else if (strcasecmp((char*)currNode->name, "path") == 0) {
             addPath(currNode, image->paths);
-        } else if (strcmp((char*)currNode->name, "g") == 0) {
+        } else if (strcasecmp((char*)currNode->name, "g") == 0) {
             addGroup(currNode, image->groups);
-        } else if (strcmp((char*)currNode->name, "title") == 0) {
+        } else if (strcasecmp((char*)currNode->name, "title") == 0) {
             strcpy(image->title, (char*)currNode->children->content);
-        } else if (strcmp((char*)currNode->name, "desc") == 0) {
+        } else if (strcasecmp((char*)currNode->name, "desc") == 0) {
             strcpy(image->description, (char*)currNode->children->content);
         }
     }
@@ -161,7 +162,7 @@ int numPathsWithdata(SVGimage* img, char* data) {
     //TODO: Use path getter
     if (img != NULL && img->paths->length > 0) {
         for (Node* currentPath = img->paths->head; currentPath != NULL; currentPath = currentPath->next) {
-            if (strcmp(((Path*)currentPath)->data, data) == 0) {
+            if (strcasecmp(((Path*)currentPath)->data, data) == 0) {
                 count++;
             }
         }
@@ -316,15 +317,15 @@ void addRectangle(xmlNode* node, List* list) {
     char* units = NULL;
 
     for (xmlAttr* attrNode = node->properties; attrNode != NULL; attrNode = attrNode->next) {
-        if (strcmp((char*)attrNode->name, "x") == 0) {
+        if (strcasecmp((char*)attrNode->name, "x") == 0) {
             /*This first case gives strtof the `units` field because we only care about the first element having units.
               If the fist has no units, we assume none do. And if the first has units, we assume the same for all elements.*/
             rectToAdd->x = strtof((char*)attrNode->children->content, &units);
-        } else if (strcmp((char*)attrNode->name, "y") == 0) {
+        } else if (strcasecmp((char*)attrNode->name, "y") == 0) {
             rectToAdd->y = strtof((char*)attrNode->children->content, NULL);
-        } else if (strcmp((char*)attrNode->name, "width") == 0) {
+        } else if (strcasecmp((char*)attrNode->name, "width") == 0) {
             rectToAdd->width = strtof((char*)attrNode->children->content, NULL);
-        } else if (strcmp((char*)attrNode->name, "height") == 0) {
+        } else if (strcasecmp((char*)attrNode->name, "height") == 0) {
             rectToAdd->height = strtof((char*)attrNode->children->content, NULL);
         } else {
             insertBack(rectToAdd->otherAttributes, makeAttribute(attrNode));
@@ -342,13 +343,13 @@ void addCircle(xmlNode* node, List* list) {
     char* units = NULL;
 
     for (xmlAttr* attrNode = node->properties; attrNode != NULL; attrNode = attrNode->next) {
-        if (strcmp((char*)attrNode->name, "cx") == 0) {
+        if (strcasecmp((char*)attrNode->name, "cx") == 0) {
             /*This first case gives strtof the `units` field because we only care about the first element having units.
               If the fist has no units, we assume none do. And if the first has units, we assume the same for all elements.*/
             circleToAdd->cx = strtof((char*)attrNode->children->content, &units);
-        } else if (strcmp((char*)attrNode->name, "cy") == 0) {
+        } else if (strcasecmp((char*)attrNode->name, "cy") == 0) {
             circleToAdd->cy = strtof((char*)attrNode->children->content, NULL);
-        } else if (strcmp((char*)attrNode->name, "r") == 0) {
+        } else if (strcasecmp((char*)attrNode->name, "r") == 0) {
             circleToAdd->r = strtof((char*)attrNode->children->content, NULL);
         } else {
             insertBack(circleToAdd->otherAttributes, makeAttribute(attrNode));
@@ -364,7 +365,7 @@ void addPath(xmlNode* node, List* list) {
     pathToAdd->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
 
     for (xmlAttr* attrNode = node->properties; attrNode != NULL; attrNode = attrNode->next){
-        if (strcmp((char*)attrNode->name, "d") == 0) {
+        if (strcasecmp((char*)attrNode->name, "d") == 0) {
             pathToAdd->data = calloc(strlen((char*)attrNode->children->content) + 1, sizeof(char));
             strcpy(pathToAdd->data, (char*)attrNode->children->content);
         } else {
@@ -379,13 +380,13 @@ void addGroup(xmlNode* node, List* list) {
     //TODO: Make sure im not forgetting the other attributes thing
     //TODO: Make work
     for (xmlNode* currNode = node->children; currNode != NULL; currNode = currNode->next) {
-        if (strcmp((char*)currNode->name, "rect") == 0) {
+        if (strcasecmp((char*)currNode->name, "rect") == 0) {
 //        addRectangle(currNode, image->rectangles);
-        } else if (strcmp((char*)currNode->name, "circle") == 0) {
+        } else if (strcasecmp((char*)currNode->name, "circle") == 0) {
 //        addCircle(currNode, image->circles);
-        } else if (strcmp((char*)currNode->name, "path") == 0) {
+        } else if (strcasecmp((char*)currNode->name, "path") == 0) {
 //        addPath(currNode, image->paths);
-        } else if (strcmp((char*)currNode->name, "g") == 0) {
+        } else if (strcasecmp((char*)currNode->name, "g") == 0) {
 //        addGroup(currNode, image->groups);
         }
     }
