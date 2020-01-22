@@ -50,44 +50,47 @@ SVGimage* createSVGimage(char* fileName) {
 }
 
 char* SVGimageToString(SVGimage* img) {
-    char* desc = calloc(strlen(img->namespace) + strlen(img->title) + strlen(img->description) + 242, sizeof(char)); //242 extra bytes for \0's and extra words in the next line
-    sprintf(desc, "[NAMESPACE]\n%s\n[TITLE]\n%s\n[DESCRIPTION]\n%s", img->namespace, img->title, img->description);
+    char* desc = calloc(strlen(img->namespace) + strlen(img->title) + strlen(img->description) + 512, sizeof(char)); //242 extra bytes for \0's and extra words in the next line
+    sprintf(desc, "[BEGIN SVG]\n[NAMESPACE]\n%s\n[TITLE]\n%s\n[DESCRIPTION]\n%s", img->namespace, img->title, img->description);
 
-    char* listDesc;
+    char* listDesc = NULL;
     if (img->otherAttributes->length > 0) {
         listDesc = toString(img->otherAttributes);
-        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 2);
+        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 8);
         strcat(desc, listDesc);
         free(listDesc);
     }
 
     if (img->rectangles->length > 0) {
         listDesc = toString(img->rectangles);
-        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 2);
+        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 8);
         strcat(desc, listDesc);
         free(listDesc);
     }
 
     if (img->circles->length > 0) {
         listDesc = toString(img->circles);
-        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 2);
+        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 8);
         strcat(desc, listDesc);
         free(listDesc);
     }
 
     if (img->paths->length > 0) {
         listDesc = toString(img->paths);
-        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 2);
+        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 8);
         strcat(desc, listDesc);
         free(listDesc);
     }
 
     if (img->groups->length > 0) {
         listDesc = toString(img->groups);
-        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 2);
+        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 8);
         strcat(desc, listDesc);
         free(listDesc);
     }
+
+    desc = realloc(desc, strlen(desc) + 16);
+    strcat(desc, "[END SVG]\n");
 
     return desc;
 }
@@ -286,9 +289,19 @@ void deletePath(void* data) {
 }
 
 char* pathToString(void* data) {
-    char* temp = calloc(64, sizeof(char));
-    strcpy(temp, "<PATH PLACEHOLDER>\n");
-    return temp;
+    char* tmpDesc = calloc(strlen(((Path*)data)->data) + 64, sizeof(char));
+    sprintf(tmpDesc, "[BEGIN PATH]\nd: %s\n[END PATH]\n", ((Path*)data)->data);
+
+    if (((Path*)data)->otherAttributes->length > 0) {
+        char* listDesc = toString(((Path*)data)->otherAttributes);
+        tmpDesc = realloc(tmpDesc, sizeof(char) * (strlen(tmpDesc) + strlen(listDesc) + 64));
+        strcat(tmpDesc, listDesc);
+        free(listDesc);
+    }
+
+    strcat(tmpDesc, "[END PATH]\n");
+
+    return tmpDesc;
 }
 
 //Unused
