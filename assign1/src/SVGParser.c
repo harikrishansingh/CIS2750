@@ -327,14 +327,7 @@ void addPath(xmlNode* node, List* list) {
             strcpy(tmpData, (char*)attrNode->children->content);
             pathToAdd->data = tmpData;
         } else {
-            Attribute* attrToAdd = calloc(1, sizeof(Attribute));
-            char* tmpName = calloc(strlen((char*)attrNode->name), sizeof(char));
-            char* tmpValue = calloc(strlen((char*)attrNode->children->content), sizeof(char));
-            strcpy(tmpName, (char*)attrNode->name);
-            strcpy(tmpValue, (char*)attrNode->children->content);
-            attrToAdd->name = tmpName;
-            attrToAdd->value = tmpValue;
-            insertBack(pathToAdd->otherAttributes, attrToAdd);
+            insertBack(pathToAdd->otherAttributes, makeAttribute(attrNode));
         }
     }
 
