@@ -1,6 +1,6 @@
 #include "SVGParser.h"
 #include "Helper.h"
-#include <malloc.h>
+#include <math.h>
 
 SVGimage* createSVGimage(char* fileName) {
     xmlDoc* document = xmlReadFile(fileName, NULL, 0);
@@ -83,7 +83,6 @@ char* SVGimageToString(SVGimage* img) {
 
 void deleteSVGimage(SVGimage* img) {
     if (img == NULL) return;
-
     freeList(img->rectangles);
     freeList(img->circles);
     freeList(img->paths);
@@ -92,33 +91,35 @@ void deleteSVGimage(SVGimage* img) {
     free(img);
 }
 
+//TODO
 List* getRects(SVGimage* img) {
-    return img == NULL ? NULL : img->rectangles;
+    return NULL;
 }
 
+//TODO
 List* getCircles(SVGimage* img) {
-    return img == NULL ? NULL : img->circles;
+    return NULL;
 }
 
+//TODO
 List* getGroups(SVGimage* img) {
-    return img == NULL ? NULL : img->groups;
+    return NULL;
 }
 
+//TODO
 List* getPaths(SVGimage* img) {
-    return img == NULL ? NULL : img->paths;
+    return NULL;
 }
 
 int numRectsWithArea(SVGimage* img, float area) {
     int count = 0;
 
+    //TODO: Use rectangles getter
     if (img != NULL && img->rectangles->length > 0) {
-        Node* currentRect = img->rectangles->head;
-        for (int i = img->rectangles->length; i >= 0; i--) {
-            if ((((Rectangle*)currentRect->data)->width * ((Rectangle*)currentRect->data)->height) == area) {
+        for (Node* currentRect = img->rectangles->head; currentRect != NULL; currentRect = currentRect->next) {
+            if (ceil(((Rectangle*)currentRect->data)->width * ((Rectangle*)currentRect->data)->height) == ceil(area)) {
                 count++;
             }
-            //TODO: Make sure this is next and not previous
-            currentRect = currentRect->next;
         }
     }
 
@@ -128,14 +129,12 @@ int numRectsWithArea(SVGimage* img, float area) {
 int numCirclesWithArea(SVGimage* img, float area) {
     int count = 0;
 
+    //TODO: Use circles getter
     if (img != NULL && img->circles->length > 0) {
-        Node* currentCircle = img->circles->head;
-        for (int i = img->circles->length; i >= 0; i--) {
-            if ((((Circle*)currentCircle->data)->r * ((Circle*)currentCircle->data)->r * PI) == area) {
+        for (Node* currentCircle = img->circles->head; currentCircle != NULL; currentCircle = currentCircle->next) {
+            if (ceil(((Circle*)currentCircle->data)->r * ((Circle*)currentCircle->data)->r * PI) == ceil(area)) {
                 count++;
             }
-            //TODO: Make sure this is next and not previous
-            currentCircle = currentCircle->next;
         }
     }
 
@@ -145,14 +144,12 @@ int numCirclesWithArea(SVGimage* img, float area) {
 int numPathsWithdata(SVGimage* img, char* data) {
     int count = 0;
 
+    //TODO: Use path getter
     if (img != NULL && img->paths->length > 0) {
-        Node* currentPath = img->paths->head;
-        for (int i = img->paths->length; i >= 0; i--) {
+        for (Node* currentPath = img->paths->head; currentPath != NULL; currentPath = currentPath->next) {
             if (strcmp(((Path*)currentPath)->data, data) == 0) {
                 count++;
             }
-            //TODO: Make sure this is next and not previous
-            currentPath = currentPath->next;
         }
     }
 
@@ -162,19 +159,15 @@ int numPathsWithdata(SVGimage* img, char* data) {
 int numGroupsWithLen(SVGimage* img, int len) {
     int count = 0;
 
+    //TODO: use groups getter
     if (img != NULL && img->groups->length > 0) {
-        Node* currentGroup = img->groups->head;
-        for (int i = img->paths->length; i >= 0; i--) {
+        for (Node* currentGroup = img->groups->head; currentGroup != NULL; currentGroup = currentGroup->next) {
             int currentGroupLength = ((Group*)currentGroup->data)->rectangles->length +
                                      ((Group*)currentGroup->data)->circles->length +
                                      ((Group*)currentGroup->data)->paths->length +
                                      ((Group*)currentGroup->data)->groups->length;
 
-            if (currentGroupLength == len) {
-                count++;
-            }
-            //TODO: Make sure this is next and not previous
-            currentGroup = currentGroup->next;
+            if (currentGroupLength == len) count++;
         }
     }
 
@@ -182,7 +175,7 @@ int numGroupsWithLen(SVGimage* img, int len) {
 }
 
 int numAttr(SVGimage* img) {
-    //TODO: Loop through rects, circles, paths, groups, attribute lists for this (INCLUDES SVG NODE ATTRIBUTES (NOT including the description, title, or namespace))
+    //TODO: Loop through ALL nodes and count (NOT including the description, title, or namespace))
     return 0;
 }
 
@@ -194,7 +187,7 @@ void deleteAttribute(void* data) {
 
 char* attributeToString(void* data) {
     char* temp = calloc(14, sizeof(char));
-    strcpy(temp, "<PLACEHOLDER>");
+    strcpy(temp, "<ATTRIBUTE PLACEHOLDER>");
     return temp;
 }
 
@@ -214,7 +207,7 @@ void deleteGroup(void* data) {
 
 char* groupToString(void* data) {
     char* temp = calloc(14, sizeof(char));
-    strcpy(temp, "<PLACEHOLDER>");
+    strcpy(temp, "<GROUP PLACEHOLDER>");
     return temp;
 }
 
@@ -230,7 +223,7 @@ void deleteRectangle(void* data) {
 
 char* rectangleToString(void* data) {
     char* temp = calloc(14, sizeof(char));
-    strcpy(temp, "<PLACEHOLDER>");
+    strcpy(temp, "<RECTANGLE PLACEHOLDER>");
     return temp;
 }
 
@@ -246,7 +239,7 @@ void deleteCircle(void* data) {
 
 char* circleToString(void* data) {
     char* temp = calloc(14, sizeof(char));
-    strcpy(temp, "<PLACEHOLDER>");
+    strcpy(temp, "<CIRCLE PLACEHOLDER>");
     return temp;
 }
 
@@ -263,7 +256,7 @@ void deletePath(void* data) {
 
 char* pathToString(void* data) {
     char* temp = calloc(14, sizeof(char));
-    strcpy(temp, "<PLACEHOLDER>");
+    strcpy(temp, "<PATH PLACEHOLDER>");
     return temp;
 }
 
