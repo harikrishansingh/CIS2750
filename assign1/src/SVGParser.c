@@ -319,9 +319,8 @@ void addPath(xmlNode* node, List* list) {
 
     for (xmlAttr* attrNode = node->properties; attrNode != NULL; attrNode = attrNode->next){
         if (strcmp((char*)attrNode->name, "d") == 0) {
-            char* tmpData = calloc(strlen((char*)attrNode->children->content), sizeof(char));
-            strcpy(tmpData, (char*)attrNode->children->content);
-            pathToAdd->data = tmpData;
+            pathToAdd->data = calloc(strlen((char*)attrNode->children->content), sizeof(char));
+            strcpy(pathToAdd->data, (char*)attrNode->children->content);
         } else {
             insertBack(pathToAdd->otherAttributes, makeAttribute(attrNode));
         }
