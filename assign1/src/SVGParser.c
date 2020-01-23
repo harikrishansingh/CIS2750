@@ -24,7 +24,6 @@ SVGimage* createSVGimage(char* fileName) {
     image->groups = initializeList(groupToString, deleteGroup, compareGroups);
     image->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
 
-    //TODO: Make sure im not forgetting the other attributes thing
     for (xmlNode* currNode = rootNode->children; currNode != NULL; currNode = currNode->next) {
         if (strcasecmp((char*)currNode->name, "rect") == 0) {
             addRectangle(currNode, image->rectangles);
@@ -106,6 +105,7 @@ void deleteSVGimage(SVGimage* img) {
     free(img);
 }
 
+//TODO: Possibly initialize delete functions to NULL to prevent double free
 //TODO
 List* getRects(SVGimage* img) {
     return NULL;
@@ -377,19 +377,35 @@ void addPath(xmlNode* node, List* list) {
 }
 
 void addGroup(xmlNode* node, List* list) {
-    //TODO: Make sure im not forgetting the other attributes thing
-    //TODO: Make work
+    Group* groupToAdd = calloc(1, sizeof(Group));
+    groupToAdd->rectangles = initializeList(rectangleToString, deleteRectangle, compareRectangles);
+    groupToAdd->circles = initializeList(circleToString, deleteCircle, compareCircles);
+    groupToAdd->paths = initializeList(pathToString, deletePath, comparePaths);
+    groupToAdd->groups = initializeList(groupToString, deleteGroup, compareGroups);
+    groupToAdd->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
+
     for (xmlNode* currNode = node->children; currNode != NULL; currNode = currNode->next) {
         if (strcasecmp((char*)currNode->name, "rect") == 0) {
-//        addRectangle(currNode, image->rectangles);
+            addRectangle(currNode, groupToAdd->rectangles);
         } else if (strcasecmp((char*)currNode->name, "circle") == 0) {
-//        addCircle(currNode, image->circles);
+            addCircle(currNode, groupToAdd->circles);
         } else if (strcasecmp((char*)currNode->name, "path") == 0) {
-//        addPath(currNode, image->paths);
+            addPath(currNode, groupToAdd->paths);
         } else if (strcasecmp((char*)currNode->name, "g") == 0) {
-//        addGroup(currNode, image->groups);
+            addGroup(currNode, groupToAdd->groups);
+        /*} else if (strcasecmp((char*)currNode->name, "title") == 0) {
+            strcpy(image->title, (char*)currNode->children->content);
+        } else if (strcasecmp((char*)currNode->name, "desc") == 0) {
+            strcpy(image->description, (char*)currNode->children->content);*/
+        //Not sure if the above should be put in the "other attributes" list or not
         }
     }
+
+    for (xmlAttr* attrNode = node->properties; attrNode != NULL; attrNode = attrNode->next) {
+        insertBack(groupToAdd->otherAttributes, makeAttribute(attrNode));
+    }
+
+    insertBack(list, groupToAdd);
 }
 
 Attribute* makeAttribute(xmlAttr* attrNode) {
