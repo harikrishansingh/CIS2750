@@ -221,9 +221,40 @@ void deleteGroup(void* data) {
 }
 
 char* groupToString(void* data) {
-    char* temp = calloc(64, sizeof(char));
-    strcpy(temp, "<GROUP PLACEHOLDER>\n");
-    return temp;
+    char* desc = calloc(32, sizeof(char));
+    sprintf(desc, "[BEGIN GROUP]");
+    char* listDesc = NULL;
+
+    if (((Group*)data)->rectangles->length > 0) {
+        listDesc = toString(((Group*)data)->rectangles);
+        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 8);
+        strcat(desc, listDesc);
+    }
+
+    if (((Group*)data)->circles->length > 0) {
+        listDesc = toString(((Group*)data)->circles);
+        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 8);
+        strcat(desc, listDesc);
+        free(listDesc);
+    }
+
+    if (((Group*)data)->paths->length > 0) {
+        listDesc = toString(((Group*)data)->paths);
+        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 8);
+        strcat(desc, listDesc);
+        free(listDesc);
+    }
+
+    if (((Group*)data)->groups->length > 0) {
+        listDesc = toString(((Group*)data)->groups);
+        desc = realloc(desc, strlen(desc) + strlen(listDesc) + 8);
+        strcat(desc, listDesc);
+        free(listDesc);
+    }
+
+    desc = realloc(desc, strlen(desc) + 16);
+    strcat(desc, "[END GROUP]\n");
+    return desc;
 }
 
 //Unused
@@ -237,18 +268,17 @@ void deleteRectangle(void* data) {
 }
 
 char* rectangleToString(void* data) {
-    char* tmpDesc = calloc(128, sizeof(char));
-    sprintf(tmpDesc, "[BEGIN RECTANGLE]\nx: %f\ny: %f\nwidth: %f\nheight: %f\nunits: %s\n", ((Rectangle*)data)->x, ((Rectangle*)data)->y, ((Rectangle*)data)->width, ((Rectangle*)data)->height, ((Rectangle*)data)->units);
+    char* tmpDesc = calloc(64, sizeof(char));
+    sprintf(tmpDesc, "[BEGIN RECTANGLE]\nx: %.2f\ny: %.2f\nwidth: %.2f\nheight: %.2f\nunits: %s\n", ((Rectangle*)data)->x, ((Rectangle*)data)->y, ((Rectangle*)data)->width, ((Rectangle*)data)->height, ((Rectangle*)data)->units);
 
     if (((Rectangle*)data)->otherAttributes->length > 0) {
         char* listDesc = toString(((Rectangle*)data)->otherAttributes);
-        tmpDesc = realloc(tmpDesc, sizeof(char) * (strlen(tmpDesc) + strlen(listDesc) + 64));
+        tmpDesc = realloc(tmpDesc, sizeof(char) * (strlen(tmpDesc) + strlen(listDesc) + 32));
         strcat(tmpDesc, listDesc);
         free(listDesc);
     }
 
     strcat(tmpDesc, "[END RECTANGLE]\n");
-
     return tmpDesc;
 }
 
@@ -264,17 +294,16 @@ void deleteCircle(void* data) {
 
 char* circleToString(void* data) {
     char* tmpDesc = calloc(128, sizeof(char));
-    sprintf(tmpDesc, "[BEGIN CIRCLE]\ncx: %f\ncy: %f\nr: %f\nunits: %s", ((Circle*)data)->cx, ((Circle*)data)->cy, ((Circle*)data)->r, ((Circle*)data)->units);
+    sprintf(tmpDesc, "[BEGIN CIRCLE]\ncx: %.2f\ncy: %.2f\nr: %.2f\nunits: %s\n", ((Circle*)data)->cx, ((Circle*)data)->cy, ((Circle*)data)->r, ((Circle*)data)->units);
 
     if (((Circle*)data)->otherAttributes->length > 0) {
         char* listDesc = toString(((Circle*)data)->otherAttributes);
-        tmpDesc = realloc(tmpDesc, sizeof(char) * (strlen(tmpDesc) + strlen(listDesc) + 64));
+        tmpDesc = realloc(tmpDesc, sizeof(char) * (strlen(tmpDesc) + strlen(listDesc) + 32));
         strcat(tmpDesc, listDesc);
         free(listDesc);
     }
 
     strcat(tmpDesc, "[END CIRCLE]\n");
-
     return tmpDesc;
 }
 
@@ -291,17 +320,16 @@ void deletePath(void* data) {
 
 char* pathToString(void* data) {
     char* tmpDesc = calloc(strlen(((Path*)data)->data) + 64, sizeof(char));
-    sprintf(tmpDesc, "[BEGIN PATH]\nd: %s\n[END PATH]\n", ((Path*)data)->data);
+    sprintf(tmpDesc, "[BEGIN PATH]\nd: %s", ((Path*)data)->data);
 
     if (((Path*)data)->otherAttributes->length > 0) {
         char* listDesc = toString(((Path*)data)->otherAttributes);
-        tmpDesc = realloc(tmpDesc, sizeof(char) * (strlen(tmpDesc) + strlen(listDesc) + 64));
+        tmpDesc = realloc(tmpDesc, sizeof(char) * (strlen(tmpDesc) + strlen(listDesc) + 32));
         strcat(tmpDesc, listDesc);
         free(listDesc);
     }
 
     strcat(tmpDesc, "[END PATH]\n");
-
     return tmpDesc;
 }
 
