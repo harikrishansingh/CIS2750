@@ -12,11 +12,10 @@ SVGimage* createSVGimage(char* fileName) {
     }
 
     xmlNode* rootNode = xmlDocGetRootElement(document);
-
     SVGimage* image = calloc(1, sizeof(SVGimage));
 
     //Get namespace
-    strcpy(image->namespace, (char*)rootNode->ns->href);
+    strncpy(image->namespace, (char*)rootNode->ns->href, 255);
 
     image->rectangles = initializeList(rectangleToString, deleteRectangle, compareRectangles);
     image->circles = initializeList(circleToString, deleteCircle, compareCircles);
@@ -34,9 +33,9 @@ SVGimage* createSVGimage(char* fileName) {
         } else if (strcasecmp((char*)currNode->name, "g") == 0) {
             addGroup(currNode, image->groups);
         } else if (strcasecmp((char*)currNode->name, "title") == 0) {
-            strcpy(image->title, (char*)currNode->children->content);
+            strncpy(image->title, (char*)currNode->children->content, 255);
         } else if (strcasecmp((char*)currNode->name, "desc") == 0) {
-            strcpy(image->description, (char*)currNode->children->content);
+            strncpy(image->description, (char*)currNode->children->content, 255);
         }
     }
 
@@ -50,7 +49,7 @@ SVGimage* createSVGimage(char* fileName) {
 }
 
 char* SVGimageToString(SVGimage* img) {
-    char* desc = calloc(strlen(img->namespace) + strlen(img->title) + strlen(img->description) + 512, sizeof(char)); //242 extra bytes for \0's and extra words in the next line
+    char* desc = calloc(strlen(img->namespace) + strlen(img->title) + strlen(img->description) + 512, sizeof(char)); //Extra bytes for \0's and extra words in the next line
     sprintf(desc, "[BEGIN SVG]\n[NAMESPACE]\n%s\n[TITLE]\n%s\n[DESCRIPTION]\n%s", img->namespace, img->title, img->description);
 
     char* listDesc = NULL;
@@ -190,8 +189,9 @@ int numGroupsWithLen(SVGimage* img, int len) {
 }
 
 int numAttr(SVGimage* img) {
-    //TODO: Loop through ALL nodes and count (NOT including the description, title, or namespace))
-    return 0;
+    int count = 0;
+
+    return count;
 }
 
 void deleteAttribute(void* data) {
@@ -360,7 +360,7 @@ void addRectangle(xmlNode* node, List* list) {
             insertBack(rectToAdd->otherAttributes, makeAttribute(attrNode));
         }
     }
-    if (units != NULL) strcpy(rectToAdd->units, units);
+    if (units != NULL) strncpy(rectToAdd->units, units, 49);
 
     insertBack(list, rectToAdd);
 }
@@ -384,7 +384,7 @@ void addCircle(xmlNode* node, List* list) {
             insertBack(circleToAdd->otherAttributes, makeAttribute(attrNode));
         }
     }
-    if (units != NULL) strcpy(circleToAdd->units, units);
+    if (units != NULL) strncpy(circleToAdd->units, units, 49);
 
     insertBack(list, circleToAdd);
 }
