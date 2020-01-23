@@ -229,6 +229,7 @@ char* groupToString(void* data) {
         listDesc = toString(((Group*)data)->rectangles);
         desc = realloc(desc, strlen(desc) + strlen(listDesc) + 8);
         strcat(desc, listDesc);
+        free(listDesc);
     }
 
     if (((Group*)data)->circles->length > 0) {
@@ -268,7 +269,7 @@ void deleteRectangle(void* data) {
 }
 
 char* rectangleToString(void* data) {
-    char* tmpDesc = calloc(64, sizeof(char));
+    char* tmpDesc = calloc(128, sizeof(char));
     sprintf(tmpDesc, "[BEGIN RECTANGLE]\nx: %.2f\ny: %.2f\nwidth: %.2f\nheight: %.2f\nunits: %s\n", ((Rectangle*)data)->x, ((Rectangle*)data)->y, ((Rectangle*)data)->width, ((Rectangle*)data)->height, ((Rectangle*)data)->units);
 
     if (((Rectangle*)data)->otherAttributes->length > 0) {
