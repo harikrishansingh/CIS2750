@@ -187,65 +187,70 @@ List* getPaths(SVGimage* img) {
 }
 
 int numRectsWithArea(SVGimage* img, float area) {
-    int count = 0;
+    if (img == NULL) return 0;
 
-    //TODO: Use rectangles getter
-    if (img != NULL && img->rectangles->length > 0) {
-        for (Node* currentRect = img->rectangles->head; currentRect != NULL; currentRect = currentRect->next) {
-            if (ceil(((Rectangle*)currentRect->data)->width * ((Rectangle*)currentRect->data)->height) == ceil(area)) {
-                count++;
-            }
+    int count = 0;
+    List* allRectangles = getRects(img);
+
+    for (Node* currentRect = allRectangles->head; currentRect != NULL; currentRect = currentRect->next) {
+        if (ceilf(((Rectangle*)currentRect->data)->width * ((Rectangle*)currentRect->data)->height) == ceilf(area)) {
+            count++;
         }
     }
 
+    freeList(allRectangles);
     return count;
 }
 
+//This feels gross but its the only way I could get it to work
 int numCirclesWithArea(SVGimage* img, float area) {
-    int count = 0;
+    if (img == NULL) return 0;
 
-    //TODO: Use circles getter
-    if (img != NULL && img->circles->length > 0) {
-        for (Node* currentCircle = img->circles->head; currentCircle != NULL; currentCircle = currentCircle->next) {
-            if (ceil(((Circle*)currentCircle->data)->r * ((Circle*)currentCircle->data)->r * PI) == ceil(area)) {
-                count++;
-            }
-        }
+    int count = 0;
+    List* allCircles = getCircles(img);
+
+    int areaRound = ceilf(area);
+    for (Node* currentCircle = allCircles->head; currentCircle != NULL; currentCircle = currentCircle->next) {
+        int radSquareRound = ceilf(((Circle*)currentCircle->data)->r * ((Circle*)currentCircle->data)->r * PI);
+        if (radSquareRound == areaRound) count++;
     }
 
+    freeList(allCircles);
     return count;
 }
 
 int numPathsWithdata(SVGimage* img, char* data) {
-    int count = 0;
+    if (img == NULL) return 0;
 
-    //TODO: Use path getter
-    if (img != NULL && img->paths->length > 0) {
-        for (Node* currentPath = img->paths->head; currentPath != NULL; currentPath = currentPath->next) {
-            if (strcasecmp(((Path*)currentPath)->data, data) == 0) {
-                count++;
-            }
+    int count = 0;
+    List* allPaths = getPaths(img);
+
+    for (Node* currentPath = allPaths->head; currentPath != NULL; currentPath = currentPath->next) {
+        if (strcasecmp(((Path*)(currentPath->data))->data, data) == 0) {
+            count++;
         }
     }
 
+    freeList(allPaths);
     return count;
 }
 
 int numGroupsWithLen(SVGimage* img, int len) {
+    if (img == NULL) return 0;
+
     int count = 0;
+    List* allGroups = getGroups(img);
 
-    //TODO: use groups getter
-    if (img != NULL && img->groups->length > 0) {
-        for (Node* currentGroup = img->groups->head; currentGroup != NULL; currentGroup = currentGroup->next) {
-            int currentGroupLength = ((Group*)currentGroup->data)->rectangles->length +
-                                     ((Group*)currentGroup->data)->circles->length +
-                                     ((Group*)currentGroup->data)->paths->length +
-                                     ((Group*)currentGroup->data)->groups->length;
+    for (Node* currentGroup = allGroups->head; currentGroup != NULL; currentGroup = currentGroup->next) {
+        int currentGroupLength = ((Group*)currentGroup->data)->rectangles->length +
+                                 ((Group*)currentGroup->data)->circles->length +
+                                 ((Group*)currentGroup->data)->paths->length +
+                                 ((Group*)currentGroup->data)->groups->length;
 
-            if (currentGroupLength == len) count++;
-        }
+        if (currentGroupLength == len) count++;
     }
 
+    freeList(allGroups);
     return count;
 }
 
