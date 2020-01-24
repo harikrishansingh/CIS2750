@@ -7,6 +7,8 @@ void addRectangle (xmlNode* node, List* list);
 void addCircle (xmlNode* node, List* list);
 void addPath (xmlNode* node, List* list);
 void addGroup (xmlNode* node, List* list);
+void getGroupsHelper (List* masterList, Node* groupRoot);
 Attribute* makeAttribute(xmlAttr* attrNode);
+void dummy();
 
 #endif

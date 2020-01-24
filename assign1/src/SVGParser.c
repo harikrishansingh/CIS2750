@@ -104,25 +104,86 @@ void deleteSVGimage(SVGimage* img) {
     free(img);
 }
 
-//TODO: Possibly initialize delete functions to NULL to prevent double free
-//TODO
 List* getRects(SVGimage* img) {
-    return NULL;
+    if (img == NULL) return NULL;
+
+    List* allRectangles = initializeList(rectangleToString, dummy, compareRectangles);
+
+    for (Node* node = img->rectangles->head; node != NULL; node = node->next) {
+        insertBack(allRectangles, node->data);
+    }
+
+    List* groups = getGroups(img);
+    for (Node* node = groups->head; node != NULL; node = node->next) {
+        if (((Group*)(node->data))->rectangles->length > 0) {
+            for (Node* rectangleNode = ((Group*)(node->data))->rectangles->head; node != NULL; node = node->next) {
+                insertBack(allRectangles, rectangleNode->data);
+            }
+        }
+    }
+
+    freeList(groups);
+    return allRectangles;
 }
 
-//TODO
+//Click 👏 the 👏 circles 👏
 List* getCircles(SVGimage* img) {
-    return NULL;
+    if (img == NULL) return NULL;
+
+    List* allCircles = initializeList(circleToString, dummy, compareCircles);
+
+    for (Node* node = img->circles->head; node != NULL; node = node->next) {
+        insertBack(allCircles, node->data);
+    }
+
+    List* groups = getGroups(img);
+    for (Node* node = groups->head; node != NULL; node = node->next) {
+        if (((Group*)(node->data))->circles->length > 0) {
+            for (Node* circleNode = ((Group*)(node->data))->circles->head; circleNode != NULL; circleNode = circleNode->next) {
+                insertBack(allCircles, circleNode->data);
+            }
+        }
+    }
+
+    freeList(groups);
+    return allCircles;
 }
 
-//TODO
 List* getGroups(SVGimage* img) {
-    return NULL;
+    if (img == NULL) return NULL;
+
+    List* allGroups = initializeList(groupToString, dummy, compareGroups);
+    if (img->groups->length > 0) getGroupsHelper(allGroups, img->groups->head);
+    return allGroups;
 }
 
-//TODO
+void getGroupsHelper (List* masterList, Node* groupRoot) {
+    for (Node* node = groupRoot; node != NULL; node = node->next) {
+        insertBack(masterList, node->data);
+        if (((Group*)node->data)->groups->length > 0) getGroupsHelper(masterList, node);
+    }
+}
+
 List* getPaths(SVGimage* img) {
-    return NULL;
+    if (img == NULL) return NULL;
+
+    List* allPaths = initializeList(pathToString, dummy, comparePaths);
+
+    for (Node* node = img->paths->head; node != NULL; node = node->next) {
+        insertBack(allPaths, node->data);
+    }
+
+    List* groups = getGroups(img);
+    for (Node* node = groups->head; node != NULL; node = node->next) {
+        if (((Group*)(node->data))->paths->length > 0) {
+            for (Node* pathNode = ((Group*)(node->data))->paths->head; pathNode != NULL; pathNode = pathNode->next) {
+                insertBack(allPaths, pathNode->data);
+            }
+        }
+    }
+
+    freeList(groups);
+    return allPaths;
 }
 
 int numRectsWithArea(SVGimage* img, float area) {
@@ -422,11 +483,11 @@ void addGroup(xmlNode* node, List* list) {
             addPath(currNode, groupToAdd->paths);
         } else if (strcasecmp((char*)currNode->name, "g") == 0) {
             addGroup(currNode, groupToAdd->groups);
-        /*} else if (strcasecmp((char*)currNode->name, "title") == 0) {
-            strcpy(image->title, (char*)currNode->children->content);
-        } else if (strcasecmp((char*)currNode->name, "desc") == 0) {
-            strcpy(image->description, (char*)currNode->children->content);*/
-        //Not sure if the above should be put in the "other attributes" list or not
+            /*} else if (strcasecmp((char*)currNode->name, "title") == 0) {
+                strcpy(image->title, (char*)currNode->children->content);
+            } else if (strcasecmp((char*)currNode->name, "desc") == 0) {
+                strcpy(image->description, (char*)currNode->children->content);*/
+            //Not sure if the above should be put in the "other attributes" list or not
         }
     }
 
@@ -445,3 +506,5 @@ Attribute* makeAttribute(xmlAttr* attrNode) {
     strcpy(attrToAdd->value, (char*)attrNode->children->content);
     return attrToAdd;
 }
+
+void dummy(){}
