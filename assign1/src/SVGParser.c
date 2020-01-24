@@ -116,7 +116,7 @@ List* getRects(SVGimage* img) {
     List* groups = getGroups(img);
     for (Node* node = groups->head; node != NULL; node = node->next) {
         if (((Group*)(node->data))->rectangles->length > 0) {
-            for (Node* rectangleNode = ((Group*)(node->data))->rectangles->head; node != NULL; node = node->next) {
+            for (Node* rectangleNode = ((Group*)(node->data))->rectangles->head; rectangleNode != NULL; rectangleNode = rectangleNode->next) {
                 insertBack(allRectangles, rectangleNode->data);
             }
         }
@@ -255,7 +255,29 @@ int numGroupsWithLen(SVGimage* img, int len) {
 }
 
 int numAttr(SVGimage* img) {
-    int count = 0;
+    if (img == NULL) return 0;
+
+    int count = img->otherAttributes->length;
+
+    List* list = getRects(img);
+    for (Node* node = list->head; node != NULL; node = node->next) {
+        count += ((Rectangle*)(node->data))->otherAttributes->length;
+    }
+
+    list = getCircles(img);
+    for (Node* node = list->head; node != NULL; node = node->next) {
+        count += ((Circle*)(node->data))->otherAttributes->length;
+    }
+
+    list = getPaths(img);
+    for (Node* node = list->head; node != NULL; node = node->next) {
+        count += ((Path*)(node->data))->otherAttributes->length;
+    }
+
+    list = getGroups(img);
+    for (Node* node = list->head; node != NULL; node = node->next) {
+        count += ((Group*)(node->data))->otherAttributes->length;
+    }
 
     return count;
 }

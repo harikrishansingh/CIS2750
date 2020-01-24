@@ -7,6 +7,13 @@
           <mappings>
             <mapping deploy="/2750" local="$PROJECT_DIR$/" />
           </mappings>
+        </serverdata>
+      </paths>
+      <paths name="School (69533ca9-49b4-4a2a-ab78-dc0719516ab4)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/tmp.z2fIG89FHN" local="$PROJECT_DIR$/assign1" />
+          </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/assign1/cmake-build-debug" />
           </excludedPaths>
