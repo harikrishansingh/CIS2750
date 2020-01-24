@@ -264,21 +264,25 @@ int numAttr(SVGimage* img) {
         count += ((Rectangle*)(node->data))->otherAttributes->length;
     }
 
+    freeList(list);
     list = getCircles(img);
     for (Node* node = list->head; node != NULL; node = node->next) {
         count += ((Circle*)(node->data))->otherAttributes->length;
     }
 
+    freeList(list);
     list = getPaths(img);
     for (Node* node = list->head; node != NULL; node = node->next) {
         count += ((Path*)(node->data))->otherAttributes->length;
     }
 
+    freeList(list);
     list = getGroups(img);
     for (Node* node = list->head; node != NULL; node = node->next) {
         count += ((Group*)(node->data))->otherAttributes->length;
     }
 
+    freeList(list);
     return count;
 }
 
