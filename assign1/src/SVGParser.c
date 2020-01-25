@@ -712,11 +712,13 @@ void addGroup(xmlNode* node, List* list) {
             addPath(currNode, groupToAdd->paths);
         } else if (strcasecmp((char*)currNode->name, "g") == 0) {
             addGroup(currNode, groupToAdd->groups);
-            /*} else if (strcasecmp((char*)currNode->name, "title") == 0) {
-                strcpy(image->title, (char*)currNode->children->content);
-            } else if (strcasecmp((char*)currNode->name, "desc") == 0) {
-                strcpy(image->description, (char*)currNode->children->content);*/
-            //Not sure if the above should be put in the "other attributes" list or not
+        } else if (strcasecmp((char*)currNode->name, "title") == 0) {
+            /*currNode casted to xmlAttr to avoid compiler warnings.
+              Both xmlAttr and xmlNode have a `name` and `children` field though,
+              making it perfectly fine to do this.*/
+            insertBack(groupToAdd->otherAttributes, makeAttribute((xmlAttr*)currNode));
+        } else if (strcasecmp((char*)currNode->name, "desc") == 0) {
+            insertBack(groupToAdd->otherAttributes, makeAttribute((xmlAttr*)currNode));
         }
     }
 
