@@ -1,3 +1,7 @@
+/* Name: Nicholas Rosati
+ * Student ID: 1037025
+ * Email: nrosati@uoguelph.ca*/
+
 #ifndef _HELPER_
 #define _HELPER_
 #define PI 3.1415926535
