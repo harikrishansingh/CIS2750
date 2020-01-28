@@ -1,3 +1,7 @@
+/* Name: Nicholas Rosati
+ * Student ID: 1037025
+ * Email: nrosati@uoguelph.ca*/
+
 #include "SVGParser.h"
 #include "Helper.h"
 #include <math.h>
