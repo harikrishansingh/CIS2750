@@ -2,7 +2,7 @@
  * Student ID: 1037025
  * Email: nrosati@uoguelph.ca*/
 
-#include "SVGParser.h"
+#include "SVGParser_A2temp.h"
 #include "Helper.h"
 #include <math.h>
 
@@ -752,3 +752,18 @@ Attribute* makeAttribute(xmlAttr* attrNode) {
  * Dummy function, used in getter delete list initializers.
  */
 void dummy(){}
+
+bool validateSVGimage(SVGimage* image, char* schemaFile){
+
+    return false;
+}
+
+SVGimage* createValidSVGimage(char* fileName, char* schemaFile){
+
+    return NULL;
+}
+
+bool writeSVGimage(SVGimage* image, char* fileName){
+
+    return false;
+}

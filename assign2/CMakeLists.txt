@@ -3,7 +3,7 @@ if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
 
-project("2750A1")
+project("2750")
 find_package(LibXml2 REQUIRED)
 
 set(CMAKE_C_FLAGS "-Wall -g -std=c11")

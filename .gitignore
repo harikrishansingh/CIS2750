@@ -1,7 +1,7 @@
 .vscode/
 example/
 ListTest
-assign1/bin/
-assign1/cmake-build-debug
+assign2/bin/
+assign2/cmake-build-debug
 main.c
 functions to do.txt
