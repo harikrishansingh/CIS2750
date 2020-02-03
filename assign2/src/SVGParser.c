@@ -821,12 +821,24 @@ SVGimage* createValidSVGimage(char* fileName, char* schemaFile){
     }
 }
 
+/**
+ * Validate an SVGImage against a XSD file.
+ * @param image The SVGImage to validate.
+ * @param schemaFile File name for the XML SXD file to use.
+ * @return True is the SVGImage is valid, false otherwise
+ */
 bool validateSVGimage(SVGimage* image, char* schemaFile){
-
+    //TODO
     return false;
 }
 
+/**
+ * Writes the SVGImage to a SVG image file.
+ * @param image SVGImage struct to write.
+ * @param fileName Filename to write to.
+ * @return True if completed successfully, false otherwise.
+ */
 bool writeSVGimage(SVGimage* image, char* fileName){
-
+    //TODO
     return false;
 }
