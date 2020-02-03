@@ -753,14 +753,56 @@ Attribute* makeAttribute(xmlAttr* attrNode) {
  */
 void dummy(){}
 
+//TODO: TEST THIS A LOT
+/**
+ * Creates a valid SVG image struct.
+ * @param fileName File name for the XML document.
+ * @param schemaFile Schema file to validate the xml file against. Expected to be an SVG schema file.
+ * @return A valid SVGImage struct if the given XML document is valid SVG, NULL otherwise.
+ */
+SVGimage* createValidSVGimage(char* fileName, char* schemaFile){
+    xmlDoc* xmlDoc = xmlReadFile(fileName, NULL, 0);
+    if (xmlDoc == NULL) return NULL;
+
+    xmlSchemaParserCtxtPtr schemaContext = xmlSchemaNewParserCtxt(schemaFile);
+    if (schemaContext == NULL) {
+        xmlCleanupParser();
+        return NULL;
+    }
+
+    xmlSchema* xmlSchema = xmlSchemaParse(schemaContext);
+    if (xmlSchema == NULL) {
+        xmlCleanupParser();
+        xmlSchemaFree(xmlSchema);
+        return NULL;
+    }
+
+    xmlSchemaValidCtxtPtr xmlSchemaValidator = xmlSchemaNewValidCtxt(xmlSchema);
+    if (xmlSchemaValidator == NULL) {
+        xmlCleanupParser();
+        xmlSchemaFree(xmlSchema);
+        xmlSchemaFreeValidCtxt(xmlSchemaValidator);
+        return NULL;
+    }
+
+    //0 if valid, -1 if error, >0 if not valid
+    if (xmlSchemaValidateDoc(xmlSchemaValidator, xmlDoc) == 0) {
+        SVGimage* image = createSVGimage(fileName);
+        xmlCleanupParser();
+        xmlSchemaFree(xmlSchema);
+        xmlSchemaFreeValidCtxt(xmlSchemaValidator);
+        return image;
+    } else {
+        xmlCleanupParser();
+        xmlSchemaFree(xmlSchema);
+        xmlSchemaFreeValidCtxt(xmlSchemaValidator);
+        return NULL;
+    }
+}
+
 bool validateSVGimage(SVGimage* image, char* schemaFile){
 
     return false;
-}
-
-SVGimage* createValidSVGimage(char* fileName, char* schemaFile){
-
-    return NULL;
 }
 
 bool writeSVGimage(SVGimage* image, char* fileName){

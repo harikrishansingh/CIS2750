@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="School (329cf4cf-95e4-4987-9b47-aa0a68c1b9f2)" createEmptyFolders="true" exclude=".svn;.cvs;.idea;.DS_Store;.git;.hg;*.hprof;*.pyc;.gitignore;.gitattributes">
+  <component name="PublishConfigData" autoUpload="Always" serverName="School (tunnel) (f8d3a5a2-69f0-4b44-9339-ba9587b17091)" createEmptyFolders="true" exclude=".svn;.cvs;.idea;.DS_Store;.git;.hg;*.hprof;*.pyc;.gitignore;.gitattributes">
     <serverData>
-      <paths name="School (329cf4cf-95e4-4987-9b47-aa0a68c1b9f2)">
+      <paths name="School (tunnel) (f8d3a5a2-69f0-4b44-9339-ba9587b17091)">
         <serverdata>
           <mappings>
-            <mapping deploy="/2750" local="$PROJECT_DIR$/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="School (69533ca9-49b4-4a2a-ab78-dc0719516ab4)">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/tmp/tmp.z2fIG89FHN" local="$PROJECT_DIR$/assign1" />
+            <mapping deploy="/2750" local="$PROJECT_DIR$" web="/" />
           </mappings>
           <excludedPaths>
-            <excludedPath local="true" path="$PROJECT_DIR$/assign1/cmake-build-debug" />
+            <excludedPath local="true" path="$PROJECT_DIR$/assign2/cmake-build-debug" />
           </excludedPaths>
         </serverdata>
       </paths>
