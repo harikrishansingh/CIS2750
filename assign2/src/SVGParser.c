@@ -761,41 +761,62 @@ void dummy(){}
  * @return A valid SVGImage struct if the given XML document is valid SVG, NULL otherwise.
  */
 SVGimage* createValidSVGimage(char* fileName, char* schemaFile){
-    xmlDoc* xmlDoc = xmlReadFile(fileName, NULL, 0);
-    if (xmlDoc == NULL) return NULL;
+    if (fileName == NULL || schemaFile == NULL) { return NULL; }
+    if (strcmp(".xsd", schemaFile + (strlen(schemaFile) - 4)) != 0) { return NULL; }
+    if (strcmp(".svg", fileName + (strlen(fileName) - 4)) != 0) { return NULL; }
 
-    xmlSchemaParserCtxtPtr schemaContext = xmlSchemaNewParserCtxt(schemaFile);
-    if (schemaContext == NULL) {
+    xmlDoc* xmlDoc = xmlReadFile(fileName, NULL, 0);
+    if (xmlDoc == NULL) {
         xmlCleanupParser();
+        xmlFreeDoc(xmlDoc);
+        return NULL;
+    }
+
+    xmlSchemaParserCtxt* schemaContext = xmlSchemaNewParserCtxt(schemaFile);
+    if (schemaContext == NULL) {
+        xmlFreeDoc(xmlDoc);
+        xmlCleanupParser();
+        xmlSchemaFreeParserCtxt(schemaContext);
         return NULL;
     }
 
     xmlSchema* xmlSchema = xmlSchemaParse(schemaContext);
     if (xmlSchema == NULL) {
+        xmlFreeDoc(xmlDoc);
         xmlCleanupParser();
         xmlSchemaFree(xmlSchema);
+        xmlSchemaFreeParserCtxt(schemaContext);
         return NULL;
     }
 
-    xmlSchemaValidCtxtPtr xmlSchemaValidator = xmlSchemaNewValidCtxt(xmlSchema);
+    xmlSchemaValidCtxt* xmlSchemaValidator = xmlSchemaNewValidCtxt(xmlSchema);
     if (xmlSchemaValidator == NULL) {
+        xmlFreeDoc(xmlDoc);
         xmlCleanupParser();
         xmlSchemaFree(xmlSchema);
         xmlSchemaFreeValidCtxt(xmlSchemaValidator);
+        xmlSchemaFreeParserCtxt(schemaContext);
         return NULL;
     }
 
     //0 if valid, -1 if error, >0 if not valid
     if (xmlSchemaValidateDoc(xmlSchemaValidator, xmlDoc) == 0) {
         SVGimage* image = createSVGimage(fileName);
-        xmlCleanupParser();
+
+        xmlFreeDoc(xmlDoc);
         xmlSchemaFree(xmlSchema);
+        xmlSchemaFreeParserCtxt(schemaContext);
         xmlSchemaFreeValidCtxt(xmlSchemaValidator);
+        xmlCleanupParser();
+        xmlSchemaCleanupTypes();
         return image;
     } else {
-        xmlCleanupParser();
+        xmlFreeDoc(xmlDoc);
         xmlSchemaFree(xmlSchema);
+        xmlSchemaFreeParserCtxt(schemaContext);
         xmlSchemaFreeValidCtxt(xmlSchemaValidator);
+        xmlCleanupParser();
+        xmlSchemaCleanupTypes();
         return NULL;
     }
 }
