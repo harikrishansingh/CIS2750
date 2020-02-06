@@ -67,8 +67,10 @@ SVGimage* createSVGimage(char* fileName) {
  * @return A string describing the image.
  */
 char* SVGimageToString(SVGimage* img) {
-    char* desc = calloc(strlen(img->namespace) + strlen(img->title) + strlen(img->description) + 512, sizeof(char)); //Extra bytes for \0's and extra words in the next line
-    sprintf(desc, "[BEGIN SVG]\n[NAMESPACE]\n%s\n[TITLE]\n%s\n[DESCRIPTION]\n%s", img->namespace, img->title, img->description);
+    char* desc = calloc(strlen(img->namespace) + strlen(img->title) + strlen(img->description) + 512,
+                        sizeof(char)); //Extra bytes for \0's and extra words in the next line
+    sprintf(desc, "[BEGIN SVG]\n[NAMESPACE]\n%s\n[TITLE]\n%s\n[DESCRIPTION]\n%s", img->namespace, img->title,
+            img->description);
 
     char* listDesc = NULL;
     //Get description of the root node attributes (the svg node)
@@ -153,7 +155,8 @@ List* getRects(SVGimage* img) {
     List* groups = getGroups(img);
     for (Node* node = groups->head; node != NULL; node = node->next) {
         if (((Group*)(node->data))->rectangles->length > 0) {
-            for (Node* rectangleNode = ((Group*)(node->data))->rectangles->head; rectangleNode != NULL; rectangleNode = rectangleNode->next) {
+            for (Node* rectangleNode = ((Group*)(node->data))->rectangles->head; rectangleNode !=
+                                                                                 NULL; rectangleNode = rectangleNode->next) {
                 insertBack(allRectangles, rectangleNode->data);
             }
         }
@@ -183,7 +186,8 @@ List* getCircles(SVGimage* img) {
     List* groups = getGroups(img);
     for (Node* node = groups->head; node != NULL; node = node->next) {
         if (((Group*)(node->data))->circles->length > 0) {
-            for (Node* circleNode = ((Group*)(node->data))->circles->head; circleNode != NULL; circleNode = circleNode->next) {
+            for (Node* circleNode = ((Group*)(node->data))->circles->head; circleNode !=
+                                                                           NULL; circleNode = circleNode->next) {
                 insertBack(allCircles, circleNode->data);
             }
         }
@@ -213,7 +217,7 @@ List* getGroups(SVGimage* img) {
  * @param masterList Main Groups list to add more groups to.
  * @param groupRoot Node in a list to act as a root node. Other groups nodes will become a groupNode when called recursively.
  */
-void getGroupsHelper (List* masterList, Node* groupRoot) {
+void getGroupsHelper(List* masterList, Node* groupRoot) {
     for (Node* node = groupRoot; node != NULL; node = node->next) {
         insertBack(masterList, node->data);
         if (((Group*)node->data)->groups->length > 0) getGroupsHelper(masterList, node);
@@ -410,7 +414,8 @@ void deleteAttribute(void* data) {
  */
 char* attributeToString(void* data) {
     char* tmpDesc = calloc(strlen(((Attribute*)data)->name) + strlen(((Attribute*)data)->value) + 64, sizeof(char));
-    sprintf(tmpDesc, "[BEGIN ATTRIBUTE]\nname: %s\nvalue: %s\n[END ATTRIBUTE]\n", ((Attribute*)data)->name, ((Attribute*)data)->value);
+    sprintf(tmpDesc, "[BEGIN ATTRIBUTE]\nname: %s\nvalue: %s\n[END ATTRIBUTE]\n", ((Attribute*)data)->name,
+            ((Attribute*)data)->value);
     return tmpDesc;
 }
 
@@ -508,7 +513,9 @@ void deleteRectangle(void* data) {
  */
 char* rectangleToString(void* data) {
     char* tmpDesc = calloc(128, sizeof(char));
-    sprintf(tmpDesc, "[BEGIN RECTANGLE]\nx: %.2f\ny: %.2f\nwidth: %.2f\nheight: %.2f\nunits: %s\n", ((Rectangle*)data)->x, ((Rectangle*)data)->y, ((Rectangle*)data)->width, ((Rectangle*)data)->height, ((Rectangle*)data)->units);
+    sprintf(tmpDesc, "[BEGIN RECTANGLE]\nx: %.2f\ny: %.2f\nwidth: %.2f\nheight: %.2f\nunits: %s\n",
+            ((Rectangle*)data)->x, ((Rectangle*)data)->y, ((Rectangle*)data)->width, ((Rectangle*)data)->height,
+            ((Rectangle*)data)->units);
 
     //Get string descriptions for other attributes, dynamic sizing
     if (((Rectangle*)data)->otherAttributes->length > 0) {
@@ -546,7 +553,8 @@ void deleteCircle(void* data) {
  */
 char* circleToString(void* data) {
     char* tmpDesc = calloc(128, sizeof(char));
-    sprintf(tmpDesc, "[BEGIN CIRCLE]\ncx: %.2f\ncy: %.2f\nr: %.2f\nunits: %s\n", ((Circle*)data)->cx, ((Circle*)data)->cy, ((Circle*)data)->r, ((Circle*)data)->units);
+    sprintf(tmpDesc, "[BEGIN CIRCLE]\ncx: %.2f\ncy: %.2f\nr: %.2f\nunits: %s\n", ((Circle*)data)->cx,
+            ((Circle*)data)->cy, ((Circle*)data)->r, ((Circle*)data)->units);
 
     //Get string descriptions for other attributes, dynamic sizing
     if (((Circle*)data)->otherAttributes->length > 0) {
@@ -679,7 +687,7 @@ void addPath(xmlNode* node, List* list) {
     Path* pathToAdd = calloc(1, sizeof(Path));
     pathToAdd->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
 
-    for (xmlAttr* attrNode = node->properties; attrNode != NULL; attrNode = attrNode->next){
+    for (xmlAttr* attrNode = node->properties; attrNode != NULL; attrNode = attrNode->next) {
         if (strcmp((char*)attrNode->name, "d") == 0) {
             pathToAdd->data = calloc(strlen((char*)attrNode->children->content) + 1, sizeof(char));
             strcpy(pathToAdd->data, (char*)attrNode->children->content);
@@ -751,7 +759,7 @@ Attribute* makeAttribute(xmlAttr* attrNode) {
 /**
  * Dummy function, used in getter delete list initializers.
  */
-void dummy(){}
+void dummy() {}
 
 /**
  * Creates a valid SVG image struct.
@@ -759,12 +767,14 @@ void dummy(){}
  * @param schemaFile Schema file to validate the xml file against. Expected to be an SVG schema file.
  * @return A valid SVGimage struct if the given XML document is valid SVG, NULL otherwise.
  */
-SVGimage* createValidSVGimage(char* fileName, char* schemaFile){
+SVGimage* createValidSVGimage(char* fileName, char* schemaFile) {
     /*Return NULL if:
         -fileName/schemaFile is NULL
         -fileName does not have a .svg extension
         -schemaFile does not have a .xsd extension*/
-    if ((fileName == NULL || schemaFile == NULL) || (strcmp(".svg", schemaFile + (strlen(schemaFile) - 4)) != 0) || (strcmp(".xsd", fileName + (strlen(fileName) - 4)) != 0)) { return NULL; }
+    if ((fileName == NULL || schemaFile == NULL) ||
+        (strcmp(".svg", schemaFile + (strlen(schemaFile) - 4)) != 0) ||
+        (strcmp(".xsd", fileName + (strlen(fileName) - 4)) != 0)) return NULL;
     SVGimage* image = NULL;
 
     xmlSchemaParserCtxt* parserContext = xmlSchemaNewParserCtxt(schemaFile);
@@ -826,7 +836,7 @@ SVGimage* createValidSVGimage(char* fileName, char* schemaFile){
  * @param schemaFile File name for the XML XSD file to use.
  * @return True is the SVGimage is valid, false otherwise
  */
-bool validateSVGimage(SVGimage* image, char* schemaFile){
+bool validateSVGimage(SVGimage* image, char* schemaFile) {
     //TODO
     return -1;
 }
@@ -837,7 +847,7 @@ bool validateSVGimage(SVGimage* image, char* schemaFile){
  * @param fileName Filename to write to.
  * @return True if completed successfully, false otherwise.
  */
-bool writeSVGimage(SVGimage* image, char* fileName){
+bool writeSVGimage(SVGimage* image, char* fileName) {
     if (image == NULL || fileName == NULL) return false;
     xmlDoc* imageXML = svgImagetoXML(image);
     if (imageXML == NULL) return false;
@@ -850,6 +860,6 @@ bool writeSVGimage(SVGimage* image, char* fileName){
  * @return
  */
 xmlDoc* svgImagetoXML(SVGimage* image) {
-
+    xmlDoc* imageXML = xmlNewDoc((xmlChar*)"1.0");
     return NULL;
 }
