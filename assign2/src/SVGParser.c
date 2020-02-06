@@ -7,10 +7,10 @@
 #include <math.h>
 
 /**
- * Creates an SVGImage from a SVG file.
- * @post A SVGImage struct is created and returned if the given file was valid XML. NULL otherwise.
+ * Creates an SVGimage from a SVG file.
+ * @post A SVGimage struct is created and returned if the given file was valid XML. NULL otherwise.
  * @param fileName A path to a svg file.
- * @return A fully populated SVGImage struct.
+ * @return A fully populated SVGimage struct.
  */
 SVGimage* createSVGimage(char* fileName) {
     xmlDoc* document = xmlReadFile(fileName, NULL, 0);
@@ -60,10 +60,10 @@ SVGimage* createSVGimage(char* fileName) {
 }
 
 /**
- * Creates a string representation of a SVGImage using other *toString functions.
+ * Creates a string representation of a SVGimage using other *toString functions.
  * @pre im should not be NULL.
  * @post A string describing the image is created.
- * @param img A pointer to a SVGImage struct.
+ * @param img A pointer to a SVGimage struct.
  * @return A string describing the image.
  */
 char* SVGimageToString(SVGimage* img) {
@@ -118,9 +118,9 @@ char* SVGimageToString(SVGimage* img) {
 
 /**
  * Frees an entire SVG image.
- * @pre img can be NULL or point to a populated SVGImage struct.
+ * @pre img can be NULL or point to a populated SVGimage struct.
  * @post img and all its content is freed.
- * @param img A pointer to a SVGImage.
+ * @param img A pointer to a SVGimage.
  */
 void deleteSVGimage(SVGimage* img) {
     if (img == NULL) return;
@@ -134,9 +134,9 @@ void deleteSVGimage(SVGimage* img) {
 
 /**
  * Creates a list of ALL the circles in the image.
- * @pre img can be NULL or point to a SVGImage struct.
+ * @pre img can be NULL or point to a SVGimage struct.
  * @post A list containing 0 or more Nodes of all the circles in the image.
- * @param img pointer to a SVGImage struct.
+ * @param img pointer to a SVGimage struct.
  * @return A list containing all of the circles in the image.
  */
 List* getRects(SVGimage* img) {
@@ -164,9 +164,9 @@ List* getRects(SVGimage* img) {
 
 /**
  * Creates a list of ALL the circles in the image.
- * @pre img can be NULL or point to a SVGImage struct.
+ * @pre img can be NULL or point to a SVGimage struct.
  * @post A list containing 0 or more Nodes of all the circles in the image.
- * @param img pointer to a SVGImage struct.
+ * @param img pointer to a SVGimage struct.
  * @return A list containing all of the circles in the image.
  */
 List* getCircles(SVGimage* img) {
@@ -194,9 +194,9 @@ List* getCircles(SVGimage* img) {
 
 /**
  * Creates a list of ALL the groups in the image. This function calls a recursive function to get groups that are in groups.
- * @pre img can be NULL or point to a SVGImage struct.
+ * @pre img can be NULL or point to a SVGimage struct.
  * @post A list containing 0 or more Nodes of all the Groups in the image.
- * @param img A SVGImage struct.
+ * @param img A SVGimage struct.
  * @return A list containing all of the Groups in the image. If none, Will return an empty list.
  */
 List* getGroups(SVGimage* img) {
@@ -222,9 +222,9 @@ void getGroupsHelper (List* masterList, Node* groupRoot) {
 
 /**
  * Creates a list of ALL the paths in the image.
- * @pre img can be NULL or point to a SVGImage struct.
+ * @pre img can be NULL or point to a SVGimage struct.
  * @post A list containing 0 or more Nodes of all the Paths in the image.
- * @param img A SVGImage struct.
+ * @param img A SVGimage struct.
  * @return A list containing all of the Paths in the image. If none, Will return an empty list.
  */
 List* getPaths(SVGimage* img) {
@@ -252,9 +252,9 @@ List* getPaths(SVGimage* img) {
 
 /**
  * Find the number of rectangles that have the same (rounded) area as given.
- * @pre img can be NULL or point to a SVGImage struct. area is an area to compare with.
+ * @pre img can be NULL or point to a SVGimage struct. area is an area to compare with.
  * @post Number of rectangles that have the same (rounded) given area is calculated.
- * @param img A pointer to a SVGImage struct.
+ * @param img A pointer to a SVGimage struct.
  * @param area Float value of an area to compare with.
  * @return The number of rectangles that have the same (rounded) area as the given value.
  */
@@ -274,9 +274,9 @@ int numRectsWithArea(SVGimage* img, float area) {
 
 /**
  * Find the number of circles that have the same (rounded) area as given.
- * @pre img can be NULL or point to a SVGImage struct. area is an area to compare with.
+ * @pre img can be NULL or point to a SVGimage struct. area is an area to compare with.
  * @post Number of circles that have the same (rounded) given area is calculated.
- * @param img A pointer to a SVGImage struct.
+ * @param img A pointer to a SVGimage struct.
  * @param area Float value of an area to compare with.
  * @return The number of circles that have the same (rounded) area as the given value.
  */
@@ -299,9 +299,9 @@ int numCirclesWithArea(SVGimage* img, float area) {
 
 /**
  * Finds the number of paths that match the given data string.
- * @pre img can be NULL or point to a SVGImage struct . data is a string of data to compare with.
+ * @pre img can be NULL or point to a SVGimage struct . data is a string of data to compare with.
  * @post Number of paths with the given data is calculated.
- * @param img A pointer to a SVGImage struct.
+ * @param img A pointer to a SVGimage struct.
  * @param data A string to compare with.
  * @return The number of paths that have the same data as the given data.
  */
@@ -321,9 +321,9 @@ int numPathsWithdata(SVGimage* img, char* data) {
 
 /**
  * Finds the number of groups that match the given length.
- * @pre img can be NULL or point to a SVGImage struct. len can be any integer.
+ * @pre img can be NULL or point to a SVGimage struct. len can be any integer.
  * @post Number of groups with the given lengths is calculated.
- * @param img A pointer to a SVGImage struct.
+ * @param img A pointer to a SVGimage struct.
  * @param len The length of a group to compare with.
  * @return The number of groups in the image that have the same length as len.
  */
@@ -347,9 +347,9 @@ int numGroupsWithLen(SVGimage* img, int len) {
 
 /**
  * Counts the number of other attributes in the entire SVG image.
- * @pre img can be NULL or point to a SVGImage struct.
+ * @pre img can be NULL or point to a SVGimage struct.
  * @post The number of other attributes in the image is calculated.
- * @param img A pointer to a SVGImage struct.
+ * @param img A pointer to a SVGimage struct.
  * @return The number of other attributes in the SVG image, or 0 if img is NULL.
  */
 int numAttr(SVGimage* img) {
@@ -757,7 +757,7 @@ void dummy(){}
  * Creates a valid SVG image struct.
  * @param fileName File name for the XML document.
  * @param schemaFile Schema file to validate the xml file against. Expected to be an SVG schema file.
- * @return A valid SVGImage struct if the given XML document is valid SVG, NULL otherwise.
+ * @return A valid SVGimage struct if the given XML document is valid SVG, NULL otherwise.
  */
 SVGimage* createValidSVGimage(char* fileName, char* schemaFile){
     /*Return NULL if:
@@ -821,10 +821,10 @@ SVGimage* createValidSVGimage(char* fileName, char* schemaFile){
 }
 
 /**
- * Validate an SVGImage against a XSD file.
- * @param image The SVGImage to validate.
+ * Validate an SVGimage against a XSD file.
+ * @param image The SVGimage to validate.
  * @param schemaFile File name for the XML XSD file to use.
- * @return True is the SVGImage is valid, false otherwise
+ * @return True is the SVGimage is valid, false otherwise
  */
 bool validateSVGimage(SVGimage* image, char* schemaFile){
     //TODO
@@ -832,8 +832,8 @@ bool validateSVGimage(SVGimage* image, char* schemaFile){
 }
 
 /**
- * Writes the SVGImage to a SVG image file.
- * @param image SVGImage struct to write.
+ * Writes the SVGimage to a SVG image file.
+ * @param image SVGimage struct to write.
  * @param fileName Filename to write to.
  * @return True if completed successfully, false otherwise.
  */
