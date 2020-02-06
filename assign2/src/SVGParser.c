@@ -838,6 +838,18 @@ bool validateSVGimage(SVGimage* image, char* schemaFile){
  * @return True if completed successfully, false otherwise.
  */
 bool writeSVGimage(SVGimage* image, char* fileName){
-    //TODO
-    return -1;
+    if (image == NULL || fileName == NULL) return false;
+    xmlDoc* imageXML = svgImagetoXML(image);
+    if (imageXML == NULL) return false;
+    return (xmlSaveFormatFileEnc(fileName, imageXML, "UTF-8", 1) == -1 ? false : true);
+}
+
+/**
+ * Creates an XML tree from an SVGimage.
+ * @param image The SVGimage struct to create an XML tree from.
+ * @return
+ */
+xmlDoc* svgImagetoXML(SVGimage* image) {
+
+    return NULL;
 }
