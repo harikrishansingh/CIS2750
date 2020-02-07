@@ -841,6 +841,7 @@ bool validateSVGimage(SVGimage* image, char* schemaFile) {
     return -1;
 }
 
+//TODO: Testing
 /**
  * Writes the SVGimage to a SVG image file.
  * @param image SVGimage struct to write.
@@ -849,7 +850,7 @@ bool validateSVGimage(SVGimage* image, char* schemaFile) {
  */
 bool writeSVGimage(SVGimage* image, char* fileName) {
     if (image == NULL || fileName == NULL) return false;
-    xmlDoc* imageXML = svgImagetoXML(image);
+    xmlDoc* imageXML = imageToXML(image);
     if (imageXML == NULL) return false;
     return (xmlSaveFormatFileEnc(fileName, imageXML, "UTF-8", 1) == -1 ? false : true);
 }
@@ -857,9 +858,18 @@ bool writeSVGimage(SVGimage* image, char* fileName) {
 /**
  * Creates an XML tree from an SVGimage.
  * @param image The SVGimage struct to create an XML tree from.
- * @return
+ * @return A XML document based on the given SVGimage.
  */
 xmlDoc* svgImagetoXML(SVGimage* image) {
     xmlDoc* imageXML = xmlNewDoc((xmlChar*)"1.0");
     return NULL;
+}
+
+/**
+ * Adds elements in a group node to the XML document.
+ * @param root The group node to treat as current root.
+ * @param tree The XML root node to build the rest of the tree on.
+ */
+void addContent(Node* root, xmlNode* tree) {
+
 }
