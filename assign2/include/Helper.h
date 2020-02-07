@@ -15,6 +15,6 @@ void getGroupsHelper (List* masterList, Node* groupRoot);
 Attribute* makeAttribute(xmlAttr* attrNode);
 void dummy();
 xmlDoc* imageToXML(SVGimage* image);
-void addContent(Node* root, xmlNode* tree);
+void addGroupsToXML(Node* root, xmlNode* tree);
 
 #endif

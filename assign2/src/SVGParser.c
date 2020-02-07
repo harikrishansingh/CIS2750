@@ -860,9 +860,18 @@ bool writeSVGimage(SVGimage* image, char* fileName) {
  * @param image The SVGimage struct to create an XML tree from.
  * @return A XML document based on the given SVGimage.
  */
-xmlDoc* svgImagetoXML(SVGimage* image) {
+xmlDoc* imageToXML(SVGimage* image) {
+    if (image == NULL) return NULL;
     xmlDoc* imageXML = xmlNewDoc((xmlChar*)"1.0");
-    return NULL;
+    xmlNode* rootNode = xmlNewNode(NULL, (xmlChar*)"svg");
+    xmlNs* namespace = xmlNewNs(rootNode, (xmlChar*)image->namespace, NULL);
+    xmlSetNs(rootNode, namespace);
+    xmlDocSetRootElement(imageXML, rootNode);
+
+    //TODO: Add rects, circles, paths, groups; in that order
+    addGroupsToXML(image->groups->head, xmlDocGetRootElement(imageXML));
+
+    return imageXML;
 }
 
 /**
@@ -870,6 +879,8 @@ xmlDoc* svgImagetoXML(SVGimage* image) {
  * @param root The group node to treat as current root.
  * @param tree The XML root node to build the rest of the tree on.
  */
-void addContent(Node* root, xmlNode* tree) {
-
+void addGroupsToXML(Node* root, xmlNode* tree) {
+    for(Node* node = root; node != NULL; node = node->next) {
+        //TODO: Add rects, circles, paths, groups; in that order. Groups are recursive with this function.
+    }
 }
