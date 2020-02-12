@@ -208,7 +208,13 @@ List* getGroups(SVGimage* img) {
 
     List* allGroups = initializeList(groupToString, dummy, compareGroups);
     //Starts with the groups in the img
-    if (img->groups->length > 0) getGroupsHelper(allGroups, img->groups->head);
+    ListIterator iterator = createIterator(img->groups);
+    Group* g = nextElement(&iterator);
+    while (g != NULL) {
+        getGroupsHelper(allGroups, g);
+        insertBack(allGroups, g);
+        g = nextElement(&iterator);
+    }
     return allGroups;
 }
 
@@ -217,10 +223,13 @@ List* getGroups(SVGimage* img) {
  * @param masterList Main Groups list to add more groups to.
  * @param groupRoot Node in a list to act as a root node. Other groups nodes will become a groupNode when called recursively.
  */
-void getGroupsHelper(List* masterList, Node* groupRoot) {
-    for (Node* node = groupRoot; node != NULL; node = node->next) {
-        insertBack(masterList, node->data);
-        if (((Group*)node->data)->groups->length > 0) getGroupsHelper(masterList, node);
+void getGroupsHelper(List* masterList, Group* groupRoot) {
+    ListIterator iterator = createIterator(groupRoot->groups);
+    Group* g = nextElement(&iterator);
+    while (g != NULL) {
+        getGroupsHelper(masterList, g);
+        insertBack(masterList, g);
+        g = nextElement(&iterator);
     }
 }
 

@@ -11,7 +11,7 @@ void addRectangle (xmlNode* node, List* list);
 void addCircle (xmlNode* node, List* list);
 void addPath (xmlNode* node, List* list);
 void addGroup (xmlNode* node, List* list);
-void getGroupsHelper (List* masterList, Node* groupRoot);
+void getGroupsHelper (List* masterList, Group* groupRoot);
 Attribute* makeAttribute(xmlAttr* attrNode);
 void dummy();
 xmlDoc* imageToXML(SVGimage* image);
