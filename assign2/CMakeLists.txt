@@ -6,9 +6,11 @@ endif(COMMAND cmake_policy)
 project("2750")
 find_package(LibXml2 REQUIRED)
 
-set(CMAKE_C_FLAGS "-Wall -g -std=c11 -DDEBUG")
-#set(CMAKE_C_FLAGS "-Wall -g -std=c11")
-set(CMAKE_BINARY_DIR bin)
+#set(CMAKE_C_FLAGS "-Wall -g -std=c11 -DDEBUG")
+set(CMAKE_C_FLAGS "-Wall -g -std=c11")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ../bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ../bin)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${LIBXML2_INCLUDE_DIR})
 

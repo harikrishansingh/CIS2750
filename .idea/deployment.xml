@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="School (tunnel) (f8d3a5a2-69f0-4b44-9339-ba9587b17091)" createEmptyFolders="true" exclude=".svn;.cvs;.idea;.DS_Store;.git;.hg;*.hprof;*.pyc;.gitignore;.gitattributes">
+  <component name="PublishConfigData" autoUpload="Always" promptOnRemoteOverwrite="CHECK_TIMESTAMP" serverName="School (tunnel) (f8d3a5a2-69f0-4b44-9339-ba9587b17091)" deleteMissingItems="true" createEmptyFolders="true" exclude=".svn;.cvs;.idea;.DS_Store;.git;.hg;*.hprof;*.pyc;.gitignore;.gitattributes" autoUploadExternalChanges="true">
     <serverData>
       <paths name="School (tunnel) (f8d3a5a2-69f0-4b44-9339-ba9587b17091)">
         <serverdata>

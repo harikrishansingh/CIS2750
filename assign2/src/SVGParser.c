@@ -2,7 +2,7 @@
  * Student ID: 1037025
  * Email: nrosati@uoguelph.ca*/
 
-#include "SVGParser_A2temp2.h"
+#include "SVGParser.h"
 #include "Helper.h"
 #include <math.h>
 
