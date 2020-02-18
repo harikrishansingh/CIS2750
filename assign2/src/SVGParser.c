@@ -856,19 +856,48 @@ xmlDoc* imageToXML(SVGimage* image) {
     xmlSetNs(rootNode, namespace);
     xmlDocSetRootElement(imageXML, rootNode);
 
-    //TODO: Add rects, circles, paths, groups; in that order
+    addRectsToXML(image->rectangles->head, xmlDocGetRootElement(imageXML));
+    addCirclesToXML(image->circles->head, xmlDocGetRootElement(imageXML));
+    addPathsToXML(image->paths->head, xmlDocGetRootElement(imageXML));
     addGroupsToXML(image->groups->head, xmlDocGetRootElement(imageXML));
 
     return imageXML;
 }
 
 /**
- * Adds elements in a group node to the XML document.
- * @param root The group node to treat as current root.
- * @param tree The XML root node to build the rest of the tree on.
+ * Adds elements in a Rectangle node to the XML document.
+ * @param elementNode The head rectangle node.
+ * @param docHead The XML root node to add do.
  */
-void addGroupsToXML(Node* root, xmlNode* tree) {
-    for(Node* node = root; node != NULL; node = node->next) {
+void addRectsToXML(Node* elementNode, xmlNode* docHead) {
+
+}
+
+/**
+ * Adds elements in a Circle node to the XML document.
+ * @param elementNode The head rectangle node.
+ * @param docHead The XML root node to add do.
+ */
+void addCirclesToXML(Node* elementNode, xmlNode* docHead) {
+
+}
+
+/**
+ * Adds elements in a Path node to the XML document.
+ * @param elementNode The head rectangle node.
+ * @param docHead The XML root node to add do.
+ */
+void addPathsToXML(Node* elementNode, xmlNode* docHead) {
+
+}
+
+/**
+ * Adds elements in a Group node to the XML document.
+ * @param elementNode The group node to treat as current root.
+ * @param docHead The XML root node to add do.
+ */
+void addGroupsToXML(Node* elementNode, xmlNode* docHead) {
+    for(Node* node = elementNode; node != NULL; node = node->next) {
         //TODO: Add rects, circles, paths, groups; in that order. Groups are recursive with this function.
     }
 }
