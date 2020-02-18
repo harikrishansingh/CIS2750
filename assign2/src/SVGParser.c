@@ -786,48 +786,20 @@ SVGimage* createValidSVGimage(char* fileName, char* schemaFile) {
         (strcmp(".svg", fileName + (strlen(fileName) - 4)) != 0)) return NULL;
 
     xmlSchemaParserCtxt* parserContext = xmlSchemaNewParserCtxt(schemaFile);
-    if (parserContext == NULL) {
-#ifdef DEBUG
-        fprintf(stderr, "Could not make new parser context for %s\n", schemaFile);
-#endif
-        goto end;
-    }
+    if (parserContext == NULL) goto end;
 
     xmlSchema* schema = xmlSchemaParse(parserContext);
-    if (schema == NULL) {
-#ifdef DEBUG
-        fprintf(stderr, "Could not make new schema for parser context.\n");
-#endif
-        goto end;
-    }
+    if (schema == NULL) goto end;
 
     xmlDoc* docToValidate = xmlReadFile(fileName, NULL, 0);
-    if (docToValidate == NULL) {
-#ifdef DEBUG
-        fprintf(stderr, "Could not make new XML document for %s\n", fileName);
-#endif
-        goto end;
-    }
+    if (docToValidate == NULL) goto end;
 
     xmlSchemaValidCtxtPtr validator = xmlSchemaNewValidCtxt(schema);
-    if (validator == NULL) {
-#ifdef DEBUG
-        fprintf(stderr, "Could not make new validator.\n");
-#endif
-        goto end;
-    }
+    if (validator == NULL) goto end;
 
     int ret = xmlSchemaValidateDoc(validator, docToValidate);
     SVGimage* image = NULL;
-    if (ret == 0) {
-        /*Valid SVG file*/
-        image = createSVGimage(fileName);
-    }
-#ifdef DEBUG
-    else {
-        fprintf(stderr, "Schema validator output: %d\nValidating %s against %s\n", ret, fileName, schemaFile);
-    }
-#endif
+    if (ret == 0) /*Valid SVG file*/ image = createSVGimage(fileName);
 
     end:
     if (parserContext != NULL) xmlSchemaFreeParserCtxt(parserContext);
