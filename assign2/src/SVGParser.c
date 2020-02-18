@@ -785,11 +785,14 @@ SVGimage* createValidSVGimage(char* fileName, char* schemaFile) {
         (strcmp(".xsd", schemaFile + (strlen(schemaFile) - 4)) != 0) ||
         (strcmp(".svg", fileName + (strlen(fileName) - 4)) != 0)) return NULL;
 
+    //Declaring all the XML variables
     xmlSchemaParserCtxt* parserContext = NULL;
     xmlSchema* schema = NULL;
     xmlDoc* docToValidate = NULL;
     xmlSchemaValidCtxt* validator = NULL;
+    SVGimage* image = NULL;
 
+    //This is all for XML validation against a inputted schema files
     parserContext = xmlSchemaNewParserCtxt(schemaFile);
     if (parserContext == NULL) goto end;
 
@@ -803,8 +806,7 @@ SVGimage* createValidSVGimage(char* fileName, char* schemaFile) {
     if (validator == NULL) goto end;
 
     int ret = xmlSchemaValidateDoc(validator, docToValidate);
-    SVGimage* image = NULL;
-    if (ret == 0) /*Valid SVG file*/ image = createSVGimage(fileName);
+    if (ret == 0) /*SVG file is valid*/ image = createSVGimage(fileName);
 
     end:
     if (parserContext != NULL) xmlSchemaFreeParserCtxt(parserContext);
@@ -813,7 +815,7 @@ SVGimage* createValidSVGimage(char* fileName, char* schemaFile) {
     if (validator != NULL) xmlSchemaFreeValidCtxt(validator);
     xmlSchemaCleanupTypes();
     xmlCleanupParser();
-    return (image == NULL ? NULL : image);
+    return image;
 }
 
 /**
