@@ -778,13 +778,12 @@ void dummy() {}
  */
 SVGimage* createValidSVGimage(char* fileName, char* schemaFile) {
     /*Return NULL if:
-        -fileName/schemaFile is NULL
+        -fileName or schemaFile is NULL
         -fileName does not have a .svg extension
         -schemaFile does not have a .xsd extension*/
     if ((fileName == NULL || schemaFile == NULL) ||
-        (strcmp(".svg", schemaFile + (strlen(schemaFile) - 4)) != 0) ||
-        (strcmp(".xsd", fileName + (strlen(fileName) - 4)) != 0)) return NULL;
-    SVGimage* image = NULL;
+        (strcmp(".xsd", schemaFile + (strlen(schemaFile) - 4)) != 0) ||
+        (strcmp(".svg", fileName + (strlen(fileName) - 4)) != 0)) return NULL;
 
     xmlSchemaParserCtxt* parserContext = xmlSchemaNewParserCtxt(schemaFile);
     if (parserContext == NULL) {
@@ -819,6 +818,7 @@ SVGimage* createValidSVGimage(char* fileName, char* schemaFile) {
     }
 
     int ret = xmlSchemaValidateDoc(validator, docToValidate);
+    SVGimage* image = NULL;
     if (ret == 0) {
         /*Valid SVG file*/
         image = createSVGimage(fileName);
