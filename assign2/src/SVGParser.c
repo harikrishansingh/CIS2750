@@ -785,47 +785,35 @@ SVGimage* createValidSVGimage(char* fileName, char* schemaFile) {
         (strcmp(".xsd", schemaFile + (strlen(schemaFile) - 4)) != 0) ||
         (strcmp(".svg", fileName + (strlen(fileName) - 4)) != 0)) return NULL;
 
-    xmlSchemaParserCtxt* parserContext = xmlSchemaNewParserCtxt(schemaFile);
-    if (parserContext == NULL) {
-        xmlSchemaFreeParserCtxt(parserContext);
-        return NULL;
-    }
+    xmlSchemaParserCtxt* parserContext = NULL;
+    xmlSchema* schema = NULL;
+    xmlDoc* docToValidate = NULL;
+    xmlSchemaValidCtxt* validator = NULL;
 
-    xmlSchema* schema = xmlSchemaParse(parserContext);
-    if (schema == NULL) {
-        xmlSchemaFreeParserCtxt(parserContext);
-        xmlSchemaFree(schema);
-        return NULL;
-    }
+    parserContext = xmlSchemaNewParserCtxt(schemaFile);
+    if (parserContext == NULL) goto end;
 
-    xmlDoc* docToValidate = xmlReadFile(fileName, NULL, 0);
-    if (docToValidate == NULL) {
-        xmlSchemaFreeParserCtxt(parserContext);
-        xmlSchemaFree(schema);
-        xmlFreeDoc(docToValidate);
-        return NULL;
-    }
+    schema = xmlSchemaParse(parserContext);
+    if (schema == NULL) goto end;
 
-    xmlSchemaValidCtxtPtr validator = xmlSchemaNewValidCtxt(schema);
-    if (validator == NULL) {
-        xmlSchemaFreeParserCtxt(parserContext);
-        xmlSchemaFree(schema);
-        xmlFreeDoc(docToValidate);
-        xmlSchemaFreeValidCtxt(validator);
-        return NULL;
-    }
+    docToValidate = xmlReadFile(fileName, NULL, 0);
+    if (docToValidate == NULL) goto end;
 
-    SVGimage* image = NULL;
+    validator = xmlSchemaNewValidCtxt(schema);
+    if (validator == NULL) goto end;
+
     int ret = xmlSchemaValidateDoc(validator, docToValidate);
+    SVGimage* image = NULL;
     if (ret == 0) /*Valid SVG file*/ image = createSVGimage(fileName);
 
-    xmlSchemaFreeParserCtxt(parserContext);
-    xmlSchemaFree(schema);
-    xmlFreeDoc(docToValidate);
-    xmlSchemaFreeValidCtxt(validator);
+    end:
+    if (parserContext != NULL) xmlSchemaFreeParserCtxt(parserContext);
+    if (schema != NULL) xmlSchemaFree(schema);
+    if (docToValidate != NULL) xmlFreeDoc(docToValidate);
+    if (validator != NULL) xmlSchemaFreeValidCtxt(validator);
     xmlSchemaCleanupTypes();
     xmlCleanupParser();
-    return image;
+    return (image == NULL ? NULL : image);
 }
 
 /**
