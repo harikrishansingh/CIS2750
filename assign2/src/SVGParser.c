@@ -786,29 +786,46 @@ SVGimage* createValidSVGimage(char* fileName, char* schemaFile) {
         (strcmp(".svg", fileName + (strlen(fileName) - 4)) != 0)) return NULL;
 
     xmlSchemaParserCtxt* parserContext = xmlSchemaNewParserCtxt(schemaFile);
-    if (parserContext == NULL) goto end;
+    if (parserContext == NULL) {
+        xmlSchemaFreeParserCtxt(parserContext);
+        return NULL;
+    }
 
     xmlSchema* schema = xmlSchemaParse(parserContext);
-    if (schema == NULL) goto end;
+    if (schema == NULL) {
+        xmlSchemaFreeParserCtxt(parserContext);
+        xmlSchemaFree(schema);
+        return NULL;
+    }
 
     xmlDoc* docToValidate = xmlReadFile(fileName, NULL, 0);
-    if (docToValidate == NULL) goto end;
+    if (docToValidate == NULL) {
+        xmlSchemaFreeParserCtxt(parserContext);
+        xmlSchemaFree(schema);
+        xmlFreeDoc(docToValidate);
+        return NULL;
+    }
 
     xmlSchemaValidCtxtPtr validator = xmlSchemaNewValidCtxt(schema);
-    if (validator == NULL) goto end;
+    if (validator == NULL) {
+        xmlSchemaFreeParserCtxt(parserContext);
+        xmlSchemaFree(schema);
+        xmlFreeDoc(docToValidate);
+        xmlSchemaFreeValidCtxt(validator);
+        return NULL;
+    }
 
-    int ret = xmlSchemaValidateDoc(validator, docToValidate);
     SVGimage* image = NULL;
+    int ret = xmlSchemaValidateDoc(validator, docToValidate);
     if (ret == 0) /*Valid SVG file*/ image = createSVGimage(fileName);
 
-    end:
-    if (parserContext != NULL) xmlSchemaFreeParserCtxt(parserContext);
-    if (schema != NULL) xmlSchemaFree(schema);
-    if (docToValidate != NULL) xmlFreeDoc(docToValidate);
-    if (validator != NULL) xmlSchemaFreeValidCtxt(validator);
+    xmlSchemaFreeParserCtxt(parserContext);
+    xmlSchemaFree(schema);
+    xmlFreeDoc(docToValidate);
+    xmlSchemaFreeValidCtxt(validator);
     xmlSchemaCleanupTypes();
     xmlCleanupParser();
-    return (image == NULL ? NULL : image);
+    return image;
 }
 
 /**
