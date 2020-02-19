@@ -877,8 +877,8 @@ void addRectsToXML(List* elementList, xmlNode* docHead) {
 
     while ((rect = nextElement(&iterator)) != NULL) {
         xmlNode* newNode = xmlNewNode(docHead->ns, (xmlChar*)name);
-        //TODO: Loop through x, y, width, height, an all otherAttributes, making a xmlNewProp for each
 
+        //Adds all the properties to the newly created XML node
         char* value = calloc(10240, sizeof(char));
         sprintf(value, "%.2f", rect->x);
         xmlNewProp(newNode, (xmlChar*)"x", (xmlChar*)value);
@@ -889,8 +889,10 @@ void addRectsToXML(List* elementList, xmlNode* docHead) {
         sprintf(value, "%.2f", rect->height);
         xmlNewProp(newNode, (xmlChar*)"height", (xmlChar*)value);
         //TODO: Go through the otherAttributes list
-        free(value);
+
+        //Adds the new node to the SVG doc
         xmlAddChild(docHead, newNode);
+        free(value);
         //TODO: Check for memory leaks if I should free the node I made
     }
 
