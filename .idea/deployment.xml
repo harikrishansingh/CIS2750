@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" promptOnRemoteOverwrite="CHECK_TIMESTAMP" serverName="School (tunnel) (f8d3a5a2-69f0-4b44-9339-ba9587b17091)" deleteMissingItems="true" createEmptyFolders="true" exclude=".svn;.cvs;.idea;.DS_Store;.git;.hg;*.hprof;*.pyc;.gitignore;.gitattributes" autoUploadExternalChanges="true">
+  <component name="PublishConfigData" autoUpload="Always" promptOnRemoteOverwrite="CHECK_TIMESTAMP" deleteMissingItems="true" createEmptyFolders="true" exclude=".svn;.cvs;.idea;.DS_Store;.git;.hg;*.hprof;*.pyc;.gitignore;.gitattributes" autoUploadExternalChanges="true">
     <serverData>
+      <paths name="School">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/2750" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="WSL (82371ef2-39d8-48d1-890b-ab1ae338c9ab)">
         <serverdata>
           <mappings>

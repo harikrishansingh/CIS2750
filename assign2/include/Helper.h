@@ -1,6 +1,9 @@
 /* Name: Nicholas Rosati
  * Student ID: 1037025
  * Email: nrosati@uoguelph.ca*/
+#include <libxml/tree.h>
+#include "LinkedListAPI.h"
+#include "SVGParser.h"
 
 #ifndef _HELPER_
 #define _HELPER_
@@ -15,9 +18,9 @@ void getGroupsHelper (List* masterList, Group* groupRoot);
 Attribute* makeAttribute(xmlAttr* attrNode);
 void dummy();
 xmlDoc* imageToXML(SVGimage* image);
-void addRectsToXML(Node* elementNode, xmlNode* docHead);
-void addCirclesToXML(Node* elementNode, xmlNode* docHead);
-void addPathsToXML(Node* elementNode, xmlNode* docHead);
-void addGroupsToXML(Node* elementNode, xmlNode* docHead);
+void addRectsToXML(List* elementList, xmlNode* docHead);
+void addCirclesToXML(List* elementList, xmlNode* docHead);
+void addPathsToXML(List* elementList, xmlNode* docHead);
+void addGroupsToXML(List* elementList, xmlNode* docHead);
 
 #endif

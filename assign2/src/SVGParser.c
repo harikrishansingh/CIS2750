@@ -856,48 +856,72 @@ xmlDoc* imageToXML(SVGimage* image) {
     xmlSetNs(rootNode, namespace);
     xmlDocSetRootElement(imageXML, rootNode);
 
-    addRectsToXML(image->rectangles->head, xmlDocGetRootElement(imageXML));
-    addCirclesToXML(image->circles->head, xmlDocGetRootElement(imageXML));
-    addPathsToXML(image->paths->head, xmlDocGetRootElement(imageXML));
-    addGroupsToXML(image->groups->head, xmlDocGetRootElement(imageXML));
+    addRectsToXML(image->rectangles, xmlDocGetRootElement(imageXML));
+    addCirclesToXML(image->circles, xmlDocGetRootElement(imageXML));
+    addPathsToXML(image->paths, xmlDocGetRootElement(imageXML));
+    addGroupsToXML(image->groups, xmlDocGetRootElement(imageXML));
 
     return imageXML;
 }
 
 /**
  * Adds elements in a Rectangle node to the XML document.
- * @param elementNode The head rectangle node.
+ * @param elementList The head rectangle node.
  * @param docHead The XML root node to add do.
  */
-void addRectsToXML(Node* elementNode, xmlNode* docHead) {
+void addRectsToXML(List* elementList, xmlNode* docHead) {
+    ListIterator iterator = createIterator(elementList);
+    Rectangle* rect = NULL;
+    char* name = calloc(5, sizeof(char));
+    strcpy(name, "rect");
 
+    while ((rect = nextElement(&iterator)) != NULL) {
+        xmlNode* newNode = xmlNewNode(docHead->ns, (xmlChar*)name);
+        //TODO: Loop through x, y, width, height, an all otherAttributes, making a xmlNewProp for each
+
+        char* value = calloc(10240, sizeof(char));
+        sprintf(value, "%.2f", rect->x);
+        xmlNewProp(newNode, (xmlChar*)"x", (xmlChar*)value);
+        sprintf(value, "%.2f", rect->y);
+        xmlNewProp(newNode, (xmlChar*)"y", (xmlChar*)value);
+        sprintf(value, "%.2f", rect->width);
+        xmlNewProp(newNode, (xmlChar*)"width", (xmlChar*)value);
+        sprintf(value, "%.2f", rect->height);
+        xmlNewProp(newNode, (xmlChar*)"height", (xmlChar*)value);
+        //TODO: Go through the otherAttributes list
+        free(value);
+        xmlAddChild(docHead, newNode);
+        //TODO: Check for memory leaks if I should free the node I made
+    }
+
+    free(name);
 }
 
 /**
  * Adds elements in a Circle node to the XML document.
- * @param elementNode The head rectangle node.
+ * @param elementList The head rectangle node.
  * @param docHead The XML root node to add do.
  */
-void addCirclesToXML(Node* elementNode, xmlNode* docHead) {
+void addCirclesToXML(List* elementList, xmlNode* docHead) {
 
 }
 
 /**
  * Adds elements in a Path node to the XML document.
- * @param elementNode The head rectangle node.
+ * @param elementList The head rectangle node.
  * @param docHead The XML root node to add do.
  */
-void addPathsToXML(Node* elementNode, xmlNode* docHead) {
+void addPathsToXML(List* elementList, xmlNode* docHead) {
 
 }
 
 /**
  * Adds elements in a Group node to the XML document.
- * @param elementNode The group node to treat as current root.
+ * @param elementList The group node to treat as current root.
  * @param docHead The XML root node to add do.
  */
-void addGroupsToXML(Node* elementNode, xmlNode* docHead) {
-    for(Node* node = elementNode; node != NULL; node = node->next) {
+void addGroupsToXML(List* elementList, xmlNode* docHead) {
+    for(Node* node = elementList; node != NULL; node = node->next) {
         //TODO: Add rects, circles, paths, groups; in that order. Groups are recursive with this function.
     }
 }
