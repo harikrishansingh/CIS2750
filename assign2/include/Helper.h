@@ -29,5 +29,6 @@ void addRectsToXML(List* elementList, xmlNode* docHead);
 void addCirclesToXML(List* elementList, xmlNode* docHead);
 void addPathsToXML(List* elementList, xmlNode* docHead);
 void addGroupsToXML(List* elementList, xmlNode* docHead);
+Attribute* existsInList(List* list, Attribute* attribute);
 
 #endif

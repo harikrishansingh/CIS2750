@@ -1099,7 +1099,176 @@ void addGroupsToXML(List* elementList, xmlNode* docHead) {
 }
 
 void setAttribute(SVGimage* image, elementType elemType, int elemIndex, Attribute* newAttribute) {
+    //Sanity checks
+    if (image == NULL || newAttribute == NULL || elemIndex < 0 || (elemType != RECT && elemType != CIRC && elemType != PATH && elemType != GROUP &&elemType != SVG_IMAGE)) return;
 
+    Node* node = NULL;
+    Attribute* attr = NULL;
+    switch (elemType) {
+        case SVG_IMAGE:
+            //Sanity check
+            if (elemIndex > image->otherAttributes->length - 1) return;
+
+            //TODO: Check if works
+            //Finds the target node at the index
+            node = image->otherAttributes->head;
+            for (int i = 0; i < elemIndex - 1; i++) { node = node->next; }
+
+            attr = existsInList(image->otherAttributes, newAttribute);
+            if (attr != NULL) {
+                //Free the old value, and calloc space for the new value.
+                free(attr->value);
+                attr->value = calloc(strlen(newAttribute->value), sizeof(char));
+                strcpy(attr->value, newAttribute->value);
+            } else {
+                //Add the new attribute to the list
+                insertBack(image->otherAttributes, newAttribute);
+                return;
+            }
+            deleteAttribute(newAttribute);
+            return;
+
+        case CIRC:
+            //Sanity check
+            if (elemIndex > image->circles->length - 1) return;
+
+            //TODO: Check if works
+            //Finds the target node at the index
+            node = image->circles->head;
+            for (int i = 0; i < elemIndex - 1; i++) { node = node->next; }
+
+            if (strcmp(newAttribute->name, "cx") == 0) {
+                //Set circle center x
+                ((Circle*)(node->data))->cx = strtof(newAttribute->value, NULL);
+            } else if (strcmp(newAttribute->name, "cy") == 0) {
+                //Set circle center y
+                ((Circle*)(node->data))->cy = strtof(newAttribute->value, NULL);
+            } else if (strcmp(newAttribute->name, "r") == 0) {
+                //Set radius
+                ((Circle*)(node->data))->r = strtof(newAttribute->value, NULL);
+            } else {
+                attr = existsInList(((Circle*)(node->data))->otherAttributes, newAttribute);
+                if (attr != NULL) {
+                    //Update the old attribute
+                    free(attr->value);
+                    attr->value = calloc(strlen(newAttribute->value) + 1, sizeof(char));
+                    strcpy(attr->value, newAttribute->value);
+                } else {
+                    //Add new attribute
+                    insertBack(((Circle*)(node->data))->otherAttributes, newAttribute);
+                    return;
+                }
+            }
+            deleteAttribute(newAttribute);
+            return;
+
+        case RECT:
+            //Sanity check
+            if (elemIndex > image->rectangles->length - 1) return;
+
+            //TODO: Check if works
+            //Finds the target node at the index
+            node = image->rectangles->head;
+            for (int i = 0; i < elemIndex - 1; i++) { node = node->next; }
+
+            if (strcmp(newAttribute->name, "x") == 0) {
+                //Set rectangle x
+                ((Rectangle*)(node->data))->x = strtof(newAttribute->value, NULL);
+            } else if (strcmp(newAttribute->name, "y") == 0) {
+                //Set rectangle y
+                ((Rectangle*)(node->data))->y = strtof(newAttribute->value, NULL);
+            } else if (strcmp(newAttribute->name, "width") == 0) {
+                //Set rectangle width
+                ((Rectangle*)(node->data))->width = strtof(newAttribute->value, NULL);
+            } else if (strcmp(newAttribute->name, "height") == 0) {
+                //Set rectangle width
+                ((Rectangle*)(node->data))->height = strtof(newAttribute->value, NULL);
+            } else {
+                attr = existsInList(((Rectangle*)(node->data))->otherAttributes, newAttribute);
+                if (attr != NULL) {
+                    //Update the old attribute
+                    free(attr->value);
+                    attr->value = calloc(strlen(newAttribute->value) + 1, sizeof(char));
+                    strcpy(attr->value, newAttribute->value);
+                } else {
+                    //Add new attribute
+                    insertBack(((Rectangle*)(node->data))->otherAttributes, newAttribute);
+                    return;
+                }
+            }
+            deleteAttribute(newAttribute);
+            return;
+
+        case PATH:
+            //Sanity check
+            if (elemIndex > image->paths->length - 1) return;
+
+            //TODO: Check if works
+            //Finds the target node at the index
+            node = image->paths->head;
+            for (int i = 0; i < elemIndex - 1; i++) { node = node->next; }
+
+            if (strcmp(newAttribute->name, "d") == 0) {
+                //Set path data
+                free(((Path*)(node->data))->data);
+                ((Path*)(node->data))->data = calloc(strlen(newAttribute->value) + 1, sizeof(char));
+                strcpy(((Path*)(node->data))->data, newAttribute->value);
+            } else {
+                attr = existsInList(((Path*)(node->data))->otherAttributes, newAttribute);
+                if (attr != NULL) {
+                    //Update the old attribute
+                    free(attr->value);
+                    attr->value = calloc(strlen(newAttribute->value) + 1, sizeof(char));
+                    strcpy(attr->value, newAttribute->value);
+                } else {
+                    //Add new attribute
+                    insertBack(((Path*)(node->data))->otherAttributes, newAttribute);
+                    return;
+                }
+            }
+            deleteAttribute(newAttribute);
+            return;
+
+        case GROUP:
+            //Sanity check
+            if (elemIndex > image->groups->length - 1) return;
+
+            //TODO: Check if works
+            //Finds the target node at the index
+            node = image->groups->head;
+            for (int i = 0; i < elemIndex - 1; i++) { node = node->next; }
+
+
+            attr = existsInList(((Group*)(node->data))->otherAttributes, newAttribute);
+            if (attr != NULL) {
+                //Update the old attribute
+                free(attr->value);
+                attr->value = calloc(strlen(newAttribute->value) + 1, sizeof(char));
+                strcpy(attr->value, newAttribute->value);
+                deleteAttribute(newAttribute);
+            } else {
+                //Add new attribute
+                insertBack(((Group*)(node->data))->otherAttributes, newAttribute);
+            }
+            return;
+        default:
+            return;
+    }
+}
+
+/**
+ * Checks to see if the given attribute exists in the given list.
+ * @param list List to look for attribute in.
+ * @param attribute Attribute to look for.
+ * @return A pointer to the attribute in the list if it exists, otherwise NULL.
+ */
+Attribute* existsInList(List* list, Attribute* attribute) {
+    ListIterator iterator = createIterator(list);
+    Attribute* node = NULL;
+    while ((node = nextElement(&iterator)) != NULL) {
+        if (strcmp(node->name, attribute->name) == 0) return node;
+    }
+    return NULL;
 }
 
 /**
