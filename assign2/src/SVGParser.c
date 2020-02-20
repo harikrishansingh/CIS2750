@@ -837,9 +837,13 @@ bool validateSVGimage(SVGimage* image, char* schemaFile) {
  * @return True if completed successfully, false otherwise.
  */
 bool writeSVGimage(SVGimage* image, char* fileName) {
+    //Basic validity checking
     if ((fileName == NULL || image == NULL) || (strcmp(".svg", fileName + (strlen(fileName) - 4)) != 0)) return false;
 
+    //Turns the image into an XML tree
     xmlDoc* imageXML = imageToXML(image);
+
+    //Write the XML tree
     if (imageXML == NULL) return false;
     int retVal = xmlSaveFormatFileEnc(fileName, imageXML, "UTF-8", 1);
     xmlFreeDoc(imageXML);
@@ -859,18 +863,21 @@ xmlDoc* imageToXML(SVGimage* image) {
     xmlSetNs(rootNode, namespace);
     xmlDocSetRootElement(imageXML, rootNode);
 
+    //Add a title node only if it has content
     if (strlen(image->title) > 0) {
         xmlNode* nameNode = xmlNewNode(xmlDocGetRootElement(imageXML)->ns, (xmlChar*)"title");
         xmlNodeSetContent(nameNode, (xmlChar*)image->title);
         xmlAddChild(xmlDocGetRootElement(imageXML), nameNode);
     }
 
+    //Add a desc node only if it has content
     if (strlen(image->description) > 0) {
         xmlNode* descNode = xmlNewNode(xmlDocGetRootElement(imageXML)->ns, (xmlChar*)"desc");
         xmlNodeSetContent(descNode, (xmlChar*)image->description);
         xmlAddChild(xmlDocGetRootElement(imageXML), descNode);
     }
 
+    //Add all the nodes to the XML tree, in the specified order
     addAttributesToXML(image->otherAttributes, xmlDocGetRootElement(imageXML));
     addRectsToXML(image->rectangles, xmlDocGetRootElement(imageXML));
     addCirclesToXML(image->circles, xmlDocGetRootElement(imageXML));
@@ -908,7 +915,7 @@ void addRectsToXML(List* elementList, xmlNode* docHead) {
         xmlNode* newNode = xmlNewNode(docHead->ns, (xmlChar*)name);
 
         //Adds all the properties to the newly created XML node
-        char* value = calloc(10240, sizeof(char));
+        char* value = calloc(1024, sizeof(char));
         sprintf(value, "%.2f", rect->x);
         xmlNewProp(newNode, (xmlChar*)"x", (xmlChar*)value);
         sprintf(value, "%.2f", rect->y);
