@@ -913,6 +913,7 @@ void addRectsToXML(List* elementList, xmlNode* docHead) {
         xmlNode* newNode = xmlNewNode(docHead->ns, (xmlChar*)"rect");
 
         //Adds all the properties to the newly created XML node
+        //TODO: Add units
         char* value = calloc(1024, sizeof(char));
         sprintf(value, "%.2f", rect->x);
         xmlNewProp(newNode, (xmlChar*)"x", (xmlChar*)value);
@@ -936,7 +937,28 @@ void addRectsToXML(List* elementList, xmlNode* docHead) {
  * @param docHead The XML root node to add do.
  */
 void addCirclesToXML(List* elementList, xmlNode* docHead) {
+    ListIterator iterator = createIterator(elementList);
+    Circle* circle = NULL;
 
+    while ((circle = nextElement(&iterator)) != NULL) {
+        xmlNode* newNode = xmlNewNode(docHead->ns, (xmlChar*)"rect");
+
+        //Adds all the properties to the newly created XML node
+        //TODO: Add units
+        char* value = calloc(1024, sizeof(char));
+        sprintf(value, "%.2f", circle->cx);
+        xmlNewProp(newNode, (xmlChar*)"cx", (xmlChar*)value);
+        sprintf(value, "%.2f", circle->cy);
+        xmlNewProp(newNode, (xmlChar*)"cy", (xmlChar*)value);
+        sprintf(value, "%.2f", circle->r);
+        xmlNewProp(newNode, (xmlChar*)"r", (xmlChar*)value);
+        addAttributesToXML(circle->otherAttributes, newNode);
+
+        //Adds the new node to the SVG doc
+        xmlAddChild(docHead, newNode);
+        free(value);
+    }
+}
 }
 
 /**
