@@ -837,7 +837,8 @@ bool validateSVGimage(SVGimage* image, char* schemaFile) {
  * @return True if completed successfully, false otherwise.
  */
 bool writeSVGimage(SVGimage* image, char* fileName) {
-    if (image == NULL || fileName == NULL) return false;
+    if ((fileName == NULL || image == NULL) || (strcmp(".svg", fileName + (strlen(fileName) - 4)) != 0)) return false;
+
     xmlDoc* imageXML = imageToXML(image);
     if (imageXML == NULL) return false;
     return (xmlSaveFormatFileEnc(fileName, imageXML, "UTF-8", 1) == -1 ? false : true);
@@ -849,6 +850,7 @@ bool writeSVGimage(SVGimage* image, char* fileName) {
  * @return A XML document based on the given SVGimage.
  */
 xmlDoc* imageToXML(SVGimage* image) {
+    //TODO: Add title and desc, if exist
     if (image == NULL) return NULL;
     xmlDoc* imageXML = xmlNewDoc((xmlChar*)"1.0");
     xmlNode* rootNode = xmlNewNode(NULL, (xmlChar*)"svg");
@@ -856,12 +858,34 @@ xmlDoc* imageToXML(SVGimage* image) {
     xmlSetNs(rootNode, namespace);
     xmlDocSetRootElement(imageXML, rootNode);
 
+    //FIXME: Add title and desc only if they are defined in the image
+    xmlNode* nameNode = xmlNewNode(xmlDocGetRootElement(imageXML)->ns, (xmlChar*)"title");
+    xmlNodeSetContent(nameNode, (xmlChar*)image->title);
+    xmlAddChild(xmlDocGetRootElement(imageXML), nameNode);
+    xmlNode* descNode = xmlNewNode(xmlDocGetRootElement(imageXML)->ns, (xmlChar*)"desc");
+    xmlNodeSetContent(descNode, (xmlChar*)image->description);
+    xmlAddChild(xmlDocGetRootElement(imageXML), descNode);
+
+    addAttributesToXML(image->otherAttributes, xmlDocGetRootElement(imageXML));
     addRectsToXML(image->rectangles, xmlDocGetRootElement(imageXML));
     addCirclesToXML(image->circles, xmlDocGetRootElement(imageXML));
     addPathsToXML(image->paths, xmlDocGetRootElement(imageXML));
     addGroupsToXML(image->groups, xmlDocGetRootElement(imageXML));
 
     return imageXML;
+}
+
+/**
+ * Adds elements in a otherAttributes list to the XML node.
+ * @param elementList List of otherAttributes to go through.
+ * @param node The node to add elements to.
+ */
+void addAttributesToXML(List* elementList, xmlNode* node) {
+    ListIterator iterator = createIterator(elementList);
+    Attribute* attr = NULL;
+    while ((attr = nextElement(&iterator)) != NULL) {
+        xmlNewProp(node, (xmlChar*)attr->name, (xmlChar*)attr->value);
+    }
 }
 
 /**
@@ -888,7 +912,7 @@ void addRectsToXML(List* elementList, xmlNode* docHead) {
         xmlNewProp(newNode, (xmlChar*)"width", (xmlChar*)value);
         sprintf(value, "%.2f", rect->height);
         xmlNewProp(newNode, (xmlChar*)"height", (xmlChar*)value);
-        //TODO: Go through the otherAttributes list
+        addAttributesToXML(rect->otherAttributes, newNode);
 
         //Adds the new node to the SVG doc
         xmlAddChild(docHead, newNode);
@@ -923,7 +947,5 @@ void addPathsToXML(List* elementList, xmlNode* docHead) {
  * @param docHead The XML root node to add do.
  */
 void addGroupsToXML(List* elementList, xmlNode* docHead) {
-    for(Node* node = elementList; node != NULL; node = node->next) {
-        //TODO: Add rects, circles, paths, groups; in that order. Groups are recursive with this function.
-    }
+    //TODO: Add rects, circles, paths, groups; in that order. Groups are recursive with this function.
 }
