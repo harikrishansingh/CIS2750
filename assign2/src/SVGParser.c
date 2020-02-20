@@ -913,15 +913,14 @@ void addRectsToXML(List* elementList, xmlNode* docHead) {
         xmlNode* newNode = xmlNewNode(docHead->ns, (xmlChar*)"rect");
 
         //Adds all the properties to the newly created XML node
-        //TODO: Add units
         char* value = calloc(1024, sizeof(char));
-        sprintf(value, "%.2f", rect->x);
+        sprintf(value, "%.2f%s", rect->x, rect->units);
         xmlNewProp(newNode, (xmlChar*)"x", (xmlChar*)value);
-        sprintf(value, "%.2f", rect->y);
+        sprintf(value, "%.2f%s", rect->y, rect->units);
         xmlNewProp(newNode, (xmlChar*)"y", (xmlChar*)value);
-        sprintf(value, "%.2f", rect->width);
+        sprintf(value, "%.2f%s", rect->width, rect->units);
         xmlNewProp(newNode, (xmlChar*)"width", (xmlChar*)value);
-        sprintf(value, "%.2f", rect->height);
+        sprintf(value, "%.2f%s", rect->height, rect->units);
         xmlNewProp(newNode, (xmlChar*)"height", (xmlChar*)value);
         addAttributesToXML(rect->otherAttributes, newNode);
 
@@ -941,16 +940,15 @@ void addCirclesToXML(List* elementList, xmlNode* docHead) {
     Circle* circle = NULL;
 
     while ((circle = nextElement(&iterator)) != NULL) {
-        xmlNode* newNode = xmlNewNode(docHead->ns, (xmlChar*)"rect");
+        xmlNode* newNode = xmlNewNode(docHead->ns, (xmlChar*)"circle");
 
         //Adds all the properties to the newly created XML node
-        //TODO: Add units
         char* value = calloc(1024, sizeof(char));
-        sprintf(value, "%.2f", circle->cx);
+        sprintf(value, "%.2f%s", circle->cx, circle->units);
         xmlNewProp(newNode, (xmlChar*)"cx", (xmlChar*)value);
-        sprintf(value, "%.2f", circle->cy);
+        sprintf(value, "%.2f%s", circle->cy, circle->units);
         xmlNewProp(newNode, (xmlChar*)"cy", (xmlChar*)value);
-        sprintf(value, "%.2f", circle->r);
+        sprintf(value, "%.2f%s", circle->r, circle->units);
         xmlNewProp(newNode, (xmlChar*)"r", (xmlChar*)value);
         addAttributesToXML(circle->otherAttributes, newNode);
 
@@ -958,7 +956,6 @@ void addCirclesToXML(List* elementList, xmlNode* docHead) {
         xmlAddChild(docHead, newNode);
         free(value);
     }
-}
 }
 
 /**
