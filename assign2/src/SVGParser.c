@@ -850,7 +850,6 @@ bool writeSVGimage(SVGimage* image, char* fileName) {
  * @return A XML document based on the given SVGimage.
  */
 xmlDoc* imageToXML(SVGimage* image) {
-    //TODO: Add title and desc, if exist
     if (image == NULL) return NULL;
     xmlDoc* imageXML = xmlNewDoc((xmlChar*)"1.0");
     xmlNode* rootNode = xmlNewNode(NULL, (xmlChar*)"svg");
@@ -858,13 +857,17 @@ xmlDoc* imageToXML(SVGimage* image) {
     xmlSetNs(rootNode, namespace);
     xmlDocSetRootElement(imageXML, rootNode);
 
-    //FIXME: Add title and desc only if they are defined in the image
-    xmlNode* nameNode = xmlNewNode(xmlDocGetRootElement(imageXML)->ns, (xmlChar*)"title");
-    xmlNodeSetContent(nameNode, (xmlChar*)image->title);
-    xmlAddChild(xmlDocGetRootElement(imageXML), nameNode);
-    xmlNode* descNode = xmlNewNode(xmlDocGetRootElement(imageXML)->ns, (xmlChar*)"desc");
-    xmlNodeSetContent(descNode, (xmlChar*)image->description);
-    xmlAddChild(xmlDocGetRootElement(imageXML), descNode);
+    if (strlen(image->title) > 0) {
+        xmlNode* nameNode = xmlNewNode(xmlDocGetRootElement(imageXML)->ns, (xmlChar*)"title");
+        xmlNodeSetContent(nameNode, (xmlChar*)image->title);
+        xmlAddChild(xmlDocGetRootElement(imageXML), nameNode);
+    }
+
+    if (strlen(image->description) > 0) {
+        xmlNode* descNode = xmlNewNode(xmlDocGetRootElement(imageXML)->ns, (xmlChar*)"desc");
+        xmlNodeSetContent(descNode, (xmlChar*)image->description);
+        xmlAddChild(xmlDocGetRootElement(imageXML), descNode);
+    }
 
     addAttributesToXML(image->otherAttributes, xmlDocGetRootElement(imageXML));
     addRectsToXML(image->rectangles, xmlDocGetRootElement(imageXML));
