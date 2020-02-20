@@ -964,7 +964,22 @@ void addCirclesToXML(List* elementList, xmlNode* docHead) {
  * @param docHead The XML root node to add do.
  */
 void addPathsToXML(List* elementList, xmlNode* docHead) {
+    ListIterator iterator = createIterator(elementList);
+    Path* path = NULL;
 
+    while ((path = nextElement(&iterator)) != NULL) {
+        xmlNode* newNode = xmlNewNode(docHead->ns, (xmlChar*)"rect");
+
+        //Adds all the properties to the newly created XML node
+        char* value = calloc(1024, sizeof(char));
+        sprintf(value, "%s", path->data);
+        xmlNewProp(newNode, (xmlChar*)"d", (xmlChar*)value);
+        addAttributesToXML(path->otherAttributes, newNode);
+
+        //Adds the new node to the SVG doc
+        xmlAddChild(docHead, newNode);
+        free(value);
+    }
 }
 
 /**
