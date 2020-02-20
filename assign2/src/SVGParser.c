@@ -914,7 +914,6 @@ int validateXMLwithXSD(xmlDoc* xml, char* xsdFile) {//Declaring all the XML vari
     if (validator == NULL) goto end;
 
     int retVal = xmlSchemaValidateDoc(validator, xml);
-    printf("%d\n", retVal);
 
     end:
     if (parserContext != NULL) xmlSchemaFreeParserCtxt(parserContext);
@@ -932,7 +931,7 @@ int validateXMLwithXSD(xmlDoc* xml, char* xsdFile) {//Declaring all the XML vari
  * @return True if completed successfully, false otherwise.
  */
 bool writeSVGimage(SVGimage* image, char* fileName) {
-    //Basic validity checking
+    //Basic sanity checking
     if ((fileName == NULL || image == NULL) || (strcmp(".svg", fileName + (strlen(fileName) - 4)) != 0)) return false;
 
     //Turns the image into an XML tree
