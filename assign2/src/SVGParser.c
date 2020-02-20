@@ -785,36 +785,11 @@ SVGimage* createValidSVGimage(char* fileName, char* schemaFile) {
         (strcmp(".xsd", schemaFile + (strlen(schemaFile) - 4)) != 0) ||
         (strcmp(".svg", fileName + (strlen(fileName) - 4)) != 0)) return NULL;
 
-    //Declaring all the XML variables
-    xmlSchemaParserCtxt* parserContext = NULL;
-    xmlSchema* schema = NULL;
-    xmlDoc* docToValidate = NULL;
-    xmlSchemaValidCtxt* validator = NULL;
     SVGimage* image = NULL;
-
-    //This is all for XML validation against a inputted schema files
-    parserContext = xmlSchemaNewParserCtxt(schemaFile);
-    if (parserContext == NULL) goto end;
-
-    schema = xmlSchemaParse(parserContext);
-    if (schema == NULL) goto end;
-
-    docToValidate = xmlReadFile(fileName, NULL, 0);
-    if (docToValidate == NULL) goto end;
-
-    validator = xmlSchemaNewValidCtxt(schema);
-    if (validator == NULL) goto end;
-
-    int ret = xmlSchemaValidateDoc(validator, docToValidate);
-    if (ret == 0) /*SVG file is valid*/ image = createSVGimage(fileName);
-
-    end:
-    if (parserContext != NULL) xmlSchemaFreeParserCtxt(parserContext);
-    if (schema != NULL) xmlSchemaFree(schema);
-    if (docToValidate != NULL) xmlFreeDoc(docToValidate);
-    if (validator != NULL) xmlSchemaFreeValidCtxt(validator);
-    xmlSchemaCleanupTypes();
+    xmlDoc* doc = xmlReadFile(fileName, NULL, 0);
+    int ret = validateXMLwithXSD(doc, schemaFile);
     xmlCleanupParser();
+    if (ret == 0) /*SVG file is valid*/ image = createSVGimage(fileName);
     return image;
 }
 
@@ -825,11 +800,49 @@ SVGimage* createValidSVGimage(char* fileName, char* schemaFile) {
  * @return True is the SVGimage is valid, false otherwise
  */
 bool validateSVGimage(SVGimage* image, char* schemaFile) {
-    //TODO
-    return -1;
+    if (schemaFile == NULL || image == NULL || image->rectangles == NULL || image->circles == NULL || image->paths == NULL || image->groups == NULL) return false;
+
+    xmlDoc* imageDoc = imageToXML(image);
+    int ret = validateXMLwithXSD(imageDoc, schemaFile);
+
+    return (ret == 0 ? true : false);
 }
 
-//TODO: Testing
+/**
+ * Validates an XML doc against a given schema file URL.
+ * @param xml XML tree to validate.
+ * @param xsdFile URL to the XSD to use to validate.
+ * @return The value returned when validating the XML tree.
+ */
+int validateXMLwithXSD(xmlDoc* xml, char* xsdFile) {//Declaring all the XML variables
+    xmlSchemaParserCtxt* parserContext = NULL;
+    xmlSchema* schema = NULL;
+    xmlSchemaValidCtxt* validator = NULL;
+
+    //This is all for XML validation against a inputted schema files
+    if (xml == NULL) goto end;
+
+    parserContext = xmlSchemaNewParserCtxt(xsdFile);
+    if (parserContext == NULL) goto end;
+
+    schema = xmlSchemaParse(parserContext);
+    if (schema == NULL) goto end;
+
+    validator = xmlSchemaNewValidCtxt(schema);
+    if (validator == NULL) goto end;
+
+    int retVal = xmlSchemaValidateDoc(validator, xml);
+    printf("%d\n", retVal);
+
+    end:
+    if (parserContext != NULL) xmlSchemaFreeParserCtxt(parserContext);
+    if (schema != NULL) xmlSchemaFree(schema);
+    if (validator != NULL) xmlSchemaFreeValidCtxt(validator);
+    xmlSchemaCleanupTypes();
+    xmlCleanupParser();
+    return retVal;
+}
+
 /**
  * Writes the SVGimage to a SVG image file.
  * @param image SVGimage struct to write.
@@ -968,7 +981,7 @@ void addPathsToXML(List* elementList, xmlNode* docHead) {
     Path* path = NULL;
 
     while ((path = nextElement(&iterator)) != NULL) {
-        xmlNode* newNode = xmlNewNode(docHead->ns, (xmlChar*)"rect");
+        xmlNode* newNode = xmlNewNode(docHead->ns, (xmlChar*)"path");
 
         //Adds all the properties to the newly created XML node
         char* value = calloc(1024, sizeof(char));
