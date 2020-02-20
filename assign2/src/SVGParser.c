@@ -841,7 +841,9 @@ bool writeSVGimage(SVGimage* image, char* fileName) {
 
     xmlDoc* imageXML = imageToXML(image);
     if (imageXML == NULL) return false;
-    return (xmlSaveFormatFileEnc(fileName, imageXML, "UTF-8", 1) == -1 ? false : true);
+    int retVal = xmlSaveFormatFileEnc(fileName, imageXML, "UTF-8", 1);
+    xmlFreeDoc(imageXML);
+    return (retVal == -1 ? false : true);
 }
 
 /**
