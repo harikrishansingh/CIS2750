@@ -800,12 +800,94 @@ SVGimage* createValidSVGimage(char* fileName, char* schemaFile) {
  * @return True is the SVGimage is valid, false otherwise
  */
 bool validateSVGimage(SVGimage* image, char* schemaFile) {
-    if (schemaFile == NULL || image == NULL || image->rectangles == NULL || image->circles == NULL || image->paths == NULL || image->groups == NULL) return false;
+    if (schemaFile == NULL || image == NULL) return false;
 
+    //Header constraint checks
+    if (!validateRects(image->rectangles) ||
+        !validateCircles(image->circles) ||
+        !validatePaths(image->paths) ||
+        !validateGroups(image->groups) ||
+        !validateAttributes(image->otherAttributes)) return false;
+
+    //XSD checking
     xmlDoc* imageDoc = imageToXML(image);
     int ret = validateXMLwithXSD(imageDoc, schemaFile);
 
     return (ret == 0 ? true : false);
+}
+
+/**
+ * Validate the given rectangles list against constraints outlined in the leader.
+ * @param list List of elements.
+ * @return True if the list elements are valid, false otherwise.
+ */
+bool validateRects (List* list) {
+    ListIterator iter = createIterator(list);
+    Rectangle* rect = NULL;
+    while ((rect = nextElement(&iter)) != NULL) {
+        if (rect->units == NULL || rect->otherAttributes == NULL || !validateAttributes(rect->otherAttributes)) return false;
+    }
+    return true;
+}
+
+/**
+ * Validate the given circles list against constraints outlined in the leader.
+ * @param list List of elements.
+ * @return True if the list elements are valid, false otherwise.
+ */
+bool validateCircles (List* list) {
+    ListIterator iter = createIterator(list);
+    Circle* circle = NULL;
+    while ((circle = nextElement(&iter)) != NULL) {
+        if (circle->units == NULL || circle->otherAttributes == NULL || !validateAttributes(circle->otherAttributes)) return false;
+    }
+    return true;
+}
+
+/**
+ * Validate the given paths list against constraints outlined in the leader.
+ * @param list List of elements.
+ * @return True if the list elements are valid, false otherwise.
+ */
+bool validatePaths (List* list) {
+    ListIterator iter = createIterator(list);
+    Path* path = NULL;
+    while ((path = nextElement(&iter)) != NULL) {
+        if (path->data == NULL || path->otherAttributes == NULL || !validateAttributes(path->otherAttributes)) return false;
+    }
+    return true;
+}
+
+/**
+ * Validate the given groups list against constraints outlined in the leader.
+ * @param list List of elements.
+ * @return True if the list elements are valid, false otherwise.
+ */
+bool validateGroups (List* list) {
+    ListIterator iter = createIterator(list);
+    Group* group = NULL;
+    while ((group = nextElement(&iter)) != NULL) {
+        if (!validateRects(group->rectangles) ||
+            !validateCircles(group->circles) ||
+            !validatePaths(group->paths) ||
+            !validateGroups(group->groups) ||
+            !validateAttributes(group->otherAttributes)) return false;
+    }
+    return true;
+}
+
+/**
+ * Validate the given attribute list against constraints outlined in the leader.
+ * @param list List of elements.
+ * @return True if the list elements are valid, false otherwise.
+ */
+bool validateAttributes (List* list) {
+    ListIterator iter = createIterator(list);
+    Attribute* attr = NULL;
+    while ((attr = nextElement(&iter)) != NULL) {
+        if (attr->name == NULL || attr->value == NULL) return false;
+    }
+    return true;
 }
 
 /**
