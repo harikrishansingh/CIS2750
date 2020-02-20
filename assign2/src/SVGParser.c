@@ -1102,8 +1102,28 @@ void setAttribute(SVGimage* image, elementType elemType, int elemIndex, Attribut
 
 }
 
+/**
+ * Adds a component to the given SVGimage.
+ * @param image SVGimage to add element to.
+ * @param type The type of element to add (RECT, CIRC, GROUP).
+ * @param newElement Pointer to data to add to the image.
+ */
 void addComponent(SVGimage* image, elementType type, void* newElement) {
+    if (image == NULL || (type != RECT && type != CIRC && type != PATH) || newElement == NULL) return;
 
+    switch (type) {
+        case RECT:
+            insertBack(image->rectangles, newElement);
+            break;
+        case CIRC:
+            insertBack(image->circles, newElement);
+            break;
+        case PATH:
+            insertBack(image->paths, newElement);
+            break;
+        default:
+            break;
+    }
 }
 
 char* attrToJSON(const Attribute *a) {
