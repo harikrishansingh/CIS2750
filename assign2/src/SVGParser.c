@@ -988,5 +988,16 @@ void addPathsToXML(List* elementList, xmlNode* docHead) {
  * @param docHead The XML root node to add do.
  */
 void addGroupsToXML(List* elementList, xmlNode* docHead) {
-    //TODO: Add rects, circles, paths, groups; in that order. Groups are recursive with this function.
+    ListIterator iterator = createIterator(elementList);
+    Group* group = NULL;
+
+    while ((group = nextElement(&iterator)) != NULL) {
+        xmlNode* newNode = xmlNewNode(docHead->ns, (xmlChar*)"g");
+
+        addAttributesToXML(group->otherAttributes, newNode);
+        addRectsToXML(group->rectangles, newNode);
+        addCirclesToXML(group->circles, newNode);
+        addPathsToXML(group->paths, newNode);
+        addGroupsToXML(group->groups, newNode);
+    }
 }
