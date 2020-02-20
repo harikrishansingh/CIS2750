@@ -1093,6 +1093,8 @@ void addGroupsToXML(List* elementList, xmlNode* docHead) {
         addCirclesToXML(group->circles, newNode);
         addPathsToXML(group->paths, newNode);
         addGroupsToXML(group->groups, newNode);
+
+        xmlAddChild(docHead, newNode);
     }
 }
 
