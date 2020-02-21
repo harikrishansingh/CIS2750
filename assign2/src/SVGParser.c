@@ -1295,7 +1295,11 @@ void addComponent(SVGimage* image, elementType type, void* newElement) {
  * @return JSON string representing the Attribute.
  */
 char* attrToJSON(const Attribute *a) {
-    if (a == NULL) return "{}";
+    if (a == NULL) {
+        char* retString = calloc(3, sizeof(char));
+        strcat(retString, "{}");
+        return retString;
+    }
     char* string = calloc(strlen(a->name) + strlen(a->value) + 32, sizeof(char));
     sprintf(string, "{\"name\":\"%s\",\"value\":\"%s\"}", a->name, a->value);
     return string;
@@ -1307,7 +1311,11 @@ char* attrToJSON(const Attribute *a) {
  * @return JSON string representing the Circle.
  */
 char* circleToJSON(const Circle *c) {
-    if (c == NULL) return "{}";
+    if (c == NULL) {
+        char* retString = calloc(3, sizeof(char));
+        strcat(retString, "{}");
+        return retString;
+    }
     char* string = calloc(strlen(c->units) + 64, sizeof(char));
     sprintf(string, "{\"cx\":%.2f,\"cy\":%.2f,\"r\":%.2f,\"numAttr\":%d,\"units\":\"%s\"}", c->cx, c->cy, c->r, c->otherAttributes->length, c->units);
     return string;
@@ -1319,7 +1327,11 @@ char* circleToJSON(const Circle *c) {
  * @return JSON string representing the Rectangle.
  */
 char* rectToJSON(const Rectangle *r) {
-    if (r == NULL) return "{}";
+    if (r == NULL) {
+        char* retString = calloc(3, sizeof(char));
+        strcat(retString, "{}");
+        return retString;
+    }
     char* string = calloc(strlen(r->units) + 128, sizeof(char));
     sprintf(string, "{\"x\":%.2f,\"y\":%.2f,\"w\":%.2f,\"h\":%.2f,\"numAttr\":%d,\"units\":\"%s\"}", r->x, r->y, r->width, r->height, r->otherAttributes->length, r->units);
     return string;
@@ -1331,7 +1343,11 @@ char* rectToJSON(const Rectangle *r) {
  * @return JSON string representing the Path.
  */
 char* pathToJSON(const Path *p) {
-    if (p == NULL) return "{}";
+    if (p == NULL) {
+        char* retString = calloc(3, sizeof(char));
+        strcat(retString, "{}");
+        return retString;
+    }
     char* string = calloc(strlen(p->data) + 16, sizeof(char));
     char* pathData = calloc(65, sizeof(char));
     strncpy(pathData, p->data, 64);
@@ -1346,7 +1362,11 @@ char* pathToJSON(const Path *p) {
  * @return JSON string representing the Group.
  */
 char* groupToJSON(const Group *g) {
-    if (g == NULL) return "{}";
+    if (g == NULL) {
+        char* retString = calloc(3, sizeof(char));
+        strcat(retString, "{}");
+        return retString;
+    }
     char* string = calloc(64, sizeof(char));
     sprintf(string, "{\"children\":%d,\"numAttr\":%d}", g->rectangles->length + g->circles->length + g->paths->length + g->groups->length, g->otherAttributes->length);
     return string;
@@ -1358,7 +1378,11 @@ char* groupToJSON(const Group *g) {
  * @return JSON string representing the SVG image struct.
  */
 char* SVGtoJSON(const SVGimage* imge) {
-    if (imge == NULL) return "{}";
+    if (imge == NULL) {
+        char* retString = calloc(3, sizeof(char));
+        strcat(retString, "{}");
+        return retString;
+    }
     char* string = calloc(64, sizeof(char));
     List* rects = getRects((SVGimage*)imge);
     List* circles = getCircles((SVGimage*)imge);
