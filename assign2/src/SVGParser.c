@@ -1295,8 +1295,10 @@ void addComponent(SVGimage* image, elementType type, void* newElement) {
  * @return JSON string representing the Attribute.
  */
 char* attrToJSON(const Attribute *a) {
-
-    return NULL;
+    if (a == NULL) return "{}";
+    char* string = calloc(strlen(a->name) + strlen(a->value) + 32, sizeof(char));
+    sprintf(string, "{\"name\":\"%s\",\"value\":\"%s\"}", a->name, a->value);
+    return string;
 }
 
 char* circleToJSON(const Circle *c) {
