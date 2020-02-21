@@ -1396,29 +1396,154 @@ char* SVGtoJSON(const SVGimage* imge) {
     return string;
 }
 
+/**
+ * Creates a JSON string for all attributes in a given list.
+ * @param a List of Attributes.
+ * @return JSON string representing the list of Attributes.
+ */
 char* attrListToJSON(const List *list) {
-
-    return NULL;
+    //Sanity checking
+    if (list == NULL || list->head == NULL) {
+        char* retString = calloc(3, sizeof(char));
+        strcpy(retString, "[]");
+        return retString;
+    }
+    //List initialization
+    ListIterator listIterator = createIterator((List*)list);
+    Attribute* attribute = NULL;
+    char* string = calloc(4, sizeof(char));
+    string[0] = '[';
+    //Create the string, iterating through each element
+    while ((attribute = nextElement(&listIterator)) != NULL) {
+        char* attrJSON = attrToJSON(attribute);
+        string = realloc(string, strlen(string) + strlen(attrJSON) + 8);
+        strcat(string, attrJSON);
+        strcat(string, ",");
+        free(attrJSON);
+    }
+    //Close off the JSON string and return
+    *strrchr(string, ',') = ']';
+    return string;
 }
 
+/**
+ * Creates a JSON string for all circles in a given list.
+ * @param a List of Circles.
+ * @return JSON string representing the list of Circles.
+ */
 char* circListToJSON(const List *list) {
-
-    return NULL;
+    //Sanity checking
+    if (list == NULL || list->head == NULL) {
+        char* retString = calloc(3, sizeof(char));
+        strcpy(retString, "[]");
+        return retString;
+    }
+    //List initialization
+    ListIterator listIterator = createIterator((List*)list);
+    Circle* circle = NULL;
+    char* string = calloc(4, sizeof(char));
+    string[0] = '[';
+    //Create the string, iterating through each element
+    while ((circle = nextElement(&listIterator)) != NULL) {
+        char* circleJSON = circleToJSON(circle);
+        string = realloc(string, strlen(string) + strlen(circleJSON) + 8);
+        strcat(string, circleJSON);
+        strcat(string, ",");
+        free(circleJSON);
+    }
+    //Close off the JSON string and return
+    *strrchr(string, ',') = ']';
+    return string;
 }
 
+/**
+ * Creates a JSON string for all rectangles in a given list.
+ * @param a List of Rectangles.
+ * @return JSON string representing the list of Rectangles.
+ */
 char* rectListToJSON(const List *list) {
-
-    return NULL;
+    //Sanity checking
+    if (list == NULL || list->head == NULL) {
+        char* retString = calloc(3, sizeof(char));
+        strcpy(retString, "[]");
+        return retString;
+    }
+    //List initialization
+    ListIterator listIterator = createIterator((List*)list);
+    Rectangle* rectangle = NULL;
+    char* string = calloc(4, sizeof(char));
+    string[0] = '[';
+    //Create the string, iterating through each element
+    while ((rectangle = nextElement(&listIterator)) != NULL) {
+        char* rectJSON = rectToJSON(rectangle);
+        string = realloc(string, strlen(string) + strlen(rectJSON) + 8);
+        strcat(string, rectJSON);
+        strcat(string, ",");
+        free(rectJSON);
+    }
+    //Close off the JSON string and return
+    *strrchr(string, ',') = ']';
+    return string;
 }
 
+/**
+ * Creates a JSON string for all paths in a given list.
+ * @param a List of Paths.
+ * @return JSON string representing the list of Paths.
+ */
 char* pathListToJSON(const List *list) {
-
-    return NULL;
+    //Sanity checking
+    if (list == NULL || list->head == NULL) {
+        char* retString = calloc(3, sizeof(char));
+        strcpy(retString, "[]");
+        return retString;
+    }
+    //List initialization
+    ListIterator listIterator = createIterator((List*)list);
+    Path* path = NULL;
+    char* string = calloc(4, sizeof(char));
+    string[0] = '[';
+    //Create the string, iterating through each element
+    while ((path = nextElement(&listIterator)) != NULL) {
+        char* pathJSON = pathToJSON(path);
+        string = realloc(string, strlen(string) + strlen(pathJSON) + 8);
+        strcat(string, pathJSON);
+        strcat(string, ",");
+        free(pathJSON);
+    }
+    //Close off the JSON string and return
+    *strrchr(string, ',') = ']';
+    return string;
 }
 
+/**
+ * Creates a JSON string for all groups in a given list.
+ * @param a List of Groups.
+ * @return JSON string representing the list of Groups.
+ */
 char* groupListToJSON(const List *list) {
-
-    return NULL;
+    //Sanity checking
+    if (list == NULL || list->head == NULL) {
+        char* retString = calloc(3, sizeof(char));
+        strcpy(retString, "[]");
+        return retString;
+    }
+    //List initialization
+    ListIterator listIterator = createIterator((List*)list);
+    Group* group = NULL;
+    char* string = calloc(4, sizeof(char));
+    string[0] = '[';
+    //Create the string, iterating through each element
+    while ((group = nextElement(&listIterator)) != NULL) {
+        char* groupJSON = groupToJSON(group);
+        string = realloc(string, strlen(string) + strlen(groupJSON) + 8);
+        strcat(string, groupJSON);
+        strcat(string, ",");
+        free(groupJSON);
+    }
+    //Close off the JSON string and return
+    *strrchr(string, ',') = ']';
+    return string;
 }
 
 SVGimage* JSONtoSVG(const char* svgString) {
