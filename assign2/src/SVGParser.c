@@ -1291,7 +1291,7 @@ void addComponent(SVGimage* image, elementType type, void* newElement) {
 
 /**
  * Creates a JSON string for an Attribute.
- * @param a Attribute to tunr into a JSON string.
+ * @param a Attribute to turn into a JSON string.
  * @return JSON string representing the Attribute.
  */
 char* attrToJSON(const Attribute *a) {
@@ -1301,24 +1301,67 @@ char* attrToJSON(const Attribute *a) {
     return string;
 }
 
+/**
+ * Creates a JSON string for a Circle.
+ * @param a Circle to turn into a JSON string.
+ * @return JSON string representing the Circle.
+ */
 char* circleToJSON(const Circle *c) {
-
-    return NULL;
+    if (c == NULL) return "{}";
+    char* string = calloc(strlen(c->units) + 64, sizeof(char));
+    sprintf(string, "{\"cx\":%.2f,\"cy\":%.2f,\"r\":%.2f,\"numAttr\":%d,\"units\":\"%s\"}", c->cx, c->cy, c->r, c->otherAttributes->length, c->units);
+    return string;
 }
 
+/**
+ * Creates a JSON string for a Rectangle.
+ * @param a Rectangle to turn into a JSON string.
+ * @return JSON string representing the Rectangle.
+ */
 char* rectToJSON(const Rectangle *r) {
-
-    return NULL;
+    if (r == NULL) return "{}";
+    char* string = calloc(strlen(r->units) + 128, sizeof(char));
+    sprintf(string, "{\"x\":%.2f,\"y\":%.2f,\"w\":%.2f,\"h\":%.2f,\"numAttr\":%d,\"units\":\"%s\"}", r->x, r->y, r->width, r->height, r->otherAttributes->length, r->units);
+    return string;
 }
 
+/**
+ * Creates a JSON string for a Path.
+ * @param a Path to turn into a JSON string.
+ * @return JSON string representing the Path.
+ */
 char* pathToJSON(const Path *p) {
-
-    return NULL;
+    if (p == NULL) return "{}";
+    char* string = calloc(strlen(p->data) + 16, sizeof(char));
+    char* pathData = calloc(65, sizeof(char));
+    strncpy(pathData, p->data, 64);
+    sprintf(string, "{\"d\":\"%s\",\"numAttr\":%d}", pathData, p->otherAttributes->length);
+    free(pathData);
+    return string;
 }
 
+/**
+ * Creates a JSON string for a Group.
+ * @param a Group to turn into a JSON string.
+ * @return JSON string representing the Group.
+ */
 char* groupToJSON(const Group *g) {
+    if (g == NULL) return "{}";
+    char* string = calloc(64, sizeof(char));
+    sprintf(string, "{\"children\":%d,\"numAttr\":%d}", g->rectangles->length + g->circles->length + g->paths->length + g->groups->length, g->otherAttributes->length);
+    return string;
+}
 
-    return NULL;
+/**
+ * Creates a JSON string for a SVG image struct.
+ * @param a SVG image struct to turn into a JSON string.
+ * @return JSON string representing the SVG image struct.
+ */
+char* SVGtoJSON(const SVGimage* imge) {
+    if (imge == NULL) return "{}";
+    char* string = calloc(64, sizeof(char));
+    sprintf(string, "{\"numRect\":%d,\"numCirc\":%d,\"numPaths\":%d,\"numGroups\":%d}", getRects((SVGimage*)imge)->length, getCircles((SVGimage*)imge)->length, getPaths((SVGimage*)imge)->length, getGroups((SVGimage*)imge)->length);
+    return string;
 }
 
 char* attrListToJSON(const List *list) {
@@ -1342,11 +1385,6 @@ char* pathListToJSON(const List *list) {
 }
 
 char* groupListToJSON(const List *list) {
-
-    return NULL;
-}
-
-char* SVGtoJSON(const SVGimage* imge) {
 
     return NULL;
 }
