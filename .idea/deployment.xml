@@ -7,6 +7,13 @@
           <mappings>
             <mapping deploy="/2750" local="$PROJECT_DIR$" web="/" />
           </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/assign2/cmake-build-debug" />
+            <excludedPath local="true" path="$PROJECT_DIR$/assign2/bin/assignmentFiles" />
+            <excludedPath local="true" path="$PROJECT_DIR$/assign2/bin/otherTestFiles" />
+            <excludedPath local="true" path="$PROJECT_DIR$/assign2/bin/testFiles" />
+            <excludedPath local="true" path="$PROJECT_DIR$/assign2/bin/testFilesA2" />
+          </excludedPaths>
         </serverdata>
       </paths>
       <paths name="WSL (82371ef2-39d8-48d1-890b-ab1ae338c9ab)">

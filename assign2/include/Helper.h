@@ -23,6 +23,7 @@ bool validateCircles (List* list);
 bool validatePaths (List* list);
 bool validateGroups (List* list);
 bool validateAttributes (List* list);
+bool fileExists (char* fileName);
 int validateXMLwithXSD(xmlDoc* xml, char* xsdFile);
 void addAttributesToXML(List* elementList, xmlNode* node);
 void addRectsToXML(List* elementList, xmlNode* docHead);

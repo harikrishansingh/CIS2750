@@ -783,12 +783,18 @@ SVGimage* createValidSVGimage(char* fileName, char* schemaFile) {
         -schemaFile does not have a .xsd extension*/
     if ((fileName == NULL || schemaFile == NULL) ||
         (strcmp(".xsd", schemaFile + (strlen(schemaFile) - 4)) != 0) ||
-        (strcmp(".svg", fileName + (strlen(fileName) - 4)) != 0)) return NULL;
+        (strcmp(".svg", fileName + (strlen(fileName) - 4)) != 0) ||
+        !fileExists(fileName) || !fileExists(schemaFile)) return NULL;
 
     SVGimage* image = NULL;
     xmlDoc* doc = xmlReadFile(fileName, NULL, 0);
+    if (doc == NULL) {
+        xmlCleanupParser();
+        return NULL;
+    }
     int ret = validateXMLwithXSD(doc, schemaFile);
     xmlCleanupParser();
+    xmlFreeDoc(doc);
     if (ret == 0) /*SVG file is valid*/ image = createSVGimage(fileName);
     return image;
 }
@@ -812,16 +818,19 @@ bool validateSVGimage(SVGimage* image, char* schemaFile) {
     //XSD checking
     xmlDoc* imageDoc = imageToXML(image);
     int ret = validateXMLwithXSD(imageDoc, schemaFile);
+    xmlFreeDoc(imageDoc);
 
     return (ret == 0 ? true : false);
 }
 
 /**
- * Validate the given rectangles list against constraints outlined in the leader.
+ * Validate the given rectangles list against constraints outlined in the header.
  * @param list List of elements.
  * @return True if the list elements are valid, false otherwise.
  */
 bool validateRects (List* list) {
+    if (list == NULL) return false;
+
     ListIterator iter = createIterator(list);
     Rectangle* rect = NULL;
     while ((rect = nextElement(&iter)) != NULL) {
@@ -831,11 +840,13 @@ bool validateRects (List* list) {
 }
 
 /**
- * Validate the given circles list against constraints outlined in the leader.
+ * Validate the given circles list against constraints outlined in the header.
  * @param list List of elements.
  * @return True if the list elements are valid, false otherwise.
  */
 bool validateCircles (List* list) {
+    if (list == NULL) return false;
+
     ListIterator iter = createIterator(list);
     Circle* circle = NULL;
     while ((circle = nextElement(&iter)) != NULL) {
@@ -845,11 +856,13 @@ bool validateCircles (List* list) {
 }
 
 /**
- * Validate the given paths list against constraints outlined in the leader.
+ * Validate the given paths list against constraints outlined in the header.
  * @param list List of elements.
  * @return True if the list elements are valid, false otherwise.
  */
 bool validatePaths (List* list) {
+    if (list == NULL) return false;
+
     ListIterator iter = createIterator(list);
     Path* path = NULL;
     while ((path = nextElement(&iter)) != NULL) {
@@ -859,11 +872,13 @@ bool validatePaths (List* list) {
 }
 
 /**
- * Validate the given groups list against constraints outlined in the leader.
+ * Validate the given groups list against constraints outlined in the header.
  * @param list List of elements.
  * @return True if the list elements are valid, false otherwise.
  */
 bool validateGroups (List* list) {
+    if (list == NULL) return false;
+
     ListIterator iter = createIterator(list);
     Group* group = NULL;
     while ((group = nextElement(&iter)) != NULL) {
@@ -877,16 +892,31 @@ bool validateGroups (List* list) {
 }
 
 /**
- * Validate the given attribute list against constraints outlined in the leader.
+ * Validate the given attribute list against constraints outlined in the header.
  * @param list List of elements.
  * @return True if the list elements are valid, false otherwise.
  */
 bool validateAttributes (List* list) {
+    if (list == NULL) return false;
+
     ListIterator iter = createIterator(list);
     Attribute* attr = NULL;
     while ((attr = nextElement(&iter)) != NULL) {
         if (attr->name == NULL || attr->value == NULL) return false;
     }
+    return true;
+}
+
+/**
+ * Checks if a given file exists.
+ * @param fileName File to attempt to open.
+ * @return True or false if the file exists.
+ */
+bool fileExists (char* fileName) {
+    if (fileName == NULL) return false;
+    FILE* file = fopen(fileName, "r");
+    if (file == NULL) return false;
+    fclose(file);
     return true;
 }
 
@@ -900,9 +930,11 @@ int validateXMLwithXSD(xmlDoc* xml, char* xsdFile) {//Declaring all the XML vari
     xmlSchemaParserCtxt* parserContext = NULL;
     xmlSchema* schema = NULL;
     xmlSchemaValidCtxt* validator = NULL;
+    int retVal = -1;
 
     //This is all for XML validation against a inputted schema files
     if (xml == NULL) goto end;
+    if (!fileExists(xsdFile)) goto end;
 
     parserContext = xmlSchemaNewParserCtxt(xsdFile);
     if (parserContext == NULL) goto end;
@@ -913,7 +945,7 @@ int validateXMLwithXSD(xmlDoc* xml, char* xsdFile) {//Declaring all the XML vari
     validator = xmlSchemaNewValidCtxt(schema);
     if (validator == NULL) goto end;
 
-    int retVal = xmlSchemaValidateDoc(validator, xml);
+    retVal = xmlSchemaValidateDoc(validator, xml);
 
     end:
     if (parserContext != NULL) xmlSchemaFreeParserCtxt(parserContext);
@@ -931,8 +963,10 @@ int validateXMLwithXSD(xmlDoc* xml, char* xsdFile) {//Declaring all the XML vari
  * @return True if completed successfully, false otherwise.
  */
 bool writeSVGimage(SVGimage* image, char* fileName) {
-    //Basic sanity checking
-    if ((fileName == NULL || image == NULL) || (strcmp(".svg", fileName + (strlen(fileName) - 4)) != 0)) return false;
+    //Validity checking
+    if (image == NULL || fileName == NULL) return false;
+    if (strcmp(".svg", fileName + (strlen(fileName) - 4)) != 0) return false;
+    if (!(validateRects(image->rectangles) && validateCircles(image->circles) && validatePaths(image->paths) && validateGroups(image->groups) && validateAttributes(image->otherAttributes))) return false;
 
     //Turns the image into an XML tree
     xmlDoc* imageXML = imageToXML(image);
@@ -1008,13 +1042,13 @@ void addRectsToXML(List* elementList, xmlNode* docHead) {
 
         //Adds all the properties to the newly created XML node
         char* value = calloc(1024, sizeof(char));
-        sprintf(value, "%.2f%s", rect->x, rect->units);
+        sprintf(value, "%f%s", rect->x, rect->units);
         xmlNewProp(newNode, (xmlChar*)"x", (xmlChar*)value);
-        sprintf(value, "%.2f%s", rect->y, rect->units);
+        sprintf(value, "%f%s", rect->y, rect->units);
         xmlNewProp(newNode, (xmlChar*)"y", (xmlChar*)value);
-        sprintf(value, "%.2f%s", rect->width, rect->units);
+        sprintf(value, "%f%s", rect->width, rect->units);
         xmlNewProp(newNode, (xmlChar*)"width", (xmlChar*)value);
-        sprintf(value, "%.2f%s", rect->height, rect->units);
+        sprintf(value, "%f%s", rect->height, rect->units);
         xmlNewProp(newNode, (xmlChar*)"height", (xmlChar*)value);
         addAttributesToXML(rect->otherAttributes, newNode);
 
@@ -1038,11 +1072,11 @@ void addCirclesToXML(List* elementList, xmlNode* docHead) {
 
         //Adds all the properties to the newly created XML node
         char* value = calloc(1024, sizeof(char));
-        sprintf(value, "%.2f%s", circle->cx, circle->units);
+        sprintf(value, "%f%s", circle->cx, circle->units);
         xmlNewProp(newNode, (xmlChar*)"cx", (xmlChar*)value);
-        sprintf(value, "%.2f%s", circle->cy, circle->units);
+        sprintf(value, "%f%s", circle->cy, circle->units);
         xmlNewProp(newNode, (xmlChar*)"cy", (xmlChar*)value);
-        sprintf(value, "%.2f%s", circle->r, circle->units);
+        sprintf(value, "%f%s", circle->r, circle->units);
         xmlNewProp(newNode, (xmlChar*)"r", (xmlChar*)value);
         addAttributesToXML(circle->otherAttributes, newNode);
 
@@ -1107,7 +1141,10 @@ void addGroupsToXML(List* elementList, xmlNode* docHead) {
  */
 void setAttribute(SVGimage* image, elementType elemType, int elemIndex, Attribute* newAttribute) {
     //Sanity checks
-    if (image == NULL || (newAttribute == NULL || !(newAttribute->name != NULL && newAttribute->value != NULL)) || (elemType != RECT && elemType != CIRC && elemType != PATH && elemType != GROUP &&elemType != SVG_IMAGE)) return;
+    if (image == NULL || newAttribute == NULL) return;
+    if (newAttribute->name == NULL || newAttribute->value == NULL) return;
+    if (elemType != RECT && elemType != CIRC && elemType != PATH && elemType != GROUP &&elemType != SVG_IMAGE) return;
+    if (!(validateRects(image->rectangles) && validateCircles(image->circles) && validatePaths(image->paths) && validateGroups(image->groups) && validateAttributes(image->otherAttributes))) return;
 
     Node* node = NULL;
     Attribute* attr = NULL;
@@ -1272,7 +1309,9 @@ Attribute* existsInList(List* list, Attribute* attribute) {
  * @param newElement Pointer to data to add to the image.
  */
 void addComponent(SVGimage* image, elementType type, void* newElement) {
-    if (image == NULL || (type != RECT && type != CIRC && type != PATH) || newElement == NULL) return;
+    if (image == NULL || newElement == NULL) return;
+    if (type != RECT && type != CIRC && type != PATH) return;
+    if (!(validateRects(image->rectangles) && validateCircles(image->circles) && validatePaths(image->paths) && validateGroups(image->groups) && validateAttributes(image->otherAttributes))) return;
 
     switch (type) {
         case RECT:
@@ -1546,9 +1585,24 @@ char* groupListToJSON(const List *list) {
     return string;
 }
 
+/**
+ * Creates a SVGimage from a JSON string.
+ * @param svgString JSON string to turn into a SVGimage
+ * @return The SVGimage
+ */
 SVGimage* JSONtoSVG(const char* svgString) {
+    if (svgString == NULL) return NULL;
+    //Create new SVGimage
+    SVGimage* image = calloc(1, sizeof(SVGimage));
+//    image->rectangles = initializeList(rectangleToString, deleteRectangle, compareRectangles);
+//    image->circles = initializeList(circleToString, deleteCircle, compareCircles);
+//    image->paths = initializeList(pathToString, deletePath, comparePaths);
+//    image->groups = initializeList(groupToString, deleteGroup, compareGroups);
+//    image->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
 
-    return NULL;
+
+
+    return image;
 }
 
 Rectangle* JSONtoRect(const char* svgString) {
