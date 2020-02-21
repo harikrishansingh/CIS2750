@@ -1098,22 +1098,21 @@ void addGroupsToXML(List* elementList, xmlNode* docHead) {
     }
 }
 
+/**
+ * Adds or edits an attribute, for a element type, at an index.
+ * @param image The image struct to edit.
+ * @param elemType The element type to look for. RECT/CIRC/PATH/GROUP/ATTRIBUTE.
+ * @param elemIndex The 0 based index for the element of the given type to edit.
+ * @param newAttribute Attribute to look for or add to the image.
+ */
 void setAttribute(SVGimage* image, elementType elemType, int elemIndex, Attribute* newAttribute) {
     //Sanity checks
-    if (image == NULL || newAttribute == NULL || elemIndex < 0 || (elemType != RECT && elemType != CIRC && elemType != PATH && elemType != GROUP &&elemType != SVG_IMAGE)) return;
+    if (image == NULL || (newAttribute == NULL || !(newAttribute->name != NULL && newAttribute->value != NULL)) || (elemType != RECT && elemType != CIRC && elemType != PATH && elemType != GROUP &&elemType != SVG_IMAGE)) return;
 
     Node* node = NULL;
     Attribute* attr = NULL;
     switch (elemType) {
         case SVG_IMAGE:
-            //Sanity check
-            if (elemIndex > image->otherAttributes->length - 1) return;
-
-            //TODO: Check if works
-            //Finds the target node at the index
-            node = image->otherAttributes->head;
-            for (int i = 0; i < elemIndex - 1; i++) { node = node->next; }
-
             attr = existsInList(image->otherAttributes, newAttribute);
             if (attr != NULL) {
                 //Free the old value, and calloc space for the new value.
@@ -1130,12 +1129,11 @@ void setAttribute(SVGimage* image, elementType elemType, int elemIndex, Attribut
 
         case CIRC:
             //Sanity check
-            if (elemIndex > image->circles->length - 1) return;
+            if (elemIndex > image->circles->length - 1 || elemIndex < 0) return;
 
-            //TODO: Check if works
             //Finds the target node at the index
             node = image->circles->head;
-            for (int i = 0; i < elemIndex - 1; i++) { node = node->next; }
+            for (int i = 0; i < elemIndex; i++) { node = node->next; }
 
             if (strcmp(newAttribute->name, "cx") == 0) {
                 //Set circle center x
@@ -1164,12 +1162,11 @@ void setAttribute(SVGimage* image, elementType elemType, int elemIndex, Attribut
 
         case RECT:
             //Sanity check
-            if (elemIndex > image->rectangles->length - 1) return;
+            if (elemIndex > image->rectangles->length - 1 || elemIndex < 0) return;
 
-            //TODO: Check if works
             //Finds the target node at the index
             node = image->rectangles->head;
-            for (int i = 0; i < elemIndex - 1; i++) { node = node->next; }
+            for (int i = 0; i < elemIndex; i++) { node = node->next; }
 
             if (strcmp(newAttribute->name, "x") == 0) {
                 //Set rectangle x
@@ -1201,12 +1198,11 @@ void setAttribute(SVGimage* image, elementType elemType, int elemIndex, Attribut
 
         case PATH:
             //Sanity check
-            if (elemIndex > image->paths->length - 1) return;
+            if (elemIndex > image->paths->length - 1 || elemIndex < 0) return;
 
-            //TODO: Check if works
             //Finds the target node at the index
             node = image->paths->head;
-            for (int i = 0; i < elemIndex - 1; i++) { node = node->next; }
+            for (int i = 0; i < elemIndex; i++) { node = node->next; }
 
             if (strcmp(newAttribute->name, "d") == 0) {
                 //Set path data
@@ -1218,7 +1214,7 @@ void setAttribute(SVGimage* image, elementType elemType, int elemIndex, Attribut
                 if (attr != NULL) {
                     //Update the old attribute
                     free(attr->value);
-                    attr->value = calloc(strlen(newAttribute->value) + 1, sizeof(char));
+                    attr->value = calloc(strlen(newAttribute->value), sizeof(char));
                     strcpy(attr->value, newAttribute->value);
                 } else {
                     //Add new attribute
@@ -1231,13 +1227,11 @@ void setAttribute(SVGimage* image, elementType elemType, int elemIndex, Attribut
 
         case GROUP:
             //Sanity check
-            if (elemIndex > image->groups->length - 1) return;
+            if (elemIndex > image->groups->length - 1 || elemIndex < 0) return;
 
-            //TODO: Check if works
             //Finds the target node at the index
             node = image->groups->head;
-            for (int i = 0; i < elemIndex - 1; i++) { node = node->next; }
-
+            for (int i = 0; i < elemIndex; i++) { node = node->next; }
 
             attr = existsInList(((Group*)(node->data))->otherAttributes, newAttribute);
             if (attr != NULL) {
@@ -1295,6 +1289,11 @@ void addComponent(SVGimage* image, elementType type, void* newElement) {
     }
 }
 
+/**
+ * Creates a JSON string for an Attribute.
+ * @param a Attribute to tunr into a JSON string.
+ * @return JSON string representing the Attribute.
+ */
 char* attrToJSON(const Attribute *a) {
 
     return NULL;
