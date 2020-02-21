@@ -1360,7 +1360,15 @@ char* groupToJSON(const Group *g) {
 char* SVGtoJSON(const SVGimage* imge) {
     if (imge == NULL) return "{}";
     char* string = calloc(64, sizeof(char));
-    sprintf(string, "{\"numRect\":%d,\"numCirc\":%d,\"numPaths\":%d,\"numGroups\":%d}", getRects((SVGimage*)imge)->length, getCircles((SVGimage*)imge)->length, getPaths((SVGimage*)imge)->length, getGroups((SVGimage*)imge)->length);
+    List* rects = getRects((SVGimage*)imge);
+    List* circles = getCircles((SVGimage*)imge);
+    List* paths = getPaths((SVGimage*)imge);
+    List* groups = getGroups((SVGimage*)imge);
+    sprintf(string, "{\"numRect\":%d,\"numCirc\":%d,\"numPaths\":%d,\"numGroups\":%d}", rects->length, circles->length, paths->length, groups->length);
+    freeList(rects);
+    freeList(circles);
+    freeList(paths);
+    freeList(groups);
     return string;
 }
 
