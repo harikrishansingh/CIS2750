@@ -1642,6 +1642,11 @@ Rectangle* JSONtoRect(const char* svgString) {
     return rectangle;
 }
 
+/**
+ * Creates a Circle from a JSON string.
+ * @param svgString JSON string to turn into a Circle.
+ * @return A Circle.
+ */
 Circle* JSONtoCircle(const char* svgString) {
     if (svgString == NULL) return NULL;
     //Create new Rectangle
