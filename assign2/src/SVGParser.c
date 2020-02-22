@@ -1587,30 +1587,78 @@ char* groupListToJSON(const List *list) {
 
 /**
  * Creates a SVGimage from a JSON string.
- * @param svgString JSON string to turn into a SVGimage
+ * @param svgString JSON string to turn into a SVGimage.
  * @return The SVGimage
  */
 SVGimage* JSONtoSVG(const char* svgString) {
     if (svgString == NULL) return NULL;
     //Create new SVGimage
     SVGimage* image = calloc(1, sizeof(SVGimage));
-//    image->rectangles = initializeList(rectangleToString, deleteRectangle, compareRectangles);
-//    image->circles = initializeList(circleToString, deleteCircle, compareCircles);
-//    image->paths = initializeList(pathToString, deletePath, comparePaths);
-//    image->groups = initializeList(groupToString, deleteGroup, compareGroups);
-//    image->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
+    image->rectangles = initializeList(rectangleToString, deleteRectangle, compareRectangles);
+    image->circles = initializeList(circleToString, deleteCircle, compareCircles);
+    image->paths = initializeList(pathToString, deletePath, comparePaths);
+    image->groups = initializeList(groupToString, deleteGroup, compareGroups);
+    image->otherAttributes = initializeList(attributeToString, deleteAttribute, compareAttributes);
 
+    char* start = strstr(svgString, "title") + 8;
+    char* end = strstr(start, "\",\"");
+    strncpy(image->title, start, ((end - start) / sizeof(char)));
 
+    start = strstr(end, "descr") + 8;
+    end = strstr(start, "\"}");
+    int length = ((end - start) / sizeof(char));
+    strncpy(image->description, start, (length > 255 ? 255 : length));
 
     return image;
 }
 
+/**
+ * Creates a Rectangle from a JSON string.
+ * @param svgString JSON string to turn into a Rectangle.
+ * @return A Rectangle.
+ */
 Rectangle* JSONtoRect(const char* svgString) {
+    if (svgString == NULL) return NULL;
+    //Create new Rectangle
+    Rectangle* rectangle = calloc(1, sizeof(Rectangle));
+    rectangle->otherAttributes = initializeList(rectangleToString, deleteRectangle, compareRectangles);
 
-    return NULL;
+    //Finds the required fields and populates the rectangle
+    char* start = strstr(svgString, "x") + 3;
+    rectangle->x = strtof(start, NULL);
+    start = strstr(svgString, "y") + 3;
+    rectangle->y = strtof(start, NULL);
+    start = strstr(svgString, "w") + 3;
+    rectangle->width = strtof(start, NULL);
+    start = strstr(svgString, "h") + 3;
+    rectangle->height = strtof(start, NULL);
+    start = strstr(svgString, "h") + 3;
+    rectangle->height = strtof(start, NULL);
+    start = strstr(svgString, "units") + 8;
+    char* end = strstr(start, "\"}");
+    int length = ((end - start) / sizeof(char));
+    strncpy(rectangle->units, start, (length > 255 ? 255 : length));
+
+    return rectangle;
 }
 
 Circle* JSONtoCircle(const char* svgString) {
+    if (svgString == NULL) return NULL;
+    //Create new Rectangle
+    Circle* circle = calloc(1, sizeof(Circle));
+    circle->otherAttributes = initializeList(circleToString, deleteCircle, compareCircles);
 
-    return NULL;
+    //Finds the required fields and populates the rectangle
+    char* start = strstr(svgString, "cx") + 4;
+    circle->cx = strtof(start, NULL);
+    start = strstr(svgString, "cy") + 4;
+    circle->cy = strtof(start, NULL);
+    start = strstr(svgString, "r") + 3;
+    circle->r = strtof(start, NULL);
+    start = strstr(svgString, "units") + 8;
+    char* end = strstr(start, "\"}");
+    int length = ((end - start) / sizeof(char));
+    strncpy(circle->units, start, (length > 255 ? 255 : length));
+
+    return circle;
 }
