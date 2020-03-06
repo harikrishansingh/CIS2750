@@ -1154,7 +1154,7 @@ void setAttribute(SVGimage* image, elementType elemType, int elemIndex, Attribut
             if (attr != NULL) {
                 //Free the old value, and calloc space for the new value.
                 free(attr->value);
-                attr->value = calloc(strlen(newAttribute->value), sizeof(char));
+                attr->value = calloc(strlen(newAttribute->value) + 4, sizeof(char));
                 strcpy(attr->value, newAttribute->value);
             } else {
                 //Add the new attribute to the list
