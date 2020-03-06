@@ -1,4 +1,4 @@
 example/
-assign3/parser/cmake-build-debug
-assign3/node_modules
-/assign3/parser/cmake-build-debug/example/
+SVGApp/parser/cmake-build-debug
+SVGApp/node_modules
+/SVGApp/parser/cmake-build-debug/example/
