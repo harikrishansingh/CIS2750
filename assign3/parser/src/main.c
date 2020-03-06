@@ -8,17 +8,9 @@ Attribute* getTestAttr1();
 Attribute* getTestAttr2();
 
 int main() {
-    SVGimage* image = createSVGimage("testFiles/hen_and_chicks.svg");
-    List* list = getPaths(image);
-    char* string = pathListToJSON(list);
-
-    FILE* out = fopen("temp.svg", "w");
-    fwrite(string, sizeof(char), strlen(string), out);
-    fclose(out);
-
-    free(string);
-    freeList(list);
+    SVGimage* image = createValidSVGimage("testFilesA2/quad01_A2.svg", "testFilesA2/svg.xsd");
     deleteSVGimage(image);
+    return 0;
 }
 
 Rectangle* getTestRect() {
