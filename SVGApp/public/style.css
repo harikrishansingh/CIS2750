@@ -1,8 +1,8 @@
 html {
-    width: 75%;
+    width: 90%;
     height: 100%;
     min-height: 100%;
-    margin: 0 auto;
+    margin: 20px auto;
     font-size: 16px;
     background-color: #FFFFFF;
 }
@@ -14,29 +14,69 @@ body {
     background-color: #FFFFFF;
 }
 
-a:link:hover {
+#header {
+    display: flex;
+    justify-content: space-between;
+}
+
+#upload-file {
+    border-style: dashed;
+    width: 200px;
+}
+
+/*a:link:hover {
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
     transition: all 0.3s ease;
     text-decoration: underline;
     cursor: pointer;
     cursor: hand;
+}*/
+
+#file-log {
+    border-radius: 10px 10px 0 0;
 }
 
-input[type=submit], button {
-    cursor: pointer;
-    cursor: hand;
+#details {
+    border-radius: 0 0 10px 10px;
 }
 
-table, th, td {
-    border: 2px solid #696969;
-    padding: 5px;
+.tab {
+    text-align: center;
+    font-size: xx-large;
+    color: black;
+    background: lightblue;
+}
+
+
+table {
+    width: 100%;
 }
 
 th {
     text-align: center;
+    font-size: larger;
 }
 
+table, th, td {
+    border: 1px solid #696969;
+}
+
+.content-table {
+    width: 100%;
+    max-height: 900px;
+    overflow-y: scroll;
+}
+
+.upload-row {
+    padding-left: 50px;
+}
+
+img.img-thumbnail {
+    max-width: 200px;
+}
+
+/*
 @media(max-width: 900px) {
     html {
         font-size: 14px !important;
@@ -56,4 +96,9 @@ th {
         font-size: 12px !important;
         width: 100% !important;
     }
+}*/
+
+input[type=submit], button {
+    cursor: pointer;
+    cursor: hand;
 }

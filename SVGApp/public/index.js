@@ -27,14 +27,14 @@ $(document).ready(function() {
         }
     });
 
-    // Event listener form example , we can use this instead explicitly listening for events
-    // No redirects if possible
-    $('#someform').submit(function(e){
-        $('#blah').html("Form has data: "+$('#entryBox').val());
-        e.preventDefault();
-        //Pass data to the Ajax call, so it gets passed to the server
-        $.ajax({
-            //Create an object for connecting to another waypoint
-        });
+    //hides and shows the content table div
+    $('.tab').click(function(e){
+        if ($('.content-table').css("display") === "none") {
+            $('.content-table').css("display", "block");
+        } else {
+            $('.content-table').css("display", "none");
+        }
+
+        e.preventDefault(); //No redirects if possible
     });
 });
