@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>CHANGE ME</title>
+    <title>SVG Image Viewer</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="CHANGE ME">
@@ -13,25 +13,39 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <!-- Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="/style.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <!-- Custom CSS End -->
 </head>
+
 <body>
-    <h3>Download test</h3>
-    If the A3 stub is running and simple.gpx exists in the uploads/ directory on the server, then clicking on the link below will download it from the server.<br>
-    <a href="rects.svg">rects.svg</a>
-    <p></p>
-    <img src="rects.svg">
+    <h2>SVG Image Viewer</h2>
+
+    <h3>File Log</h3>
+    <table class="file-log">
+        <tr>
+            <th>Image<br/>(click to download)</th>
+            <th>File name<br/>(click to download)</th>
+            <th>File size</th>
+            <th>Number of rectangles</th>
+            <th>Number of circles</th>
+            <th>Number of paths</th>
+            <th>Number of groups</th>
+        </tr>
+        <tr>
+            <td><img src="rects.svg"/></td>
+            <td><a href="rects.svg">rects.svg</a></td>
+        </tr>
+    </table>
 
     <hr>
     <div id="blah">I am blah</div>
     <hr>
     <form ref='someform'
           id='someform'>
-          <div class="form-group">
-                <label for="entryBox">Last Name</label>
-                <input type="text" class="form-control" id="entryBox" value="Value" placeholder="Placeholder">
-            </div>
+        <div class="form-group">
+            <label for="entryBox">Last Name</label>
+            <input type="text" class="form-control" id="entryBox" value="Value" placeholder="Placeholder">
+        </div>
         <div class="form-group">
             <input type='submit' class="btn btn-secondary">
         </div>
@@ -40,10 +54,3 @@
     <script src="/index.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
