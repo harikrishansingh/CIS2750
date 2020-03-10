@@ -18,39 +18,85 @@
 </head>
 
 <body>
-    <h2>SVG Image Viewer</h2>
+    <div id="header">
+        <h2 id="title">SVG Image Viewer</h2>
+        <button id="upload-file">Upload file</button>
+    </div>
+    <hr/>
+    <div id="file-log" class="tab">File Log</div>
+    <div class="content-table">
+        <table class="file-log content-tab">
+            <tr>
+                <!-- 7 Table columns -->
+                <th>Image<br/>(click to download)</th>
+                <th>File name<br/>(click to download)</th>
+                <th>File size</th>
+                <th>Number of rectangles</th>
+                <th>Number of circles</th>
+                <th>Number of paths</th>
+                <th>Number of groups</th>
+            </tr>
+            <tr>
+                <td><img src="rects.svg" class="img-thumbnail"/></td>
+                <td><a href="rects.svg">rects.svg</a></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><img src="rects.svg" class="img-thumbnail"/></td>
+                <td><a href="rects.svg">rects.svg</a></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><img src="rects.svg" class="img-thumbnail"/></td>
+                <td><a href="rects.svg">rects.svg</a></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><img src="rects.svg" class="img-thumbnail"/></td>
+                <td><a href="rects.svg">rects.svg</a></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><img src="rects.svg" class="img-thumbnail"/></td>
+                <td><a href="rects.svg">rects.svg</a></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><img src="rects.svg" class="img-thumbnail"/></td>
+                <td><a href="rects.svg">rects.svg</a></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
 
-    <h3>File Log</h3>
-    <table class="file-log">
-        <tr>
-            <th>Image<br/>(click to download)</th>
-            <th>File name<br/>(click to download)</th>
-            <th>File size</th>
-            <th>Number of rectangles</th>
-            <th>Number of circles</th>
-            <th>Number of paths</th>
-            <th>Number of groups</th>
-        </tr>
-        <tr>
-            <td><img src="rects.svg"/></td>
-            <td><a href="rects.svg">rects.svg</a></td>
-        </tr>
-    </table>
+        </table>
+    </div>
+    <div id="details" class="tab">Details</div>
 
-    <hr>
-    <div id="blah">I am blah</div>
-    <hr>
-    <form ref='someform'
-          id='someform'>
-        <div class="form-group">
-            <label for="entryBox">Last Name</label>
-            <input type="text" class="form-control" id="entryBox" value="Value" placeholder="Placeholder">
-        </div>
-        <div class="form-group">
-            <input type='submit' class="btn btn-secondary">
-        </div>
-    </form>
+
     <!-- Leave me at the bottom of body -->
-    <script src="/index.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>
