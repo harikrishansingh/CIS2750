@@ -2,3 +2,4 @@ example/
 SVGApp/parser/cmake-build-debug
 SVGApp/node_modules
 /SVGApp/parser/cmake-build-debug/example/
+/SVGApp/parser/bin/
