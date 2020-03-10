@@ -54,8 +54,11 @@ table {
 }
 
 th {
-    text-align: center;
     font-size: larger;
+}
+
+th, td {
+    text-align: center;
 }
 
 table, th, td {
@@ -68,12 +71,9 @@ table, th, td {
     overflow-y: scroll;
 }
 
-.upload-row {
-    padding-left: 50px;
-}
-
-img.img-thumbnail {
+img.img-thumb {
     max-width: 200px;
+    padding: 5px;
 }
 
 /*
@@ -97,8 +97,3 @@ img.img-thumbnail {
         width: 100% !important;
     }
 }*/
-
-input[type=submit], button {
-    cursor: pointer;
-    cursor: hand;
-}
