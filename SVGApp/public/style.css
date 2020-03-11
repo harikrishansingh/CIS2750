@@ -1,5 +1,5 @@
 html {
-    width: 90%;
+    width: 75%;
     height: 100%;
     min-height: 100%;
     margin: 20px auto;
@@ -19,7 +19,7 @@ body {
     justify-content: space-between;
 }
 
-#upload-file {
+.new-content {
     border-style: dashed;
     width: 200px;
 }
@@ -35,10 +35,6 @@ body {
 
 #file-log {
     border-radius: 10px 10px 0 0;
-}
-
-#details {
-    border-radius: 0 0 10px 10px;
 }
 
 .tab {
@@ -65,15 +61,24 @@ table, th, td {
     border: 1px solid #696969;
 }
 
-.content-table {
+.content-wrapper {
     width: 100%;
     max-height: 900px;
     overflow-y: scroll;
 }
 
+.detail-wrapper {
+    max-height: none !important;
+    overflow: hidden;
+}
+
 img.img-thumb {
     max-width: 200px;
     padding: 5px;
+}
+
+td.other-attributes {
+    width: 250px;
 }
 
 /*

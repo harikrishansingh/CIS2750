@@ -20,15 +20,18 @@
 <body>
     <div id="header">
         <h2 id="title">SVG Image Viewer</h2>
-        <button id="upload-file">Upload file</button>
+        <div>
+        <button id="upload-file" class="new-content">Upload File</button>
+        <button id="new-file" class="new-content">New File</button>
+        </div>
     </div>
     <hr/>
-    <div id="file-log" class="tab">File Log</div>
-    <div class="content-table">
-        <table class="file-log content-tab">
+    <div id="file-log" class="tab file-log">File Log</div>
+    <div class="content-wrapper file-log-wrapper">
+        <table id="file-log-table">
             <tr>
                 <!-- 7 Table columns -->
-                <th>Image<br/>(click to download)</th>
+                <th>Image<br/>(click to view details)</th>
                 <th>File name<br/>(click to download)</th>
                 <th>File size</th>
                 <th>Number of rectangles</th>
@@ -38,63 +41,45 @@
             </tr>
             <tr>
                 <td class="image"><img src="rects.svg" class="img-thumb"/></td>
-                <td class="file-name"><a href="rects.svg">rects.svg</a></td>
-                <td class="file-size"></td>
-                <td class="numRects"></td>
-                <td class="numCircles"></td>
-                <td class="numPaths"></td>
-                <td class="numGroups"></td>
+                <td class="file-name"><a download href="rects.svg">rects.svg</a></td>
+                <td class="file-size">1234KB</td>
+                <td class="numRects">69</td>
+                <td class="numCircles">420</td>
+                <td class="numPaths">1234</td>
+                <td class="numGroups">42</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="tab details">Details</div>
+    <div class="content-wrapper detail-wrapper">
+        <table class="details-table">
+            <tr>
+                <td colspan="6" rowspan="2"><img src="rects.svg" width="75%" /></td>
+            </tr>
+            <tr></tr>
+            <tr>
+                <td colspan="2"><b>Title</b></td>
+                <td colspan="4"><b>Description</b></td>
             </tr>
             <tr>
-                <td class="image"><img src="rects.svg" class="img-thumb"/></td>
-                <td class="file-name"><a href="rects.svg">rects.svg</a></td>
-                <td class="file-size"></td>
-                <td class="numRects"></td>
-                <td class="numCircles"></td>
-                <td class="numPaths"></td>
-                <td class="numGroups"></td>
+                <td colspan="2">THIS IS A TITLE</td>
+                <td colspan="4">THIS IS A DESCRIPTION</td>
             </tr>
             <tr>
-                <td class="image"><img src="rects.svg" class="img-thumb"/></td>
-                <td class="file-name"><a href="rects.svg">rects.svg</a></td>
-                <td class="file-size"></td>
-                <td class="numRects"></td>
-                <td class="numCircles"></td>
-                <td class="numPaths"></td>
-                <td class="numGroups"></td>
+                <td><b>Component</b></td>
+                <td colspan="4"><b>Summary</b></td>
+                <td class="other-attributes"><b>Other attributes</b></td>
             </tr>
             <tr>
-                <td class="image"><img src="rects.svg" class="img-thumb"/></td>
-                <td class="file-name"><a href="rects.svg">rects.svg</a></td>
-                <!--TODO: Get from server-->
-                <td class="file-size"></td>
-                <td class="numRects"></td>
-                <td class="numCircles"></td>
-                <td class="numPaths"></td>
-                <td class="numGroups"></td>
+                <td>Circle</td>
+                <td colspan="4">Center: x=3cm, y=1cm Radius: 1cm</td>
+                <td class="other-attributes">0</td>
             </tr>
-<!--            <tr>
-                <td class="image"><img src="rects.svg" class="img-thumb"/></td>
-                <td class="file-name"><a href="rects.svg">rects.svg</a></td>
-                <td class="file-size"></td>
-                <td class="numRects"></td>
-                <td class="numCircles"></td>
-                <td class="numPaths"></td>
-                <td class="numGroups"></td>
-            </tr>
-            <tr>
-                <td class="image"><img src="rects.svg" class="img-thumb"/></td>
-                <td class="file-name"><a href="rects.svg">rects.svg</a></td>
-                <td class="file-size"></td>
-                <td class="numRects"></td>
-                <td class="numCircles"></td>
-                <td class="numPaths"></td>
-                <td class="numGroups"></td>
-            </tr>-->
 
         </table>
     </div>
-    <div id="details" class="tab">Details</div>
+    <br/>
 
 
     <!-- Leave me at the bottom of body -->
