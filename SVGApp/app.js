@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 // C library API
 const ffi = require('ffi-napi');
@@ -70,14 +70,13 @@ app.get('/uploads/:name', function(req , res){
 });
 
 //******************** Your code goes here ******************** 
-
-//Sample endpoint
-app.get('/someendpoint', function(req , res){
-  let retStr = req.query.name1 + " " + req.query.name2;
-  res.send({
-    foo: retStr
-  });
-});
-
 app.listen(portNum);
 console.log('Running app at localhost: ' + portNum);
+
+//Get file names
+app.get('/files', function (req, res) {
+  const fs = require('fs');
+  res.send({
+    files: fs.readdirSync('uploads')
+  });
+});
