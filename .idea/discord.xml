@@ -6,4 +6,7 @@
     <option name="nameOverrideText" value="CIS*2750" />
     <option name="description" value="CIS*2750 Project" />
   </component>
+  <component name="ProjectNotificationSettings">
+    <option name="askShowProject" value="false" />
+  </component>
 </project>

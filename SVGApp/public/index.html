@@ -21,16 +21,17 @@
     <div id="header">
         <h2 id="title">SVG Image Viewer</h2>
         <div>
-        <button id="upload-file" class="new-content">Upload File</button>
-        <button id="new-file" class="new-content">New File</button>
+            <input type="file" id="imgupload" name="uploadFile"/>
+            <button id="submit-file" class="new-content">Upload File</button>
+            <button id="new-file" class="new-content">New File</button>
         </div>
     </div>
     <hr/>
     <div id="file-log" class="tab file-log">File Log</div>
     <div class="content-wrapper file-log-wrapper">
         <table id="file-log-table">
-            <tr>
-                <!-- 7 Table columns -->
+<!--            <tr>
+                &lt;!&ndash; 7 Table columns &ndash;&gt;
                 <th>Image<br/>(click to view details)</th>
                 <th>File name<br/>(click to download)</th>
                 <th>File size</th>
@@ -38,8 +39,8 @@
                 <th>Number of circles</th>
                 <th>Number of paths</th>
                 <th>Number of groups</th>
-            </tr>
-            <tr>
+            </tr>-->
+<!--            <tr>
                 <td class="image"><img src="rects.svg" class="img-thumb"/></td>
                 <td class="file-name"><a download href="rects.svg">rects.svg</a></td>
                 <td class="file-size">1234KB</td>
@@ -47,7 +48,7 @@
                 <td class="numCircles">420</td>
                 <td class="numPaths">1234</td>
                 <td class="numGroups">42</td>
-            </tr>
+            </tr>-->
         </table>
     </div>
 

@@ -30,12 +30,21 @@ app.get('/style.css',function(req,res){
   res.sendFile(path.join(__dirname+'/public/style.css'));
 });
 
-// Send obfuscated JS, do not change
+//FIXME: Revert
+/*// Send obfuscated JS, do not change
 app.get('/index.js',function(req,res){
   fs.readFile(path.join(__dirname+'/public/index.js'), 'utf8', function(err, contents) {
     const minimizedContents = JavaScriptObfuscator.obfuscate(contents, {compact: true, controlFlowFlattening: true});
     res.contentType('application/javascript');
     res.send(minimizedContents._obfuscatedCode);
+  });
+});*/
+
+// Send obfuscated JS, do not change
+app.get('/index.js',function(req,res){
+  fs.readFile(path.join(__dirname+'/public/index.js'), 'utf8', function(err, contents) {
+    res.contentType('application/javascript');
+    res.send(contents);
   });
 });
 
@@ -73,10 +82,27 @@ app.get('/uploads/:name', function(req , res){
 app.listen(portNum);
 console.log('Running app at localhost: ' + portNum);
 
-//Get file names
+//Get images
 app.get('/files', function (req, res) {
   const fs = require('fs');
+  const files = fs.readdirSync('uploads');
+  //TODO: loop through each file name and creatValidSVG, json stringify the array of json, send it back
+
+  var images = [];
+
+  files.forEach(e => {
+    console.log(e);
+    var fileData = [];
+    fileData[0] = e;
+    fileData[1] = Math.round(fs.statSync("uploads/" + e).size / 1024);
+    fileData[2] = 1; //TODO: numRects
+    fileData[3] = 2; //TODO: numCircles
+    fileData[4] = 3; //TODO: numPaths
+    fileData[5] = 4; //TODO: numGroups
+    images.push(fileData);
+  });
+
   res.send({
-    files: fs.readdirSync('uploads')
+    data: JSON.stringify(images)
   });
 });
