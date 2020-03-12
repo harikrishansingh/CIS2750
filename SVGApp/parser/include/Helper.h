@@ -35,5 +35,6 @@ Attribute* existsInList(List* list, Attribute* attribute);
 bool createEmptySVG(char* filename);
 char* fileToJSON(char* filename, char* schema);
 bool validateFile (char* filename, char* schema);
+char* fullImageToJSON(char* filename, char* schema);
 
 #endif

@@ -131,6 +131,11 @@ app.get('/newFile', function(req, res) {
   }
 });
 
+app.get('/fileData', function(req, res) {
+  const library = ffi.Library("./libsvgparse", {'fullImageToJSON': ['string', ['string', 'string']]});
+  res.send(library.fullImageToJSON("uploads/" + req.query.filename, "parser/bin/files/svg.xsd"));
+});
+
 function validFile (filePath) {
   const library = ffi.Library("./libsvgparse", {'validateFile': ['bool', ['string', 'string']]});
   return library.validateFile(filePath, "parser/bin/files/svg.xsd");

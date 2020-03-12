@@ -1704,3 +1704,39 @@ bool validateFile (char* filename, char* schema) {
         return true;
     }
 }
+
+char* fullImageToJSON(char* filename, char* schema) {
+    if (filename == NULL || schema == NULL) return NULL;
+    SVGimage* image = createValidSVGimage(filename, schema);
+    if (image == NULL) return NULL;
+
+    List* rects = getRects(image);
+    char* rectsJSON = rectListToJSON(rects);
+    List* circles = getCircles(image);
+    char* circlesJSON = circListToJSON(circles);
+    List* paths = getPaths(image);
+    char* pathsJSON = pathListToJSON(paths);
+    List* groups = getGroups(image);
+    char* groupsJSON = groupListToJSON(groups);
+
+    char* out = calloc(strlen(image->title) +
+                       strlen(image->description) +
+                       strlen(rectsJSON) +
+                       strlen(circlesJSON) +
+                       strlen(pathsJSON) +
+                       strlen(groupsJSON) + 128, sizeof(char));
+
+    sprintf(out, "{\"title\":\"%s\",\"description\":\"%s\",\"rectangles\":%s,\"circles\":%s,\"paths\":%s,\"groups\":%s}", image->title, image->description, rectsJSON, circlesJSON, pathsJSON, groupsJSON);
+
+    deleteSVGimage(image);
+    freeList(rects);
+    free(rectsJSON);
+    freeList(circles);
+    free(circlesJSON);
+    freeList(paths);
+    free(pathsJSON);
+    freeList(groups);
+    free(groupsJSON);
+
+    return out;
+}

@@ -104,19 +104,62 @@ function updateDetails (image) {
     $('.detail-wrapper').css("display", "block");
     const table = $('.details-table');
 
+    //Get our JSON string for a file
+    let imageJSON;
+    $.ajax({
+        type: 'get',
+        dataType: 'json',
+        url: '/fileData',
+        async: false,
+        data: {
+            filename: image
+        },
+        success: function (data) {
+            imageJSON = data;
+        },
+        fail: function (error) {
+            alert(new Error("Could not load data for file. " + error));
+        }
+    });
+
+
+    if (imageJSON === undefined) {
+        $('#detail-select').val(image);
+        $('.detail-wrapper').css("display", "none");
+        return;
+    }
+
     //Clear the table first
     table.empty();
 
+    //Add titles and content
     table.append(
         '<tr><td colspan="6" rowspan="2"><img src="' + image + '" width="800px" /></td></tr>' +
         '<tr></tr>' +
         '<tr><td colspan="2" class="detail-heading"><b>Title</b></td><td colspan="4" class="detail-heading"><b>Description</b></td></tr>' +
-        //TODO: Get actual title and description
-        '<tr><td colspan="2">THIS IS A TITLE</td><td colspan="4">THIS IS A DESCRIPTION</td></tr>' +
+        '<tr><td colspan="2">' + (imageJSON.title === "" ? "[no title]" : imageJSON.title) + '</td><td colspan="4">' + (imageJSON.description === "" ? "[no description]" : imageJSON.description) + '</td></tr>' +
         '<tr><td class="detail-heading"><b>Component</b></td><td colspan="4" class="detail-heading"><b>Summary</b></td><td class="other-attributes detail-heading"><b>Other attributes</b></td></tr>'
     );
 
-    //TODO: Loop and get the actual data
-    table.append('<tr><td>Circle</td><td colspan="4">Center: x=3cm, y=1cm Radius: 1cm</td><td class="other-attributes">0</td></tr>');
+    //Loop through rectangles
+    imageJSON.rectangles.forEach(function(r, i)  {
+        table.append('<tr><td>Rectangle ' + (i - -1) + '</td><td colspan="4">Top left: x=' + r.x + r.units + ', y=' + r.y + r.units + '<br>' +
+            'Width: ' + r.w + r.units + ' Height: ' + r.h + r.units + '</td><td class="other-attributes">' + r.numAttr + '</td></tr>')
+    });
 
+    //Loop through circles
+    imageJSON.circles.forEach(function(c, i)  {
+        table.append('<tr><td>Circle ' + (i - -1) + '</td><td colspan="4">Center: cx=' + c.cx + c.units + ', cy=' + c.cy + c.units + '<br>' +
+            'Radius: ' + c.r + c.units + '</td><td class="other-attributes">' + c.numAttr + '</td></tr>')
+    });
+
+    //Loop through paths
+    imageJSON.paths.forEach(function(p, i)  {
+        table.append('<tr><td>Path ' + (i - -1) + '</td><td colspan="4">Data: ' + p.d + '</td><td class="other-attributes">' + p.numAttr + '</td></tr>')
+    });
+
+    //Loop through groups
+    imageJSON.rectangles.forEach(function(g, i)  {
+        table.append('<tr><td>Rectangle ' + (i - -1) + '</td><td colspan="4">Number of children: ' + g.children + '</td><td class="other-attributes">' + r.numAttr + '</td></tr>')
+    });
 }
