@@ -10,17 +10,34 @@ $(document).ready(function () {
             populateTable(data);
         },
         fail: function (error) {
-            alert(new Error("Could not load files."));
+            alert(new Error("Could not load files." + error));
             populateTable(null);
         }
     });
 
+    //Make new file
+    $('#new-file').on("click", function () {
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/newFile',
+            success: function () {
+                alert("New file created!");
+                location.reload();
+            },
+            fail: function (error) {
+                alert(new Error("Could not create new file." + error));
+            }
+        });
+    });
+
     //Hides and shows the content table div
     $('.tab.file-log').on("click", function (e) {
-        if ($('.file-log-wrapper').css("display") === "none") {
-            $('.file-log-wrapper').css("display", "block");
+        const flw = $('.file-log-wrapper');
+        if (flw.css("display") === "none") {
+            flw.css("display", "block");
         } else {
-            $('.file-log-wrapper').css("display", "none");
+            flw.css("display", "none");
         }
         e.preventDefault(); //No redirects if possible
     });

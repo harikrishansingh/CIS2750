@@ -20,12 +20,17 @@
 <body>
     <div id="header">
         <h2 id="title">SVG Image Viewer</h2>
-        <form href="uploadForm" id="uploadForm" action="/upload" method="post" encType="multipart/form-data">
-            <input type="file" id="imgupload" name="uploadFile"/>
-            <button id="submit-file" class="new-content">Upload File</button>
+        <div id="addContent">
+            <form href="uploadForm" id="uploadForm" action="/upload" method="post" encType="multipart/form-data">
+                <input type="file" id="imgupload" name="uploadFile"/>
+                <button id="submit-file" class="new-content">Upload File</button>
+            </form>
             <button id="new-file" class="new-content">New File</button>
-        </form>
+        </div>
     </div>
+
+    <br><br><br>
+
     <hr/>
     <div id="file-log" class="tab file-log">File Log</div>
     <div class="content-wrapper file-log-wrapper">

@@ -54,10 +54,8 @@ app.post('/upload', function(req, res) {
     return res.status(400).send('No files were uploaded.');
   }
 
-  console.log("HERE");
-
   let uploadFile = req.files.uploadFile;
- 
+
   // Use the mv() method to place the file somewhere on your server
   uploadFile.mv('uploads/' + uploadFile.name, function(err) {
     if(err) {
@@ -106,4 +104,12 @@ app.get('/files', function (req, res) {
   res.send({
     data: JSON.stringify(images)
   });
+});
+
+app.get('/newFile', function(req, res) {
+  //TODO: Create new empty file
+
+  console.log("got here");
+
+  res.send({});
 });

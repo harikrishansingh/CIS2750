@@ -23,8 +23,16 @@ body {
 }
 
 #header {
-    display: flex;
-    justify-content: space-between;
+    width: 100%;
+}
+
+#title {
+    font-size: 200%;
+    float: left;
+}
+
+#addContent {
+    float: right;
 }
 
 .new-content {
