@@ -133,5 +133,5 @@ app.get('/newFile', function(req, res) {
 
 function validFile (filePath) {
   const library = ffi.Library("./libsvgparse", {'validateFile': ['bool', ['string', 'string']]});
-  return library.validateFile("uploads/" + filePath, "parser/bin/files/svg.xsd");
+  return library.validateFile(filePath, "parser/bin/files/svg.xsd");
 }

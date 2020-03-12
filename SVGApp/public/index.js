@@ -17,7 +17,7 @@ $(document).ready(function () {
 
     //Make new file
     $('#new-file').on("click", function () {
-        const fileURL = getFileName();
+        const fileURL = prompt("Enter a file name", "");
 
         if (!(fileURL == null || fileURL === "")) {
             $.ajax({
@@ -119,14 +119,4 @@ function updateDetails (image) {
     //TODO: Loop and get the actual data
     table.append('<tr><td>Circle</td><td colspan="4">Center: x=3cm, y=1cm Radius: 1cm</td><td class="other-attributes">0</td></tr>');
 
-}
-
-function getFileName() {
-    let filename = prompt("Enter a file name", "");
-    if (filename.slice(filename.length-4) === ".svg") {
-        return filename;
-    } else {
-        filename += ".svg";
-        return filename;
-    }
 }

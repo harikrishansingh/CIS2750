@@ -1696,6 +1696,7 @@ bool validateFile (char* filename, char* schema) {
     if (filename == NULL || schema == NULL) return false;
 
     SVGimage* image = createValidSVGimage(filename, schema);
+
     if (image == NULL) {
         return false;
     } else {
