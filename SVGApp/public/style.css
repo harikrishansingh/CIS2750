@@ -71,7 +71,7 @@ table, th, td {
 
 .content-wrapper {
     width: 100%;
-    max-height: 900px;
+    max-height: 1100px;
     overflow-y: scroll;
 }
 
@@ -95,7 +95,6 @@ td.other-attributes {
     width: 250px;
 }
 
-/*
 @media(max-width: 900px) {
     html {
         font-size: 14px !important;
@@ -115,4 +114,4 @@ td.other-attributes {
         font-size: 12px !important;
         width: 100% !important;
     }
-}*/
+}

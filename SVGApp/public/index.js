@@ -73,13 +73,10 @@ function populateTable (response) {
 }
 
 function updateDetails (image) {
-
+    //Update the details select box and details table
     $('#detail-select').val(image);
     $('.detail-wrapper').css("display", "block");
-
-    //TODO: Update details panel with the image's file name as input
-
-    var table = $('.details-table');
+    const table = $('.details-table');
 
     //Clear the table first
     table.empty();
@@ -90,8 +87,11 @@ function updateDetails (image) {
         '<tr><td colspan="2" class="detail-heading"><b>Title</b></td><td colspan="4" class="detail-heading"><b>Description</b></td></tr>' +
         //TODO: Get actual title and description
         '<tr><td colspan="2">THIS IS A TITLE</td><td colspan="4">THIS IS A DESCRIPTION</td></tr>' +
-        '<tr><td class="detail-heading"><b>Component</b></td><td colspan="4" class="detail-heading"><b>Summary</b></td><td class="other-attributes detail-heading"><b>Other attributes</b></td></tr>' +
-        //TODO: Get actual data
+        '<tr><td class="detail-heading"><b>Component</b></td><td colspan="4" class="detail-heading"><b>Summary</b></td><td class="other-attributes detail-heading"><b>Other attributes</b></td></tr>'
+    );
+
+    //TODO: Loop and get the actual data
+    table.append(
         '<tr><td>Circle</td><td colspan="4">Center: x=3cm, y=1cm Radius: 1cm</td><td class="other-attributes">0</td></tr>'
     );
 
