@@ -107,9 +107,16 @@ app.get('/files', function (req, res) {
 });
 
 app.get('/newFile', function(req, res) {
-  //TODO: Create new empty file
+  const interact = ffi.Library("./libsvgparse", {'createEmptySVG': ['bool', ['string']]});
+  var result = interact.createEmptySVG("uploads/" + req.query.filename);
 
-  console.log("got here");
-
-  res.send({});
+  if (result) {
+    return res.status(200).send({
+      filename : req.query.filename
+    });
+  } else {
+    return res.status(400).send({
+      filename : req.query.filename
+    });
+  }
 });

@@ -1667,3 +1667,16 @@ Circle* JSONtoCircle(const char* svgString) {
 
     return circle;
 }
+
+/**
+ * Create an empty SVG file
+ * @param filename Path to where the file is saved
+ * @return TruFalse if the action was successful or not
+ */
+bool createEmptySVG(char* filename) {
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) return false;
+    fprintf(file, "<?xml version=\"1.0\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\">\n</svg>");
+    fclose(file);
+    return true;
+}

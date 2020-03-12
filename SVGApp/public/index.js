@@ -17,18 +17,27 @@ $(document).ready(function () {
 
     //Make new file
     $('#new-file').on("click", function () {
-        $.ajax({
-            type: 'get',
-            dataType: 'json',
-            url: '/newFile',
-            success: function () {
-                alert("New file created!");
-                location.reload();
-            },
-            fail: function (error) {
-                alert(new Error("Could not create new file." + error));
-            }
-        });
+        const fileURL = getFileName();
+
+        if (!(fileURL == null || fileURL === "")) {
+            $.ajax({
+                type: 'get',
+                dataType: 'json',
+                url: '/newFile',
+                data: {
+                    filename: fileURL
+                },
+                success: function (data) {
+                    alert("New file " + data.filename + " created!");
+                    location.reload();
+                },
+                fail: function (error) {
+                    alert(new Error("Could not create new file." + error));
+                }
+            });
+        } else {
+            alert("New file cancelled.");
+        }
     });
 
     //Hides and shows the content table div
@@ -110,4 +119,14 @@ function updateDetails (image) {
     //TODO: Loop and get the actual data
     table.append('<tr><td>Circle</td><td colspan="4">Center: x=3cm, y=1cm Radius: 1cm</td><td class="other-attributes">0</td></tr>');
 
+}
+
+function getFileName() {
+    let filename = prompt("Enter a file name", "");
+    if (filename.slice(filename.length-4) === ".svg") {
+        return filename;
+    } else {
+        filename += ".svg";
+        return filename;
+    }
 }
