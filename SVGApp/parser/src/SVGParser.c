@@ -1680,3 +1680,9 @@ bool createEmptySVG(char* filename) {
     fclose(file);
     return true;
 }
+
+char* fileToJSON(char* filename, char* schema) {
+    if (filename == NULL || schema == NULL) return NULL;
+
+    return SVGtoJSON(createValidSVGimage(filename, schema));
+}

@@ -56,6 +56,7 @@ app.post('/upload', function(req, res) {
 
   let uploadFile = req.files.uploadFile;
 
+  //TODO: Validate the file being uploaded
   // Use the mv() method to place the file somewhere on your server
   uploadFile.mv('uploads/' + uploadFile.name, function(err) {
     if(err) {
@@ -88,16 +89,19 @@ app.get('/files', function (req, res) {
   const files = fs.readdirSync('uploads');
   //TODO: loop through each file name and creatValidSVG, json stringify the array of json, send it back
 
-  var images = [];
+  let images = [];
+  const library = ffi.Library("./libsvgparse", {'fileToJSON': ['string', ['string', 'string']]});
 
-  files.forEach(e => {
+  //Populate an array wiht information about every SVG image in the uploads directory
+  files.forEach(file => {
     var fileData = [];
-    fileData[0] = e;
-    fileData[1] = Math.round(fs.statSync("uploads/" + e).size / 1024);
-    fileData[2] = 1; //TODO: numRects
-    fileData[3] = 2; //TODO: numCircles
-    fileData[4] = 3; //TODO: numPaths
-    fileData[5] = 4; //TODO: numGroups
+    var result = JSON.parse(library.fileToJSON('uploads/' + file, "parser/bin/files/svg.xsd"));
+    fileData[0] = file;
+    fileData[1] = Math.round(fs.statSync("uploads/" + file).size / 1024);
+    fileData[2] = result.numRect;
+    fileData[3] = result.numCirc;
+    fileData[4] = result.numPaths;
+    fileData[5] = result.numGroups;
     images.push(fileData);
   });
 
@@ -107,8 +111,8 @@ app.get('/files', function (req, res) {
 });
 
 app.get('/newFile', function(req, res) {
-  const interact = ffi.Library("./libsvgparse", {'createEmptySVG': ['bool', ['string']]});
-  var result = interact.createEmptySVG("uploads/" + req.query.filename);
+  const library = ffi.Library("./libsvgparse", {'createEmptySVG': ['bool', ['string']]});
+  var result = library.createEmptySVG("uploads/" + req.query.filename);
 
   if (result) {
     return res.status(200).send({

@@ -33,5 +33,6 @@ void addGroupsToXML(List* elementList, xmlNode* docHead);
 Attribute* existsInList(List* list, Attribute* attribute);
 
 bool createEmptySVG(char* filename);
+char* fileToJSON(char* filename, char* schema);
 
 #endif
