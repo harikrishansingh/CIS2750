@@ -20,11 +20,11 @@
 <body>
     <div id="header">
         <h2 id="title">SVG Image Viewer</h2>
-        <div>
+        <form href="uploadForm" id="uploadForm" action="/upload" method="post" encType="multipart/form-data">
             <input type="file" id="imgupload" name="uploadFile"/>
             <button id="submit-file" class="new-content">Upload File</button>
             <button id="new-file" class="new-content">New File</button>
-        </div>
+        </form>
     </div>
     <hr/>
     <div id="file-log" class="tab file-log">File Log</div>
@@ -45,7 +45,6 @@
         </table>
     </div>
     <br/>
-
 
     <!-- Leave me at the bottom of body -->
     <script src="index.js"></script>

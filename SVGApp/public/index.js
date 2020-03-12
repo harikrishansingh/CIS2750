@@ -33,9 +33,10 @@ function populateTable (response) {
     //Show error if files could not be loaded
     if (response === null) {
         table.append("<tr><th colspan=\"7\">Error loading files</th></tr>");
+        return;
     }
 
-    var images = JSON.parse(response.data); //Now have an array of JSON strings
+    const images = JSON.parse(response.data); //Now have an array of JSON strings
 
     if (images.length === 0) {
         table.append("<th colspan=\"7\">No files</th>");
@@ -68,7 +69,6 @@ function populateTable (response) {
             //Add SVGs to details selector
             selector.append('<option value="' + images[i][0] + '" class="image-option ' + images[i][0] + '">' + images[i][0] + '</option>');
         }
-        //TODO: - Make the thumbnails clickable; call updateDetails
     }
 }
 
@@ -91,8 +91,6 @@ function updateDetails (image) {
     );
 
     //TODO: Loop and get the actual data
-    table.append(
-        '<tr><td>Circle</td><td colspan="4">Center: x=3cm, y=1cm Radius: 1cm</td><td class="other-attributes">0</td></tr>'
-    );
+    table.append('<tr><td>Circle</td><td colspan="4">Center: x=3cm, y=1cm Radius: 1cm</td><td class="other-attributes">0</td></tr>');
 
 }
