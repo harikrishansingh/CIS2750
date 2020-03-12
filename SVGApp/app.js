@@ -91,7 +91,6 @@ app.get('/files', function (req, res) {
   var images = [];
 
   files.forEach(e => {
-    console.log(e);
     var fileData = [];
     fileData[0] = e;
     fileData[1] = Math.round(fs.statSync("uploads/" + e).size / 1024);
