@@ -847,6 +847,8 @@ bool validateRects (List* list) {
 bool validateCircles (List* list) {
     if (list == NULL) return false;
 
+    //TODO: Prevent negative radii
+
     ListIterator iter = createIterator(list);
     Circle* circle = NULL;
     while ((circle = nextElement(&iter)) != NULL) {
@@ -1684,5 +1686,20 @@ bool createEmptySVG(char* filename) {
 char* fileToJSON(char* filename, char* schema) {
     if (filename == NULL || schema == NULL) return NULL;
 
-    return SVGtoJSON(createValidSVGimage(filename, schema));
+    SVGimage* image = createValidSVGimage(filename, schema);
+    char* imageJSON = SVGtoJSON(image);
+    deleteSVGimage(image);
+    return imageJSON;
+}
+
+bool validateFile (char* filename, char* schema) {
+    if (filename == NULL || schema == NULL) return false;
+
+    SVGimage* image = createValidSVGimage(filename, schema);
+    if (image == NULL) {
+        return false;
+    } else {
+        deleteSVGimage(image);
+        return true;
+    }
 }

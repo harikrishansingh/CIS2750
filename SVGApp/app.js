@@ -56,14 +56,20 @@ app.post('/upload', function(req, res) {
 
   let uploadFile = req.files.uploadFile;
 
-  //TODO: Validate the file being uploaded
   // Use the mv() method to place the file somewhere on your server
   uploadFile.mv('uploads/' + uploadFile.name, function(err) {
-    if(err) {
+    if(err){
+      //If the file saving errored
       return res.status(500).send(err);
+    } else {
+      //Check if the file is valid
+      if (validFile('uploads/' + uploadFile.name)) {
+        res.redirect('/');
+      } else {
+        fs.unlinkSync('uploads/' + uploadFile.name);
+        return res.status(400).send("Invalid file.");
+      }
     }
-
-    res.redirect('/');
   });
 });
 
@@ -124,3 +130,8 @@ app.get('/newFile', function(req, res) {
     });
   }
 });
+
+function validFile (filePath) {
+  const library = ffi.Library("./libsvgparse", {'validateFile': ['bool', ['string', 'string']]});
+  return library.validateFile("uploads/" + filePath, "parser/bin/files/svg.xsd");
+}
