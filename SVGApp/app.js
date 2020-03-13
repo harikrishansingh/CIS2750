@@ -133,10 +133,31 @@ app.get('/newFile', function(req, res) {
 
 app.get('/fileData', function(req, res) {
   const library = ffi.Library("./libsvgparse", {'fullImageToJSON': ['string', ['string', 'string']]});
-  res.send(library.fullImageToJSON("uploads/" + req.query.filename, "parser/bin/files/svg.xsd"));
+  let result = library.fullImageToJSON("uploads/" + req.query.filename, "parser/bin/files/svg.xsd");
+  res.send(result);
 });
 
 function validFile (filePath) {
   const library = ffi.Library("./libsvgparse", {'validateFile': ['bool', ['string', 'string']]});
   return library.validateFile(filePath, "parser/bin/files/svg.xsd");
 }
+
+app.get('/saveTitle', function(req, res) {
+  const library = ffi.Library("./libsvgparse", {'saveTitle': ['bool', ['string', 'string', 'string']]});
+  const result = library.saveTitle("uploads/" + req.query.imageName, "parser/bin/files/svg.xsd", req.query.title);
+  if (result) {
+    res.send(true);
+  } else {
+    res.send(false);
+  }
+});
+
+app.get('/saveDesc', function(req, res) {
+  const library = ffi.Library("./libsvgparse", {'saveDesc': ['bool', ['string', 'string', 'string']]});
+  const result =  library.saveDesc("uploads/" + req.query.imageName, "parser/bin/files/svg.xsd", req.query.description);
+  if (result) {
+    res.send(true);
+  } else {
+    res.send(false);
+  }
+});

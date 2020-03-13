@@ -8,9 +8,11 @@ Attribute* getTestAttr1();
 Attribute* getTestAttr2();
 
 int main() {
-//    SVGimage* image = createValidSVGimage("testFilesA2/quad01_A2.svg", "testFilesA2/svg.xsd");
-    printf("%s\n", fullImageToJSON("parser/bin/files/Emoji_party_A2.svg", "parser/bin/files/svg.xsd"));
-//    deleteSVGimage(image);
+    SVGimage* image = createValidSVGimage("uploads/quad01_A2.svg", "parser/bin/files/svg.xsd");
+
+    printf("%s\n", rectToJSON(image->rectangles->head->data));
+
+    deleteSVGimage(image);
     return 0;
 }
 

@@ -50,6 +50,11 @@ $(document).ready(function () {
         }
         e.preventDefault(); //No redirects if possible
     });
+
+    //Save the image when the save button is pressed
+    $('#saveComponents').on("click", function(e) {
+        //TODO: save title, description, all component data, all components
+    })
 });
 
 //Populate table
@@ -102,6 +107,7 @@ function updateDetails (image) {
     //Update the details select box and details table
     $('#detail-select').val(image);
     $('.detail-wrapper').css("display", "block");
+    $('#saveComponents').css("display", "block");
     const table = $('.details-table');
 
     //Get our JSON string for a file
@@ -122,8 +128,7 @@ function updateDetails (image) {
         }
     });
 
-
-    if (imageJSON === undefined) {
+    if (imageJSON === undefined || imageJSON === "") {
         $('#detail-select').val(image);
         $('.detail-wrapper').css("display", "none");
         return;
@@ -134,10 +139,11 @@ function updateDetails (image) {
 
     //Add titles and content
     table.append(
-        '<tr><td colspan="6" rowspan="2"><img src="' + image + '" width="800px" /></td></tr>' +
+        '<tr><td colspan="6" rowspan="2"><img id="imageInFocus" src="' + image + '" width="800px" /></td></tr>' +
         '<tr></tr>' +
         '<tr><td colspan="2" class="detail-heading"><b>Title</b></td><td colspan="4" class="detail-heading"><b>Description</b></td></tr>' +
-        '<tr><td colspan="2">' + (imageJSON.title === "" ? "[no title]" : imageJSON.title) + '</td><td colspan="4">' + (imageJSON.description === "" ? "[no description]" : imageJSON.description) + '</td></tr>' +
+        '<tr><td colspan="2"><textarea class="imageDescriptor title" id="' + image + '" maxlength="255">' + imageJSON.title + '</textarea><button onclick="saveTitle()">Save Title</button></td>' +
+        '<td colspan="4"><textarea class="imageDescriptor description" id="' + image + '" maxlength="255">' + imageJSON.description + '</textarea><button onclick="saveDescription()">Save Description</button></td></tr>' +
         '<tr><td class="detail-heading"><b>Component</b></td><td colspan="4" class="detail-heading"><b>Summary</b></td><td class="other-attributes detail-heading"><b>Other attributes</b></td></tr>'
     );
 
@@ -159,7 +165,47 @@ function updateDetails (image) {
     });
 
     //Loop through groups
-    imageJSON.rectangles.forEach(function(g, i)  {
-        table.append('<tr><td>Rectangle ' + (i - -1) + '</td><td colspan="4">Number of children: ' + g.children + '</td><td class="other-attributes">' + r.numAttr + '</td></tr>')
+    imageJSON.groups.forEach(function(g, i)  {
+        table.append('<tr><td>Group ' + (i - -1) + '</td><td colspan="4">Number of children: ' + g.children + '</td><td class="other-attributes">' + g.numAttr + '</td></tr>')
+    });
+}
+
+function saveTitle() {
+    const title = $('.title').val();
+    const imageName = $('#imageInFocus').attr('src');
+    $.ajax({
+        type: 'get',
+        dataType: 'json',
+        url: '/saveTitle',
+        data: {
+            imageName: imageName,
+            title: title
+        },
+        success: function () {
+            alert("Description saved!");
+        },
+        fail: function (error) {
+            alert(new Error("Could not save description. " + error));
+        }
+    });
+}
+
+function saveDescription() {
+    const description = $('.description').val();
+    const imageName = $('#imageInFocus').attr('src');
+    $.ajax({
+        type: 'get',
+        dataType: 'json',
+        url: '/saveDesc',
+        data: {
+            imageName: imageName,
+            description: description
+        },
+        success: function () {
+            alert("Description saved!");
+        },
+        fail: function (error) {
+            alert(new Error("Could not save description. " + error));
+        }
     });
 }

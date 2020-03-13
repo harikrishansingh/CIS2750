@@ -1357,8 +1357,11 @@ char* circleToJSON(const Circle *c) {
         strcat(retString, "{}");
         return retString;
     }
-    char* string = calloc(strlen(c->units) + 128, sizeof(char));
-    sprintf(string, "{\"cx\":%.2f,\"cy\":%.2f,\"r\":%.2f,\"numAttr\":%d,\"units\":\"%s\"}", c->cx, c->cy, c->r, c->otherAttributes->length, c->units);
+    char* attrList = attrListToJSON(c->otherAttributes);
+    char* string = calloc(strlen(c->units) + strlen(attrList) + 128, sizeof(char));
+    sprintf(string, "{\"cx\":%.2f,\"cy\":%.2f,\"r\":%.2f,\"numAttr\":%d,\"units\":\"%s\",\"otherAttrs\":%s}",
+            c->cx, c->cy, c->r, c->otherAttributes->length, c->units, attrList);
+    free(attrList);
     return string;
 }
 
@@ -1373,8 +1376,12 @@ char* rectToJSON(const Rectangle *r) {
         strcat(retString, "{}");
         return retString;
     }
-    char* string = calloc(strlen(r->units) + 128, sizeof(char));
-    sprintf(string, "{\"x\":%.2f,\"y\":%.2f,\"w\":%.2f,\"h\":%.2f,\"numAttr\":%d,\"units\":\"%s\"}", r->x, r->y, r->width, r->height, r->otherAttributes->length, r->units);
+
+    char* attrList = attrListToJSON(r->otherAttributes);
+    char* string = calloc(strlen(r->units) + strlen(attrList) + 128, sizeof(char));
+    sprintf(string, "{\"x\":%.2f,\"y\":%.2f,\"w\":%.2f,\"h\":%.2f,\"numAttr\":%d,\"units\":\"%s\",\"otherAttrs\":%s}",
+            r->x, r->y, r->width, r->height, r->otherAttributes->length, r->units, attrList);
+    free(attrList);
     return string;
 }
 
@@ -1389,11 +1396,14 @@ char* pathToJSON(const Path *p) {
         strcat(retString, "{}");
         return retString;
     }
-    char* string = calloc(strlen(p->data) + 128, sizeof(char));
+    char* attrList = attrListToJSON(p->otherAttributes);
+    char* string = calloc(strlen(p->data) + strlen(attrList) + 128, sizeof(char));
     char* pathData = calloc(65, sizeof(char));
     strncpy(pathData, p->data, 64);
-    sprintf(string, "{\"d\":\"%s\",\"numAttr\":%d}", pathData, p->otherAttributes->length);
+    sprintf(string, "{\"d\":\"%s\",\"numAttr\":%d,\"otherAttrs\":%s}",
+            pathData, p->otherAttributes->length, attrList);
     free(pathData);
+    free(attrList);
     return string;
 }
 
@@ -1408,8 +1418,11 @@ char* groupToJSON(const Group *g) {
         strcat(retString, "{}");
         return retString;
     }
-    char* string = calloc(128, sizeof(char));
-    sprintf(string, "{\"children\":%d,\"numAttr\":%d}", g->rectangles->length + g->circles->length + g->paths->length + g->groups->length, g->otherAttributes->length);
+    char* attrList = attrListToJSON(g->otherAttributes);
+    char* string = calloc(strlen(attrList) + 128, sizeof(char));
+    sprintf(string, "{\"children\":%d,\"numAttr\":%d,\"otherAttrs\":%s}",
+            g->rectangles->length + g->circles->length + g->paths->length + g->groups->length, g->otherAttributes->length, attrList);
+    free(attrList);
     return string;
 }
 
@@ -1739,4 +1752,30 @@ char* fullImageToJSON(char* filename, char* schema) {
     free(groupsJSON);
 
     return out;
+}
+
+bool saveTitle(char* filename, char* schema, char* newTitle) {
+    if (filename == NULL || schema == NULL || newTitle == NULL) return false;
+
+    SVGimage* image = createValidSVGimage(filename, schema);
+    if (image == NULL) return false;
+
+    strcpy(image->title, newTitle);
+    bool result = writeSVGimage(image, filename);
+    deleteSVGimage(image);
+
+    return result;
+}
+
+bool saveDesc(char* filename, char* schema, char* newDesc) {
+    if (filename == NULL || schema == NULL || newDesc == NULL) return false;
+
+    SVGimage* image = createValidSVGimage(filename, schema);
+    if (image == NULL) return false;
+
+    strcpy(image->description, newDesc);
+    bool result = writeSVGimage(image, filename);
+    deleteSVGimage(image);
+
+    return result;
 }

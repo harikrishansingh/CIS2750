@@ -36,5 +36,7 @@ bool createEmptySVG(char* filename);
 char* fileToJSON(char* filename, char* schema);
 bool validateFile (char* filename, char* schema);
 char* fullImageToJSON(char* filename, char* schema);
+bool saveTitle(char* filename, char* schema, char* newTitle);
+bool saveDesc(char* filename, char* schema, char* newDesc);
 
 #endif

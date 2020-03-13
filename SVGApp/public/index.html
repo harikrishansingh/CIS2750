@@ -18,6 +18,7 @@
 </head>
 
 <body>
+    <!--Header-->
     <div id="header">
         <h2 id="title">SVG Image Viewer</h2>
         <div id="addContent">
@@ -32,12 +33,15 @@
     <br><br><br>
 
     <hr/>
+
+    <!--File log panel-->
     <div id="file-log" class="tab file-log">File Log</div>
     <div class="content-wrapper file-log-wrapper">
         <table id="file-log-table">
         </table>
     </div>
 
+    <!--Details panel-->
     <div class="tab details">
         Details of
         <label for="detail-select"></label>
@@ -49,8 +53,15 @@
         <table class="details-table">
         </table>
     </div>
-    <br/>
+    <div id="saveButtonWrapper">
+        <button id="saveComponents">Save Components</button>
+    </div>
 
+    <footer>
+        <br>
+        <br>
+        <br>
+    </footer>
     <!-- Leave me at the bottom of body -->
     <script src="index.js"></script>
 </body>
