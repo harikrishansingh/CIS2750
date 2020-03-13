@@ -82,7 +82,6 @@ function populateTable (response) {
             '<th>Number of paths</th>' +
             '<th>Number of groups</th>');
 
-        const selector = $('#detail-select');
         for (var i = 0; i < images.length; i++) {
             //Add SVGs to log table
             table.append(
@@ -98,16 +97,26 @@ function populateTable (response) {
             );
 
             //Add SVGs to details selector
-            selector.append('<option value="' + images[i][0] + '" class="image-option ' + images[i][0] + '">' + images[i][0] + '</option>');
+            $('#detail-select').append('<option value="' + images[i][0] + '" class="image-option ' + images[i][0] + '">' + images[i][0] + '</option>');
         }
     }
 }
 
 function updateDetails (image) {
-    //Update the details select box and details table
+//Update the details select box and details table
     $('#detail-select').val(image);
     $('.detail-wrapper').css("display", "block");
-    $('#saveComponents').css("display", "block");
+    $('#component-save-edit-wrapper').css("display", "block");
+    $('#selectShapeNumber').css("display", "none");
+    $('#attributeTable').css("display", "none");
+    $('#selectComponent').empty();
+    $('#selectComponent').append('<option disabled selected value>-- Select an element type--</option>');
+    $('#selectRectNumber').empty();
+    $('#selectRectNumber').append('<option disabled selected value>-- Select an element number--</option>');
+    $('#selectCircleNumber').empty();
+    $('#selectCircleNumber').append('<option disabled selected value>-- Select an element number--</option>');
+    $('#selectPathNumber').empty();
+    $('#selectPathNumber').append('<option disabled selected value>-- Select an element number--</option>');
     const table = $('.details-table');
 
     //Get our JSON string for a file
@@ -147,22 +156,48 @@ function updateDetails (image) {
         '<tr><td class="detail-heading"><b>Component</b></td><td colspan="4" class="detail-heading"><b>Summary</b></td><td class="other-attributes detail-heading"><b>Other attributes</b></td></tr>'
     );
 
+    let i;
+    let select;
     //Loop through rectangles
     imageJSON.rectangles.forEach(function(r, i)  {
         table.append('<tr><td>Rectangle ' + (i - -1) + '</td><td colspan="4">Top left: x=' + r.x + r.units + ', y=' + r.y + r.units + '<br>' +
             'Width: ' + r.w + r.units + ' Height: ' + r.h + r.units + '</td><td class="other-attributes">' + r.numAttr + '</td></tr>')
     });
+    //Add to selector for editing
+    if (imageJSON.rectangles.length > 0) {
+        $('#selectComponent').append('<option value="rects" class="element-option">Rectangles</option>')
+        select = $('#selectRectNumber');
+        for(i = 0; i < imageJSON.rectangles.length; i++){
+            select.append('<option value="' + i + '" class="element-option">Rectangle ' + (i - -1) + '</option>');
+        }
+    }
 
     //Loop through circles
     imageJSON.circles.forEach(function(c, i)  {
         table.append('<tr><td>Circle ' + (i - -1) + '</td><td colspan="4">Center: cx=' + c.cx + c.units + ', cy=' + c.cy + c.units + '<br>' +
             'Radius: ' + c.r + c.units + '</td><td class="other-attributes">' + c.numAttr + '</td></tr>')
     });
+    //Add to selector for editing
+    if (imageJSON.circles.length > 0) {
+        $('#selectComponent').append('<option value="circles" class="element-option">Circles</option>')
+        select = $('#selectCircleNumber');
+        for(i = 0; i < imageJSON.circles.length; i++){
+            select.append('<option value="' + i + '" class="element-option">Circle ' + (i - -1) + '</option>');
+        }
+    }
 
     //Loop through paths
     imageJSON.paths.forEach(function(p, i)  {
         table.append('<tr><td>Path ' + (i - -1) + '</td><td colspan="4">Data: ' + p.d + '</td><td class="other-attributes">' + p.numAttr + '</td></tr>')
     });
+    //Add to selector for editing
+    if (imageJSON.paths.length > 0) {
+        $('#selectComponent').append('<option value="paths" class="element-option">Paths</option>')
+        select = $('#selectPathNumber');
+        for(i = 0; i < imageJSON.paths.length; i++){
+            select.append('<option value="' + i + '" class="element-option">Path ' + (i - -1) + '</option>');
+        }
+    }
 
     //Loop through groups
     imageJSON.groups.forEach(function(g, i)  {
@@ -182,7 +217,7 @@ function saveTitle() {
             title: title
         },
         success: function () {
-            alert("Description saved!");
+            alert("Title saved!");
         },
         fail: function (error) {
             alert(new Error("Could not save description. " + error));
@@ -208,4 +243,98 @@ function saveDescription() {
             alert(new Error("Could not save description. " + error));
         }
     });
+}
+
+function showShapes(type) {
+    let rectSelect = $('#selectRectNumber');
+    let circleSelect = $('#selectCircleNumber');
+    let pathSelect = $('#selectPathNumber');
+
+    if (type === "rects"){
+        rectSelect.css("display", "block");
+        circleSelect.css("display", "none");
+        pathSelect.css("display", "none");
+    } else if (type === "circles") {
+        rectSelect.css("display", "none");
+        circleSelect.css("display", "block");
+        pathSelect.css("display", "none");
+    } else if (type === "paths") {
+        rectSelect.css("display", "none");
+        circleSelect.css("display", "none");
+        pathSelect.css("display", "block");
+    }
+    $('#attributeTable').css("display", "none");
+    $('#saveAttributes').css("display", "none");
+}
+
+function showAttrs(shapeNumber, shape) {
+    var shapes;
+    const imageName = $('#imageInFocus').attr('src');
+    $.ajax({
+        type: 'get',
+        dataType: 'json',
+        url: '/fileData',
+        async: false,
+        data: {
+            filename: imageName
+        },
+        success: function (r) {
+            shapes = r;
+        },
+        fail: function (error) {
+            alert(new Error("Could not get shapes. " + error));
+            location.reload();
+        }
+    });
+
+    //Populate the attribute table with all the attributes of the selected element
+    var table = $('#attributeTable');
+    table.empty();
+    table.append('<tr><th class="heading"><h2>Attribute</h2></th><th class="heading"><h2>Value</h2></th></tr>');
+
+    //This is kinda gross and very duplicate codey but each part has something slightly different
+    let s;
+    if (shape === "circles") {
+        s = shapes.circles[shapeNumber];
+        table.append(
+            '<tr><td>cx</td><td>' + s.cx + '</td></tr>' +
+            '<tr><td>cy</td><td>' + s.cy + '</td></tr>' +
+            '<tr><td>r</td><td>' + s.r + '</td></tr>' +
+            '<tr><td>units</td><td>' + s.units + '</td></tr>');
+
+        if (s.numAttr > 0) table.append('<tr><td colspan="2"><b>Other Attribute(s)</b></td></tr>');
+        s.otherAttrs.forEach(function(oa) {
+            table.append(
+                '<tr><td>' + oa.name + '</td><td>' + oa.value + '</td></tr>'
+            )
+        })
+    } else if (shape === "rects") {
+        s = shapes.rectangles[shapeNumber];
+        table.append(
+            '<tr><td>x</td><td>' + s.x + '</td></tr>' +
+            '<tr><td>y</td><td>' + s.y + '</td></tr>' +
+            '<tr><td>width</td><td>' + s.w + '</td></tr>' +
+            '<tr><td>height</td><td>' + s.h + '</td></tr>'+
+            '<tr><td>units</td><td>' + s.units + '</td></tr>');
+
+        if (s.numAttr > 0) table.append('<tr><td colspan="2"><b>Other Attribute(s)</b></td></tr>');
+        s.otherAttrs.forEach(function(oa) {
+            table.append(
+                '<tr><td>' + oa.name + '</td><td>' + oa.value + '</td></tr>'
+            )
+        })
+    } else if (shape === "paths") {
+        s = shapes.paths[shapeNumber];
+        table.append('<tr><td>d</td><td>' + s.d + '</td></tr>');
+
+        if (s.numAttr > 0) table.append('<tr><td colspan="2"><b>Other Attribute(s)</b></td></tr>');
+        s.otherAttrs.forEach(function(oa) {
+            table.append(
+                '<tr><td>' + oa.name + '</td><td>' + oa.value + '</td></tr>'
+            )
+        })
+    }
+
+    table.css("display", "inline-table");
+    $('#saveAttributes').css("display", "block")
 }

@@ -53,9 +53,21 @@
         <table class="details-table">
         </table>
     </div>
-    <div id="saveButtonWrapper">
-        <button id="saveComponents">Save Components</button>
+    <div id="component-save-edit-wrapper">
+        <div id="selectComponentWrapper">
+            <select id="selectComponent" onchange="showShapes(this.value)"></select>
+            <select class="selectShapeNumber" id="selectRectNumber" onchange="showAttrs(this.value, 'rects')"></select>
+            <select class="selectShapeNumber" id="selectCircleNumber" onchange="showAttrs(this.value, 'circles')"></select>
+            <select class="selectShapeNumber" id="selectPathNumber" onchange="showAttrs(this.value, 'paths')"></select>
+        </div>
+        <button hidden id="saveComponents">Save Components</button>
     </div>
+
+    <br><br><br>
+
+    <table id="attributeTable">
+    </table>
+    <button id="saveAttributes">Save Attributes</button>
 
     <footer>
         <br>

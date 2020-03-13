@@ -96,15 +96,39 @@ table, th, td {
     resize: none;
 }
 
-#saveButtonWrapper {
+#selectComponentWrapper {
+    float: left;
+}
+
+.selectShapeNumber {
+    display: none;
+}
+
+#component-save-edit-wrapper {
     width: 100%;
+    display: none;
+}
+
+#attributeTable {
+    width: 50%;
+    display: none;
+    text-align: center;
+}
+
+.heading {
+    width: 50%;
+}
+
+#saveAttributes {
+    display: none;
+    width: 50%;
+    height: 50px;
 }
 
 #saveComponents {
     float: right;
     width: 300px;
     height: 50px;
-    display: none;
 }
 
 img.img-thumb {

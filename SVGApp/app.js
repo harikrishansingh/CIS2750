@@ -93,8 +93,6 @@ console.log('Running app at localhost: ' + portNum);
 app.get('/files', function (req, res) {
   const fs = require('fs');
   const files = fs.readdirSync('uploads');
-  //TODO: loop through each file name and creatValidSVG, json stringify the array of json, send it back
-
   let images = [];
   const library = ffi.Library("./libsvgparse", {'fileToJSON': ['string', ['string', 'string']]});
 
@@ -134,6 +132,7 @@ app.get('/newFile', function(req, res) {
 app.get('/fileData', function(req, res) {
   const library = ffi.Library("./libsvgparse", {'fullImageToJSON': ['string', ['string', 'string']]});
   let result = library.fullImageToJSON("uploads/" + req.query.filename, "parser/bin/files/svg.xsd");
+  // console.log(result);
   res.send(result);
 });
 
