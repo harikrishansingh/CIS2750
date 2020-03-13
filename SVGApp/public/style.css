@@ -89,6 +89,14 @@ table, th, td {
 
 }
 
+#pathData {
+    height: 100px !important;
+}
+
+.attributeDescriptor {
+    height: 50px !important;
+}
+
 .imageDescriptor{
     width: 100%;
     height: 150px;

@@ -50,11 +50,6 @@ $(document).ready(function () {
         }
         e.preventDefault(); //No redirects if possible
     });
-
-    //Save the image when the save button is pressed
-    $('#saveComponents').on("click", function(e) {
-        //TODO: save title, description, all component data, all components
-    })
 });
 
 //Populate table
@@ -297,44 +292,48 @@ function showAttrs(shapeNumber, shape) {
     if (shape === "circles") {
         s = shapes.circles[shapeNumber];
         table.append(
-            '<tr><td>cx</td><td>' + s.cx + '</td></tr>' +
-            '<tr><td>cy</td><td>' + s.cy + '</td></tr>' +
-            '<tr><td>r</td><td>' + s.r + '</td></tr>' +
-            '<tr><td>units</td><td>' + s.units + '</td></tr>');
+            '<tr><td>cx</td><td><textarea class="imageDescriptor attributeDescriptor" id="circleCX">' + s.cx + '</textarea></td></tr>' +
+            '<tr><td>cy</td><td><textarea class="imageDescriptor attributeDescriptor" id="circleCY">' + s.cy + '</textarea></td></tr>' +
+            '<tr><td>r</td><td><textarea class="imageDescriptor attributeDescriptor" id="circleR">' + s.r + '</textarea></td></tr>' +
+            '<tr><td>units</td><td><textarea class="imageDescriptor attributeDescriptor" id="circleUnits">' + s.units + '</textarea></td></tr>');
 
         if (s.numAttr > 0) table.append('<tr><td colspan="2"><b>Other Attribute(s)</b></td></tr>');
         s.otherAttrs.forEach(function(oa) {
             table.append(
-                '<tr><td>' + oa.name + '</td><td>' + oa.value + '</td></tr>'
+                '<tr><td>' + oa.name + '</td><td><textarea class="imageDescriptor attributeDescriptor">' + oa.value + '</textarea></td></tr>'
             )
         })
     } else if (shape === "rects") {
         s = shapes.rectangles[shapeNumber];
         table.append(
-            '<tr><td>x</td><td>' + s.x + '</td></tr>' +
-            '<tr><td>y</td><td>' + s.y + '</td></tr>' +
-            '<tr><td>width</td><td>' + s.w + '</td></tr>' +
-            '<tr><td>height</td><td>' + s.h + '</td></tr>'+
-            '<tr><td>units</td><td>' + s.units + '</td></tr>');
+            '<tr><td>x</td><td><textarea class="imageDescriptor attributeDescriptor" id="rectX">' + s.x + '</textarea></td></tr>' +
+            '<tr><td>y</td><td><textarea class="imageDescriptor attributeDescriptor" id="rectY">' + s.y + '</textarea></td></tr>' +
+            '<tr><td>width</td><td><textarea class="imageDescriptor attributeDescriptor" id="rectWidth">' + s.w + '</textarea></td></tr>' +
+            '<tr><td>height</td><td><textarea class="imageDescriptor attributeDescriptor" id="rectHeight">' + s.h + '</textarea></td></tr>'+
+            '<tr><td>units</td><td><textarea class="imageDescriptor attributeDescriptor" id="rectUnits">' + s.units + '</textarea></td></tr>');
 
         if (s.numAttr > 0) table.append('<tr><td colspan="2"><b>Other Attribute(s)</b></td></tr>');
         s.otherAttrs.forEach(function(oa) {
             table.append(
-                '<tr><td>' + oa.name + '</td><td>' + oa.value + '</td></tr>'
+                '<tr><td>' + oa.name + '</td><td><textarea class="imageDescriptor attributeDescriptor">' + oa.value + '</textarea></td></tr>'
             )
         })
     } else if (shape === "paths") {
         s = shapes.paths[shapeNumber];
-        table.append('<tr><td>d</td><td>' + s.d + '</td></tr>');
+        table.append('<tr><td>d</td><td><textarea class="imageDescriptor attributeDescriptor" id="pathData" maxlength="63">' + s.d + '</textarea></td></tr>');
 
         if (s.numAttr > 0) table.append('<tr><td colspan="2"><b>Other Attribute(s)</b></td></tr>');
         s.otherAttrs.forEach(function(oa) {
             table.append(
-                '<tr><td>' + oa.name + '</td><td>' + oa.value + '</td></tr>'
+                '<tr><td>' + oa.name + '</td><td><textarea class="imageDescriptor attributeDescriptor">' + oa.value + '</textarea></td></tr>'
             )
         })
     }
 
     table.css("display", "inline-table");
     $('#saveAttributes').css("display", "block")
+}
+
+function saveAttributes() {
+    alert("Saving attributes isn't implemented but just editing works great!");
 }
