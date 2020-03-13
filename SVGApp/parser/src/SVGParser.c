@@ -847,12 +847,10 @@ bool validateRects (List* list) {
 bool validateCircles (List* list) {
     if (list == NULL) return false;
 
-    //TODO: Prevent negative radii
-
     ListIterator iter = createIterator(list);
     Circle* circle = NULL;
     while ((circle = nextElement(&iter)) != NULL) {
-        if (circle->units == NULL || circle->otherAttributes == NULL || !validateAttributes(circle->otherAttributes)) return false;
+        if (circle->units == NULL || circle->otherAttributes == NULL || !validateAttributes(circle->otherAttributes) || circle->r < 0) return false;
     }
     return true;
 }
