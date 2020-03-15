@@ -30,23 +30,22 @@ app.get('/style.css',function(req,res){
   res.sendFile(path.join(__dirname+'/public/style.css'));
 });
 
-//FIXME: Revert
-/*// Send obfuscated JS, do not change
+// Send obfuscated JS, do not change
 app.get('/index.js',function(req,res){
   fs.readFile(path.join(__dirname+'/public/index.js'), 'utf8', function(err, contents) {
     const minimizedContents = JavaScriptObfuscator.obfuscate(contents, {compact: true, controlFlowFlattening: true});
     res.contentType('application/javascript');
     res.send(minimizedContents._obfuscatedCode);
   });
-});*/
+});
 
-// Send obfuscated JS, do not change
+/*// Send obfuscated JS, do not change
 app.get('/index.js',function(req,res){
   fs.readFile(path.join(__dirname+'/public/index.js'), 'utf8', function(err, contents) {
     res.contentType('application/javascript');
     res.send(contents);
   });
-});
+});*/
 
 //Respond to POST requests that upload files to uploads/ directory
 app.post('/upload', function(req, res) {
